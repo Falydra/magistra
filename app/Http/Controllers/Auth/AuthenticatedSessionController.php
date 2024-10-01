@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,11 +31,26 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            
+            $request->session()->regenerate();
+
+            if ($user->is_admin) {
+                
+                return redirect()->route('admin.kompetisi');
+            } else {
+                
+                return redirect()->route('dashboard');
+            }
+        }
+
+        return back()->withErrors([
+            'username' => 'Username atau password salah.',
+        ]);
     }
 
     /**
@@ -47,6 +64,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('home');
     }
 }

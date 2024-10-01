@@ -2,7 +2,7 @@ import { Link, Head, useForm } from '@inertiajs/react';
 import Layout from '@/Components/Layout';
 import { FormEventHandler, useState } from 'react';
 import { motion } from 'framer-motion';
-import Login from './Auth/Login';
+
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
@@ -20,7 +20,7 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
+        post(route('welcome'), {
             onFinish: () => reset('password'),
         });
     };
@@ -28,6 +28,8 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
     const handleGetStartedClick = () => {
         setShowLoginForm(true);
     };
+
+
 
     return (
         <Layout >
@@ -61,11 +63,11 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
                                     transition={{ duration: 0.5 }}
                                     className='flex w-full h-full flex-col items-center justify-center'
                                 >
-                                    <div className='flex items-center justify-center flex-col'>
+                                    
                                         <h1 className='text-2xl font-bold'>
                                             Login
                                         </h1>
-                                        <form onSubmit={submit}>
+                                        <form onSubmit={submit} className='w-full px-12'>
 
                                         <div>
 
@@ -100,15 +102,15 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
                                             <InputError message={errors.password} className="mt-2" />
                                         </div>
                                         <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                        />
-                        <span className="ms-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
+                                            <label className="flex items-center">
+                                                <Checkbox
+                                                    name="remember"
+                                                    checked={data.remember}
+                                                    onChange={(e) => setData('remember', e.target.checked)}
+                                                />
+                                                <span className="ms-2 text-sm text-gray-600">Remember me</span>
+                                            </label>
+                                        </div>
                                         <div className="flex items-center justify-end mt-4">
                                             {canResetPassword && (
                                                 <Link
@@ -125,10 +127,11 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
                                         </div>
                                         </form>
                                         
-                                    </div>
+                                    
                                 </motion.div>
                             )}
                         </div>
+                        
                         <div className='flex w-5/12 items-center flex-col rounded-l-custom text-start z-11' style={{ backgroundColor: '#2E689A' }}>
                             <h2 className='text-2xl mt-4'>
                                 Welcome To
