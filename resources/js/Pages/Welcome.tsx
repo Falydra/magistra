@@ -20,7 +20,7 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('welcome'), {
+        post(route('login'), {
             onFinish: () => reset('password'),
         });
     };
