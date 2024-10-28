@@ -1,129 +1,127 @@
-import { useState, PropsWithChildren, ReactNode } from 'react';
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
+import { useState, PropsWithChildren, ReactNode } from "react";
 
-export default function Authenticated({ header, children }: PropsWithChildren<{ header?: ReactNode }>) {
-    const user = usePage().props.auth.user;
+import { Link, usePage, Head} from "@inertiajs/react";
+import { User } from "@/types";
+// import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
+// import DashboardData from "@/configs/dashboard_data";
+// import { useLocation } from "react-router-dom";
+// import DashboardLinks from "@/configs/dashboard_link";
+import NavButton from "@/Components/NavButton";
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+
+export default function Authenticated({
+    user,
+    header,
+    children,
+    title
+}: PropsWithChildren<{ user: User; header?: string, title: string }>) {
+    const [showingNavigationDropdown, setShowingNavigationDropdown] =
+        useState(false);
+    const { url } = usePage();
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="bg-white border-b border-gray-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
-                        <div className="flex">
-                            <div className="shrink-0 flex items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
-
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:flex sm:items-center sm:ms-6">
-                            <div className="ms-3 relative">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
+        <>
+            <Head title={title} />
+            <div className="flex-col hidden w-full min-h-screen bg-white md:flex sm:flex-row">
+                <div className="flex flex-col w-full min-h-screen sm:w-2/5 lg:w-1/5 bg-dcf-dark-500">
+                    <div className="flex flex-col items-center w-full h-screen min-h-screen py-12 overflow-y-auto lg:fixed lg:w-1/5 sm:w2/5 bg-dcf-dark-500 scrollbar-hidden">
+                        <div className="flex w-32 h-32 rounded-full bg-dcf-orange-300"></div>
+                        <h1 className="pt-4 text-2xl font-bold text-center text-white">
+                            {user.name}
+                        </h1>
+                        <h3 className="text-sm font-light text-center text-white">
+                            {user.email}
+                        </h3>
+                        <div className="flex flex-col items-center w-full mt-8 text-center">
+                            {/* <ul className="flex flex-col items-center justify-center w-full text-center">
+                                <div
+                                    className={`flex w-full h-12 items-center justify-center text-white ${
+                                        url == "/dashboard" ? "bg-dcf-orange-300" : ""
+                                    }`}
+                                >
+                                    <li>
+                                        <Link href={route("dashboard")}>Dashboard</Link>
+                                    </li>
+                                </div>
+                                <div
+                                    className={`flex w-full h-12 items-center justify-center text-white ${
+                                        url == "/dashboard/perlombaan" ? "bg-dcf-orange-300" : ""
+                                    }`}
+                                >
+                                    <li>
+                                        <Link href={route("dashboard.perlombaan")}>
+                                            Perlombaan
+                                        </Link>
+                                    </li>
+                                </div>
+                                <div
+                                    className={`flex w-full h-12 items-center justify-center text-white ${
+                                        url == "/dashboard/seminar" ? "bg-dcf-orange-300" : ""
+                                    }`}
+                                >
+                                    <li>
+                                        <Link href={route("dashboard.seminar")}>
+                                            Seminar
+                                        </Link>
+                                    </li>
+                                </div>
+                                <div
+                                    className={`flex w-full h-12 items-center justify-center text-white ${
+                                        url == "/profil" ? "bg-dcf-orange-300" : ""
+                                    }`}
+                                >
+                                    <li>
+                                        <Link href={route("profil.edit")}>
+                                            Profil
+                                        </Link>
+                                    </li>
+                                </div>
+                                <div
+                                    className={`flex w-full h-12 items-center justify-center text-white`}
+                                >
+                                    <li>
+                                        <Link href={(route("logout"))} method="post" className="text-orange-500">
                                             Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
+                                        </Link>
+                                    </li>
+                                </div>
+                            </ul> */}
                         </div>
+                    </div>
+                    
+                </div>
+                
+                
+                <div className="flex flex-col items-center justify-start w-4/5 min-h-screen px-2">
+                    <div className="flex flex-row items-center justify-between w-full mt-12 bg-transparent h-fit">
+                        <h2 className="mb-3 ml-4 text-3xl font-bold leading-tight text-transparent text-gray-800 bg-gradient-to-r from-dcf-orange-500 to-dcf-orange-300 bg-clip-text">
+                            {header}
+                        </h2>
+                    </div>
+                    <main className="w-full px-4">{children}</main>
+                </div>
+            </div>
+            <div className="md:hidden">
+                <div className="min-h-screen">
+                    <div className="flex flex-row items-center justify-between w-full mt-4 bg-transparent h-fit">
+                        <h2 className="mb-3 ml-4 text-3xl font-bold leading-tight text-transparent text-gray-800 bg-gradient-to-r from-dcf-orange-500 to-dcf-orange-300 bg-clip-text">
+                            {header}
+                        </h2>
+                    </div>
+                    <div className="p-4 mb-20">
 
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
-                                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                            >
-                                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                    <path
-                                        className={!showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={showingNavigationDropdown ? 'inline-flex' : 'hidden'}
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
+                        {children}
                     </div>
                 </div>
-
-                <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
-                    <div className="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
-                        </ResponsiveNavLink>
+                {/* <div className="fixed bottom-0 left-0 right-0 z-50 flex-row h-16 bg-white border-t border-gray-200 sm:justify-center sm:items-center ">
+                    <div className="grid h-full grid-cols-4 mx-auto font-medium">
+                        {DashboardData.map((data) => {
+                            return <NavButton data={data} key={data.title} />
+                        })}
                     </div>
-
-                    <div className="pt-4 pb-1 border-t border-gray-200">
-                        <div className="px-4">
-                            <div className="font-medium text-base text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="font-medium text-sm text-gray-500">{user.email}</div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
-                </header>
-            )}
-
-            <main>{children}</main>
-        </div>
+                </div> */}
+            </div>
+            
+        </>
     );
 }

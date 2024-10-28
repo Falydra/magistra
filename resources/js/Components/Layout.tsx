@@ -1,6 +1,6 @@
 import React from "react";
 import NavLink from "./NavLink";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import Footer from "@/Components/Footer";
 import { Head } from "@inertiajs/react";
 
@@ -21,7 +21,7 @@ export default function Layout(props: LayoutData) {
             </div>
             <div>
                 <Head title={pageTitle}/>
-                <Navbar />
+                {/* <Navbar /> */}
                 {children}
                 <Footer />
             </div>
