@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
 use Inertia\Inertia;
 
-Route::get('/welcome', function () {
+Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('welcome');
 
