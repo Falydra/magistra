@@ -13,6 +13,7 @@ export default {
 
     theme: {
     	extend: {
+			
     		fontFamily: {
     			sans: ['Figtree', ...defaultTheme.fontFamily.sans]
     		},
@@ -23,6 +24,7 @@ export default {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		colors: {
+				
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {
@@ -34,12 +36,12 @@ export default {
     				foreground: 'hsl(var(--popover-foreground))'
     			},
     			primary: {
-    				DEFAULT: 'hsl(var(--primary))',
-    				foreground: 'hsl(var(--primary-foreground))'
+    				bg: "#328BC3",
+					fg: "#e9f4fa",
+					dark: "#1f76a9"
     			},
     			secondary: {
-    				DEFAULT: 'hsl(var(--secondary))',
-    				foreground: 'hsl(var(--secondary-foreground))'
+    				bg: "#FFE8BCCC",
     			},
     			muted: {
     				DEFAULT: 'hsl(var(--muted))',

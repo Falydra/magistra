@@ -13,6 +13,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/test', function() {
+    return Inertia::render('Test');
+}) ->middleware(['auth', 'verified'])->name('test');
+
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 
