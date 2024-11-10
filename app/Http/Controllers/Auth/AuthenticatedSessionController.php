@@ -18,10 +18,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Welcome', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Auth/Login');
     }
 
     /**
@@ -39,19 +36,13 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             // Redirect based on user role
-            switch ($user->role) {
-                case 0: // Student
-                    return redirect()->route('student.dashboard'); // Change to appropriate route
-                case 1: // Advisory Lecturer
-                    return redirect()->route('advisory.dashboard'); // Change to appropriate route
-                case 2: // Head of Department
-                    return redirect()->route('department.dashboard'); // Change to appropriate route
-                case 3: // Head of Faculty
-                    return redirect()->route('faculty.dashboard'); // Change to appropriate route
-                case 4: // Academic Admin
-                default:
-                    return redirect()->route('admin.dashboard'); // Change to appropriate route
+            if ($user->role == 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('dashboard');
             }
+            
+            return redirect()->intended('/user/dashboard');
         }
 
         // If authentication fails, redirect back with an error
@@ -65,11 +56,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('welcome');
     }
 }

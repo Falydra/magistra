@@ -59,6 +59,7 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
         user: User;
     };
     email: boolean;
+    
 };
 
 export type IRS<T extends Record<string, unknown>= Record<string, unknown>> = T & {

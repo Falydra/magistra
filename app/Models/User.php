@@ -3,14 +3,30 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+Relation::morphMap([
+    'Admin' => 'App\Models\Admin',
+    'Dekan' => 'App\Models\Dekan',
+    'Bagian Akademik' => 'App\Models\Akademik',
+    'Kepala Program Studi' => 'App\Models\KepalaProgramStudi',
+    'Pembimbing Akademik' => 'App\Models\PembimbingAkademik',
+    'Mahasiswa' => 'App\Models\Mahasiswa',
+]);
+
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public function role(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +37,16 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+
+    public function entity(){
+        return $this->morphTo();
+    }
 
     /**
      * The attributes that should be hidden for serialization.

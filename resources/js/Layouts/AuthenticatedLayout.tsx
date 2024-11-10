@@ -1,23 +1,36 @@
-import React, { ReactNode } from 'react';
-import { Link, Head, usePage } from '@inertiajs/react';
+import React, { PropsWithChildren, ReactNode, useEffect } from 'react';
+import { Link, Head, usePage, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import TextInput from '@/Components/TextInput';
 import { FaCircleUser } from "react-icons/fa6";
 import { TbAppsFilled } from "react-icons/tb";
 import { RxExit } from "react-icons/rx";
+import { User } from '@/types';
+import { FormEventHandler, useState } from 'react';
 
 
-interface AuthenticatedLayoutProps {
-    header?: ReactNode;
-    header1?: ReactNode;
-    header2?: ReactNode;
-   
-    children?: ReactNode;
-}
 
-const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, header1, children }) => {
+export default function AuthenticatedLayout({
+    user,
+    header,
+    header1,
+    children,
+}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode }>) {
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
+    const [notification, setNotification] = useState<string | null>(null);
+
+    useEffect(() => {
+        setNotification(`Welcome, ${user.name}!`);
+
+        const timer = setTimeout(() => {
+            setNotification(null);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, [user.name]);
+   
+
 
     return (
         <>
@@ -53,15 +66,17 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                                             
                                         </div>
                                         <div
-                                            className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl ${
-                                                url == "/dashboard" ? "" : " text-white opacity-50"
-                                            }
-                                            `
-                                        }
-                                        >
+                                            className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl
+                                                ${
+                                                    url == "/profile/edit" ? "" : " text-white opacity-100"
+                                                }
+                                             `}
+                                            
+                                        
+                                        >       
                                             <FaCircleUser className='w-8 h-8'/>
                                             
-                                            <Link href={route("dashboard")}>Profil</Link>
+                                            <Link href={route("profile.edit")}>Profil</Link>
                                         
                                         </div>
                                     
@@ -73,7 +88,7 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                         </div>
                         <div className='flex mb-24'>
                             <div className={`flex h-12 items-center justify-between space-x-4    flex-row text-white mr-12 text-xl
-                                    ${url == "/" ? "": "text-white opacity-50"}
+                                    ${url == "/welcome" ? "": "text-white opacity-50"}
                                 `}>
                                 <RxExit className='w-6 h-6' />
                                 <Link href={(route("logout"))} method="post" className="">
@@ -142,6 +157,16 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                             </h2>
                            
                         </div>
+                        <div className='flex flex-col items-center justify-center w-full'>
+                                <div>
+                                {notification && (
+                                    <div className="fixed top-0 left-0 right-0 p-4 bg-green-500 z-20 text-white text-center">
+                                        {notification}
+                                    </div>
+                                )}
+                                </div>
+                            {children}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,5 +174,3 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
         </>
     );
 };
-
-export default AuthenticatedLayout;
