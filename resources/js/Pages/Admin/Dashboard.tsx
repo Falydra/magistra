@@ -15,7 +15,7 @@ export default function AdminDashboard({auth}: PageProps) {
             
 
         >
-            <Head title="Admin Dashboard" />
+            <Head title="Dashboard" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

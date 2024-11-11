@@ -132,11 +132,8 @@ export default function AuthenticatedLayout({
                                     Email: {auth.user.email}
                                     {/* Nomor: {auth.user.nomor} */}
                                 </h3>
-                                <h3 className='pt-4'>
-                                    {/* NIDS: {auth.user.nids} */}
-                                    Email: {auth.user.id }
-                                    {/* Nomor: {auth.user.nomor} */}
-                                </h3>
+                               
+                                
                             </div>
                             
                         </div>
