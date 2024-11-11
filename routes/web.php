@@ -18,9 +18,14 @@ Route::get('/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'admin'])->name('admin.dashboard');
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Mahasiswa/Dashboard');
+})->middleware(['auth', 'mahasiswa'])->name('mahasiswa.dashboard');
+
 
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
 
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

@@ -22,6 +22,7 @@ class Akademik extends Model
     protected $fillable = [
         'nama',
         'nip',
+        'alamat', 
     ];
 
     public function name(): Attribute
