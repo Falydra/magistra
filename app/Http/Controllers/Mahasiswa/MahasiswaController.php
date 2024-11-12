@@ -13,8 +13,7 @@ class MahasiswaController extends Controller
 {
     public function index()
     {
-        $mahasiswa = Mahasiswa::all();
-        return Inertia::render('Mahasiswa/Dashboard', ['mahasiswa' => $mahasiswa]);
+        return Inertia::render('Mahasiswa/Dashboard');
     }
 
     public function create()
@@ -26,17 +25,18 @@ class MahasiswaController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'nim' => 'required|numeric|unique:mahasiswa,nim',
-            'email' => 'required|email|unique:mahasiswa,email',
-            'jurusan' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8',
+            'role' => 'required|string',
         ]);
 
-        $mahasiswa = new Mahasiswa;
-        $mahasiswa->name = $request->name;
-        $mahasiswa->nim = $request->nim;
-        $mahasiswa->email = $request->email;
-        $mahasiswa->jurusan = $request->jurusan;
-        $mahasiswa->save();
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role = $request->role; // Assign the role from the request
+        $user->save();
+
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Mahasiswa created successfully.');
     }

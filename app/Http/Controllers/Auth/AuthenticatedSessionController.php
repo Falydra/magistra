@@ -38,8 +38,14 @@ class AuthenticatedSessionController extends Controller
             // Redirect based on user role
             if ($user->role == 'admin') {
                 return redirect()->route('admin.dashboard');
-            } else {
-                return redirect()->route('dashboard');
+            } else if ($user->role == 'mahasiswa') {
+                return redirect()->route('mahasiswa.dashboard');
+            } else if ($user->role == 'pembimbing') {
+                return redirect()->route('pembimbing.dashboard');
+            } else if ($user->role == 'dekan') {
+                return redirect()->route('dekan.dashboard');
+            } else if ($user->role == 'kaprodi') {
+                return redirect()->route('kaprodi.dashboard');
             }
             
             return redirect()->intended('/user/dashboard');
