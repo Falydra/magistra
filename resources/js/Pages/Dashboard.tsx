@@ -11,7 +11,7 @@ export default function Dashboard({auth}: PageProps) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={"Dashboard Mahasiswa"}
+            header={"Dashboard User"}
             header1="Notifikasi"
         >
             <Head title="Dashboard" />
