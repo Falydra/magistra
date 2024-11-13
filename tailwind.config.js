@@ -42,6 +42,8 @@ export default {
     			},
     			secondary: {
     				bg: "#FFE8BCCC",
+					light: "#D6E8F3",
+					txt1: "#1E77AF"
     			},
     			muted: {
     				DEFAULT: 'hsl(var(--muted))',

@@ -12,6 +12,10 @@ class PembimbingController extends Controller {
         public function index() {
             return Inertia::render('Pembimbing/Dashboard');
         }
+
+        public function persetujuanIRS(){
+            return Inertia::render('Pembimbing/PersetujuanIRS');
+        }
     
         public function create() {
             return view('pembimbing.create');
@@ -25,7 +29,7 @@ class PembimbingController extends Controller {
                 'role' => 'required|string',
             ]);
     
-            $user = new User;
+            $user = new Pembimbing();
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = bcrypt($request->password);
