@@ -16,7 +16,18 @@ interface AuthenticatedLayoutProps {
     childrenSideBar?: ReactNode;
 }
 
+<<<<<<< HEAD
 const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, header1, children, childrenSideBar }) => {
+=======
+
+export default function AuthenticatedLayout({
+    user,
+    header,
+    header1,
+    children,
+    SideBarChildren,
+}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode; SideBarChildren?: ReactNode; }>) {
+>>>>>>> refs/remotes/origin/main
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
 
@@ -37,6 +48,7 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                                 </h1>
                             </div>
 
+<<<<<<< HEAD
                             {/* Sidebar Menu */}
                             <div className="flex flex-col items-start mt-8 text-center justify-center">
                                 <div
@@ -54,6 +66,41 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                                     <Link href={route("dashboard")}>Profil</Link>
                                 </div>
                                 {childrenSideBar}
+=======
+                                    
+                                        <div
+                                            className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl ${
+                                                url == "/dashboard" ? "" : " text-white opacity-100"
+                                            }
+                                            `}
+                                        >
+                                            <TbAppsFilled className='w-8 h-8'/>
+                                            
+                                            
+                                            <Link href={route("dashboard")}>Dashboard</Link>
+                                            
+                                        </div>
+                                        <div
+                                            className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl
+                                                ${
+                                                    url == "/profile/edit" ? "" : " text-white opacity-100"
+                                                }
+                                             `}
+                                            
+                                        
+                                        >       
+                                            <FaCircleUser className='w-8 h-8'/>
+                                            
+                                            <Link href={route("profile.edit")}>Profil</Link>
+                                        
+                                        </div>
+                                        
+                                        {SideBarChildren}       
+                                
+                                
+                                    </div>
+                                <div>
+>>>>>>> refs/remotes/origin/main
                             </div>
                         </div>
                         <div className='flex mb-24'>
@@ -102,6 +149,7 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                                     Email: {auth.user.email}
                                     {/* Email: {auth.user.email} */}
                                 </h3>
+<<<<<<< HEAD
                                 <h3>
                                     Nomor Telepon: {auth.user.id }
                                     {/* Nomor: {auth.user.nomor} */}
@@ -114,6 +162,16 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                             <div className='flex flex-col items-start justify-center mx-2 w-full md:w-auto'>
                                 {children}
                             </div>
+=======
+                            </div>
+                            
+                        </div>
+                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
+                        
+                            {children}
+                            
+                            
+>>>>>>> refs/remotes/origin/main
                         </div>
                     </div>
 
@@ -123,7 +181,21 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ header, heade
                             <h2 className="text-2xl font-medium leading-tight text-primary-dark ">
                                 {header1} 
                             </h2>
+<<<<<<< HEAD
                             <FaBell className='w-6 h-6 text-primary-dark'/>
+=======
+                           
+                        </div>
+                        <div className='flex flex-col items-center justify-center w-full'>
+                                <div>
+                                {notification && (
+                                    <div className="fixed top-0 left-0 right-0 p-4 bg-green-500 z-20 text-white text-center">
+                                        {notification}
+                                    </div>
+                                )}
+                                </div>
+                            
+>>>>>>> refs/remotes/origin/main
                         </div>
                     </div>
                 </div>

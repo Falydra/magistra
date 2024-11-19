@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import { table } from 'console';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -44,7 +45,16 @@ export default {
     			},
     			secondary: {
     				bg: "#FFE8BCCC",
+					light: "#D6E8F3",
+					txt1: "#1E77AF"
     			},
+				button: {
+					btngreen: "#34AF41",
+					btnred: "#F54749",
+				},
+				table:{
+					head: "#EAF3F9",
+				},
     			muted: {
     				DEFAULT: 'hsl(var(--muted))',
     				foreground: 'hsl(var(--muted-foreground))'
