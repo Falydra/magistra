@@ -1,10 +1,13 @@
 import React from 'react';
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { PageProps } from "@/types";
+import { url } from 'inspector';
+import { RxExit } from 'react-icons/rx';
 
 export default function AdminDashboard({auth}: PageProps) {
-
+    const {url} = usePage().props;
+    
 
     return (
         <Authenticated
@@ -12,6 +15,18 @@ export default function AdminDashboard({auth}: PageProps) {
             user={auth.user}
             header="Dashboard Akademik"
             header1="Notifikasi"
+            SideBarChildren = {
+                
+                <div className='flex mb-24'>
+                    <div className={`flex h-12 items-center justify-between space-x-4    flex-row text-white mr-12 text-xl ${url == "/admin/alokasiruang" ? "": "text-white opacity-50"} `}>
+                        
+                        <Link href={(route("admin.alokasiruang"))}>
+                                    Alokasi Ruang
+                        </Link>
+                            
+                    </div>           
+                </div>
+            }
             
 
         >

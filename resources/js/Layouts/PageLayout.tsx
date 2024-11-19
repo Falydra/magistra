@@ -13,8 +13,10 @@ import { IoMdSearch } from "react-icons/io";
 export default function PageLayout({
     user,
     header,
-    children
-}: PropsWithChildren<{ user: User; header?: ReactNode }>) {
+    children,
+    SideBarChildren,
+    headerChildren
+}: PropsWithChildren<{ user: User; header?: ReactNode, SideBarChildren? : ReactNode, headerChildren? : ReactNode }>) {
     const {url} = usePage().props;
     
     return(
@@ -91,15 +93,10 @@ export default function PageLayout({
                 <div className=' flex flex-row items-center justify-start w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl'>
 
                     <div className="flex flex-col items-center justify-start w-full min-h-full bg-white z-10 rounded-3xl">
-                        <div className="flex flex-row items-start justify-between w-full mt-8 bg-white h-full">
-                            <h2 className="mb-3 ml-12 text-3xl font-bold leading-tight  text-primary-dark">
-                                {header}
-                            </h2>
-                           
-                        </div>
-
+                        {headerChildren}
+                        {children}
                         
-                        </div>
+                    </div>
                     
                 </div>
             </div>

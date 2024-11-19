@@ -71,5 +71,5 @@ export default {
     	}
     },
 
-    plugins: [forms, require("tailwindcss-animate")],
+    plugins: [forms, require("tailwindcss-animate", "flowite/plugin")],
 };

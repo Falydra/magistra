@@ -16,6 +16,18 @@ class AdminController extends Controller
        return Inertia::render('Admin/Dashboard');
     }
 
+    public function Alokasi(){
+        return Inertia::render('Admin/AlokasiRuang');
+    }
+
+    public function show($id)
+    {
+        $user = User::find($id);
+        return Inertia::render('Admin/Show', [
+            'user' => $user
+        ]);
+    }
+
 
     public function create()
     {
