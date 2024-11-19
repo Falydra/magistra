@@ -14,13 +14,19 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/dashboard', function () {
+Route::get('/admin/dashboard', function () {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'admin'])->name('admin.dashboard');
 
-
-
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+Route::get('/kaprodi-dashboard', function () {
+    return Inertia::render('DashboardKaprodi'); 
+});
+
+Route::get('/monitoring-irs', function () {
+    return Inertia::render('MonitoringIRS'); 
+})->middleware(['auth'])->name('monitoring_irs');
 
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

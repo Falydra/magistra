@@ -9,13 +9,14 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.tsx',
+		"./node_modules/flowbite/**/*.js"
     ],
 
     theme: {
     	extend: {
 			
     		fontFamily: {
-    			sans: ['Figtree', ...defaultTheme.fontFamily.sans]
+    			sans: ['Poppins', ...defaultTheme.fontFamily.sans]
     		},
     		borderRadius: {
     			custom: '5.0rem',
@@ -37,8 +38,9 @@ export default {
     			},
     			primary: {
     				bg: "#328BC3",
-					fg: "#e9f4fa",
-					dark: "#1f76a9"
+					fg: "#EAF3F9",
+					dark: "#1f76a9",
+					light: "#D6E8F3"
     			},
     			secondary: {
     				bg: "#FFE8BCCC",
@@ -69,5 +71,5 @@ export default {
     	}
     },
 
-    plugins: [forms, require("tailwindcss-animate")],
+    plugins: [forms, require("tailwindcss-animate"), require('flowbite/plugin')],
 };
