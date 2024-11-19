@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import { table } from 'console';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -9,6 +10,7 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.tsx',
+		"./node_modules/flowbite/**/*.js"
     ],
 
     theme: {
@@ -45,6 +47,13 @@ export default {
 					light: "#D6E8F3",
 					txt1: "#1E77AF"
     			},
+				button: {
+					btngreen: "#34AF41",
+					btnred: "#F54749",
+				},
+				table:{
+					head: "#EAF3F9",
+				},
     			muted: {
     				DEFAULT: 'hsl(var(--muted))',
     				foreground: 'hsl(var(--muted-foreground))'
@@ -71,5 +80,5 @@ export default {
     	}
     },
 
-    plugins: [forms, require("tailwindcss-animate")],
+    plugins: [forms, require("tailwindcss-animate"), require('flowbite/plugin')],
 };

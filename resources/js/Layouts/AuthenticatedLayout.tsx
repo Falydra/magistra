@@ -139,9 +139,8 @@ export default function AuthenticatedLayout({
                         </div>
                         <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
                         
-                            <div className='flex flex-col items-start justify-center mx-8'>
                             {children}
-                            </div>
+                            
                             
                         </div>
                         

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kode_ruang')->constrained('ruang');
             $table->foreignId('kelas_id')->constrained('kelas');
+            $table->foreignId('waktu_id')->constrained('waktu');
+            $table->foreignId('hari_id')->constrained('hari');
+            $table->foreignId('dosen_id')->constrained('dosen');
+            $table->foreignId('kode_mk')->constrained('matakuliah');
             $table->timestamps();
         });
     }

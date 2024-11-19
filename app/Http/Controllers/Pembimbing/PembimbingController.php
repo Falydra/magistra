@@ -16,7 +16,15 @@ class PembimbingController extends Controller {
         public function persetujuanIRS(){
             return Inertia::render('Pembimbing/PersetujuanIRS');
         }
-    
+        
+        public function detailMahasiswa(){
+            return Inertia::render('Pembimbing/DetailMahasiswa');
+        }
+
+        public function khsMahasiswa(){
+            return Inertia::render('Pembimbing/KHS');
+        }
+
         public function create() {
             return view('pembimbing.create');
         }
