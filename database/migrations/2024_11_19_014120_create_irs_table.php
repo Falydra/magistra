@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal', function (Blueprint $table) {
+        Schema::create('irs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kode_ruang')->constrained('ruang');
-            $table->foreignId('kelas_id')->constrained('kelas');
+            $table->foreignId('kode_mk')->constrained('matakuliah');
+            $table->foreignId('dosen_id')->constrained('dosen');
             $table->foreignId('hari_id')->constrained('hari');
             $table->foreignId('waktu_id')->constrained('waktu');
-            $table->foreignId('dosen_id')->constrained('dosen');
-            $table->foreignId('kode_mk')->constrained('matakuliah');
+            $table->foreignId('ruang_id')->constrained('ruang');
             $table->int('status');
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal');
+        Schema::dropIfExists('irs');
     }
 };

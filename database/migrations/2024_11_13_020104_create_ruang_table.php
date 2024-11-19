@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama');
             $table->integer('kapasitas');
             $table->foreignId('kode_fakultas')->constrained('fakultas');
+            $table->int('status');
             $table->timestamps();
         });
     }

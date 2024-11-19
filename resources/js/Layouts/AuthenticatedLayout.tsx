@@ -15,8 +15,8 @@ export default function AuthenticatedLayout({
     header,
     header1,
     children,
-    SideBarChildren,
-}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode; SideBarChildren?: ReactNode; }>) {
+    
+}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode;  }>) {
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
     const [notification, setNotification] = useState<string | null>(null);
@@ -81,7 +81,7 @@ export default function AuthenticatedLayout({
                                         
                                         </div>
                                         
-                                        {SideBarChildren}       
+                                        {}       
                                 
                                 
                                     </div>

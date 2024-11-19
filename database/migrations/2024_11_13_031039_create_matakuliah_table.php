@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('matakuliah', function (Blueprint $table) {
             $table->id();
             $table->string('kode_mk')->unique();
+            $table->string('nama');
             $table->integer('sks');
             $table->string('semester');
+            $table->string('jenis');
             $table->foreignId('dosen_id')->constrained('dosen');
             $table->timestamps();
         });

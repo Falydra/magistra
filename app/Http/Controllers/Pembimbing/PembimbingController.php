@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pembimbing;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Pembimbing;
+use App\Models\Mahasiswa;
 use Inertia\Inertia;
 
 class PembimbingController extends Controller {
@@ -14,7 +15,10 @@ class PembimbingController extends Controller {
         }
 
         public function persetujuanIRS(){
-            return Inertia::render('Pembimbing/PersetujuanIRS');
+            $mahasiswa = Mahasiswa::all();
+            return Inertia::render('Pembimbing/PersetujuanIRS',[
+                'students' => $mahasiswa,
+            ]);
         }
         
         public function detailMahasiswa(){
@@ -46,4 +50,6 @@ class PembimbingController extends Controller {
     
             return redirect()->route('pembimbing.dashboard')->with('success', 'Pembimbing created successfully.');
         }
+
+        
 }
