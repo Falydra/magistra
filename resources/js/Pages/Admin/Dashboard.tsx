@@ -15,18 +15,7 @@ export default function AdminDashboard({auth}: PageProps) {
             user={auth.user}
             header="Dashboard Akademik"
             header1="Notifikasi"
-            SideBarChildren = {
-                
-                <div className='flex mb-24'>
-                    <div className={`flex h-12 items-center justify-between space-x-4    flex-row text-white mr-12 text-xl ${url == "/admin/alokasiruang" ? "": "text-white opacity-50"} `}>
-                        
-                        <Link href={(route("admin.alokasiruang"))}>
-                                    Alokasi Ruang
-                        </Link>
-                            
-                    </div>           
-                </div>
-            }
+           
             
 
         >

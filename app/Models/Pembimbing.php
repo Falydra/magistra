@@ -24,4 +24,9 @@ class Pembimbing extends Model
     public function users() {
         return $this->morphOne(User::class, 'entity');
     }
+
+    public function mahasiswa(){
+        return $this->hasMany(Mahasiswa::class);
+    }
+
 }

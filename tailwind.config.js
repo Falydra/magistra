@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import { table } from 'console';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -9,13 +10,14 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.tsx',
+		"./node_modules/flowbite/**/*.js"
     ],
 
     theme: {
     	extend: {
 			
     		fontFamily: {
-    			sans: ['Figtree', ...defaultTheme.fontFamily.sans]
+    			sans: ['Poppins', ...defaultTheme.fontFamily.sans]
     		},
     		borderRadius: {
     			custom: '5.0rem',
@@ -37,14 +39,22 @@ export default {
     			},
     			primary: {
     				bg: "#328BC3",
-					fg: "#e9f4fa",
-					dark: "#1f76a9"
+					fg: "#EAF3F9",
+					dark: "#1f76a9",
+					light: "#D6E8F3"
     			},
     			secondary: {
     				bg: "#FFE8BCCC",
 					light: "#D6E8F3",
 					txt1: "#1E77AF"
     			},
+				button: {
+					btngreen: "#34AF41",
+					btnred: "#F54749",
+				},
+				table:{
+					head: "#EAF3F9",
+				},
     			muted: {
     				DEFAULT: 'hsl(var(--muted))',
     				foreground: 'hsl(var(--muted-foreground))'
@@ -71,5 +81,9 @@ export default {
     	}
     },
 
+<<<<<<< HEAD
     plugins: [forms, require("tailwindcss-animate", "flowite/plugin")],
+=======
+    plugins: [forms, require("tailwindcss-animate"), require('flowbite/plugin')],
+>>>>>>> 24b42048fdf0d0fa47687f89d86df1a0949d09ba
 };

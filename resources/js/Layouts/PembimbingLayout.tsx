@@ -36,7 +36,6 @@ export default function PembimbingLayout({
 
     return (
         <>
-            <Head title="Dashboard" />
             <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row">
                 <div className="flex flex-col w-full sm:w-2/5 lg:w-1/5 bg-transparent mt-4 mb-10 ml-4 items-center">
 

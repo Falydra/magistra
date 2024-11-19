@@ -22,4 +22,8 @@ class Mahasiswa extends Model
     public function users() {
         return $this->morphOne(User::class, 'entity');
     }
+
+    public function pembimbing(){
+        return $this->belongsTo(Pembimbing::class);
+    }
 }
