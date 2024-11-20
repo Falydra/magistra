@@ -5,20 +5,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 
 class Kaprodi extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembimbing';
+    protected $table = 'kaprodi';
     protected $fillable = [
-        'nip',
-        'nidn',
-        'prodi',
-        'nomor_telepon',
-        'alamat',
+        'tahun_periode',
+        'prodi_id',
+        'dosen_id',
+        'user_id',
     ];
 
     // morph Pembimbing into User

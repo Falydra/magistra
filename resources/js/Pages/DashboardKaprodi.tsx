@@ -1,10 +1,11 @@
 import React from 'react';
-import Authenticated from "@/Layouts/AuthenticatedLayout";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage, Link } from "@inertiajs/react";
 import { FaCalendarAlt } from "react-icons/fa";
 import { MdMonitor } from "react-icons/md";
+import { PageProps } from '@/types';
 
-export default function KaprodiDashboard() {
+export default function KaprodiDashboard({auth}: PageProps) {
     const sideBarContent = (
         <div className='flex flex-col items-start justify-start min-w-max text-white opacity-50 space-y-6'>
             <div className='flex items-center space-x-4'>
@@ -24,7 +25,8 @@ export default function KaprodiDashboard() {
     );    
 
     return (
-        <Authenticated 
+        <AuthenticatedLayout
+            user = {auth.user}
             header1="Notifikasi"
             header="Dashboard"
             childrenSideBar={sideBarContent}
@@ -55,6 +57,6 @@ export default function KaprodiDashboard() {
                     </div>
                 </Link>
             </div>
-        </Authenticated>
+        </AuthenticatedLayout>
     );
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -56,5 +57,8 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'), // Default password, can be customized
             ]);
         }
+
+        // $this->call(PembimbingUserSeeder::class);
+        $this->call(KaprodiUserSeeder::class);
     }
 }

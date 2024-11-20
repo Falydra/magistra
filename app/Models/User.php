@@ -13,8 +13,8 @@ Relation::morphMap([
     'Admin' => 'App\Models\Admin',
     'Dekan' => 'App\Models\Dekan',
     'Bagian Akademik' => 'App\Models\Akademik',
-    'Kepala Program Studi' => 'App\Models\KepalaProgramStudi',
-    'Pembimbing Akademik' => 'App\Models\PembimbingAkademik',
+    'Kepala Program Studi' => 'App\Models\Kaprodi',
+    'Pembimbing Akademik' => 'App\Models\Pembimbing',
     'Mahasiswa' => 'App\Models\Mahasiswa',
 ]);
 
