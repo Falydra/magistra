@@ -25,25 +25,25 @@ class Akademik extends Model
         'alamat', 
     ];
 
-    public function name(): Attribute
-    {
-        return Attribute::make(
-            get: fn (?string $value) => $this->users->name,
-            set: fn (?string $value) => $this->users->name,
-        );
-    }
+    // public function name(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (?string $value) => $this->users->name,
+    //         set: fn (?string $value) => $this->users->name,
+    //     );
+    // }
 
-    public function user(){
-        return $this->morphOne(User::class, 'entity');
-    }
+    // public function user(){
+    //     return $this->morphOne(User::class, 'entity');
+    // }
 
-    public function email(): Attribute
-    {
-        return Attribute::make(
-            get: fn (?string $value) => $this->users->email,
-            set: fn (?string $value) => $this->users->email,
-        );
-    }
+    // public function email(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn (?string $value) => $this->users->email,
+    //         set: fn (?string $value) => $this->users->email,
+    //     );
+    // }
 
     /**
      * The attributes that should be hidden for serialization.

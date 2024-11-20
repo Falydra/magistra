@@ -1,18 +1,18 @@
 <?php
-namespace App\Http\Middleware;
+// namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+// use Closure;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
 
-class EnsureUserIsMahasiswa
-{
-    public function handle(Request $request, Closure $next)
-    {
-        if (Auth::check() && Auth::user()->role == 'mahasiswa') { // Check if the user has the admin role
-            return $next($request);
-        }
+// class EnsureUserIsMahasiswa
+// {
+//     public function handle(Request $request, Closure $next)
+//     {
+//         if (Auth::check() && Auth::user()->role == 'mahasiswa') { // Check if the user has the admin role
+//             return $next($request);
+//         }
 
-        return redirect('/dashboard'); // Redirect non-admin users to the regular dashboard
-    }
-}
+//         return redirect('/dashboard'); // Redirect non-admin users to the regular dashboard
+//     }
+// }

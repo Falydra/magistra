@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
 use Inertia\Inertia;
+use App\Models\User;
 
 
 class MahasiswaController extends Controller

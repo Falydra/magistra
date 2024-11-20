@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('akademik', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('email')->unique();
             $table->string('nomor_telepon');
             $table->text('alamat');
             $table->string('role')->default('admin');

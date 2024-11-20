@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kaprodi', function (Blueprint $table) {
+        Schema::create('dekan', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('nip')->unique();
-            $table->string('nidn')->unique();
-            $table->string('email')->unique();
-            $table->string('prodi');
-            $table->string('nomor_telepon');
-            $table->text('alamat');
-            $table->string('role')->default('kaprodi');
+            $table->year('tahun_periode');
+            $table->foreignId('kode_fakultas')->constrained('fakultas')->onDelete('cascade');
+            $table->foreignId('nip')->constrained('dosen')->onDelete('cascade');
+            $table->string('role')->default('dekan');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kaprodi');
+        Schema::dropIfExists('dekan');
     }
 };

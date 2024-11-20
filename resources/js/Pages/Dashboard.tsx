@@ -10,14 +10,14 @@ export default function Dashboard({auth}: PageProps) {
 
     return (
         <AuthenticatedLayout
-<<<<<<< HEAD
+
             // user={auth.user}
             header={"Dashboard"}
-=======
+
             user={auth.user}
-            header={"Dashboard User"}
->>>>>>> refs/remotes/origin/main
-            header1="Notifikasi"
+            header1={"Dashboard User"}
+
+            // header2="Notifikasi"
         >
             <Head title="Dashboard" />
             
