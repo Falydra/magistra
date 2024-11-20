@@ -81,9 +81,9 @@ export default {
     	}
     },
 
-<<<<<<< HEAD
+
     plugins: [forms, require("tailwindcss-animate", "flowite/plugin")],
-=======
+
     plugins: [forms, require("tailwindcss-animate"), require('flowbite/plugin')],
->>>>>>> 24b42048fdf0d0fa47687f89d86df1a0949d09ba
+
 };

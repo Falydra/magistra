@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('kode_ruang', 10)->unique();
             $table->integer('kapasitas');
-<<<<<<< HEAD:database/migrations/2024_11_13_020104_create_ruang_table.php
+
             $table->foreignId('kode_fakultas')->constrained('fakultas');
             $table->int('status');
-=======
+
             $table->foreignId('kode_fakultas')->constrained('fakultas')->onDelete('cascade'); 
->>>>>>> c023858dd564bb205f78d5176325e0d4d5b5ba0d:database/migrations/2024_11_20_142517_create_ruang_table.php
+
             $table->timestamps();
         });
     }
