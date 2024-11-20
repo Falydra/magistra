@@ -29,7 +29,7 @@ export default function KaprodiDashboard({auth}: PageProps) {
             user = {auth.user}
             header1="Notifikasi"
             header="Dashboard"
-            childrenSideBar={sideBarContent}
+            // childrenSideBar={sideBarContent}
         >
             {/* Container untuk menu */}
             <div className="flex flex-col gap-4 w-full">

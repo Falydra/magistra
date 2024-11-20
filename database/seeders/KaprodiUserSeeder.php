@@ -25,7 +25,7 @@ class KaprodiUserSeeder extends Seeder
         Kaprodi::create([
             'tahun_periode' => '2024',
             'nip' => 1,
-            'kode_prodi' => 12,
+            'kode_prodi' => 6,
             'user_id' => $kaprodiUser->id,
         ]);
 

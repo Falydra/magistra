@@ -22,7 +22,7 @@ class AdminUserSeeder extends Seeder
         // Create a corresponding akademik record
         Akademik::create([
             'nama' => 'Admin User',
-            'email' => 'admin@example.com',
+            
             'nomor_telepon' => '1234567890',
             'alamat' => 'Admin Address',
             'role' => 'admin',
