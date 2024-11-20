@@ -6,6 +6,7 @@ import { FaCircle, FaBell } from "react-icons/fa";
 import { TbAppsFilled } from "react-icons/tb";
 import { RxExit } from "react-icons/rx";
 
+
 interface AuthenticatedLayoutProps {
     user: User;
     header?: ReactNode;

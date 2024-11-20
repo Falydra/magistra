@@ -32,15 +32,9 @@ Route::get('/pembimbing/detailMahasiswa', [PembimbingController::class, 'detailM
 Route::get('/pembimbing/khsMahasiswa', [PembimbingController::class, 'khsMahasiswa'])->name('pembimbing.khsMahasiswa');
 
 Route::get('/kaprodi/dashboard', [KaprodiController::class, 'index'])->name('kaprodi.dashboard');
+Route::get('/kaprodi/monitoring', [KaprodiController::class, 'monitoring'])->name('kaprodi.monitoringIRS');
 
 
-Route::get('/kaprodi-dashboard', function () {
-    return Inertia::render('DashboardKaprodi'); 
-});
-
-Route::get('/monitoring-irs', function () {
-    return Inertia::render('MonitoringIRS'); 
-})->middleware(['auth'])->name('monitoring_irs');
 
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');

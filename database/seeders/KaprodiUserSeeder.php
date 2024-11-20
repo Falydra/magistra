@@ -18,14 +18,14 @@ class KaprodiUserSeeder extends Seeder
             'name' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
             'email' => 'arissugiharto@lecturer.undip.ac.id ',
             'password' => Hash::make('aris1234'),
-            // 'role' => 'kaprodi',
+            'role' => 'kaprodi',
         ]);
 
         // Create a corresponding kaprodi record
         Kaprodi::create([
             'tahun_periode' => '2024',
-            'prodi_id' => 6,
-            'dosen_id' => 1,
+            'nip' => 1,
+            'kode_prodi' => 12,
             'user_id' => $kaprodiUser->id,
         ]);
 

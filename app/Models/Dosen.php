@@ -14,7 +14,6 @@ class Dosen extends Model
         'nidn', 
         'nama', 
         'nomor_telepon', 
-        'alamat', 
     ];
 
     // morph Pembimbing into User

@@ -18,12 +18,12 @@ class ProdiSeeder extends Seeder
         if ($fakultas1) {
 
             Prodi::insert([
-                ['kode_prodi' => '01', 'nama' => 'Matematika', 'fakultas_id' => $fakultas1->id,],
-                ['kode_prodi' => '02', 'nama' => 'Biologi', 'fakultas_id' => $fakultas1->id,],
-                ['kode_prodi' => '03', 'nama' => 'Kimia', 'fakultas_id' => $fakultas1->id,],
-                ['kode_prodi' => '04', 'nama' => 'Fisika', 'fakultas_id' => $fakultas1->id,],
-                ['kode_prodi' => '05', 'nama' => 'Statistika', 'fakultas_id' => $fakultas1->id,],
-                ['kode_prodi' => '06', 'nama' => 'Matematika', 'fakultas_id' => $fakultas1->id,],
+                ['kode_prodi' => '01', 'nama' => 'Matematika', 'kode_fakultas' => $fakultas1->id,],
+                ['kode_prodi' => '02', 'nama' => 'Biologi', 'kode_fakultas' => $fakultas1->id,],
+                ['kode_prodi' => '03', 'nama' => 'Kimia', 'kode_fakultas' => $fakultas1->id,],
+                ['kode_prodi' => '04', 'nama' => 'Fisika', 'kode_fakultas' => $fakultas1->id,],
+                ['kode_prodi' => '05', 'nama' => 'Statistika', 'kode_fakultas' => $fakultas1->id,],
+                ['kode_prodi' => '06', 'nama' => 'Informatika', 'kode_fakultas' => $fakultas1->id,],
             ]);
     }
     }

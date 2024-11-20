@@ -11,11 +11,15 @@ use App\Models\User;
 class KaprodiController extends Controller {
     
         public function index() {
-            return Inertia::render('Kaprodi/Dashboard');
+            return Inertia::render('Kaprodi/DashboardKaprodi');
         }
     
         public function create() {
             return view('kaprodi.create');
+        }
+
+        public function monitoring(){
+            return Inertia::render('Kaprodi/MonitoringIRS');
         }
     
         public function store(Request $request) {
@@ -27,6 +31,7 @@ class KaprodiController extends Controller {
             ]);
     
             $user = new User;
+            
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = bcrypt($request->password);

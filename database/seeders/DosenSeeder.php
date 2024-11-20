@@ -18,7 +18,6 @@ class DosenSeeder extends Seeder
             'nidn' => '0011087104',
             'nama' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
             'nomor_telepon' => '1234567890', 
-            'alamat' => 'Jl. Prof. Soedarto, SH Tembalang, Semarang', 
         ],
         ]);
     }

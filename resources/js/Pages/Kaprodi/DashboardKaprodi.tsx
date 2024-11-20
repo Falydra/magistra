@@ -45,7 +45,7 @@ export default function KaprodiDashboard({auth}: PageProps) {
                 </div>
 
                 {/* Monitoring IRS */}
-                <Link href={route("monitoring_irs")}>
+                <Link href={route("kaprodi.monitoringIRS")}>
                     <div className='flex items-start justify-start bg-primary-light h-1/3 rounded-xl md:p-4'>
                         <div>
                             <img src="/images/eye.png" alt="Monitoring IRS" className='w-24 h-24' />

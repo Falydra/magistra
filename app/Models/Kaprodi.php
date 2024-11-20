@@ -14,8 +14,8 @@ class Kaprodi extends Model
     protected $table = 'kaprodi';
     protected $fillable = [
         'tahun_periode',
-        'prodi_id',
-        'dosen_id',
+        'kode_prodi',
+        'nip',
         'user_id',
     ];
 
