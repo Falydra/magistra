@@ -8,6 +8,23 @@ export interface User {
 
 }
 
+
+export interface Ruang {
+    id: number;
+    kode_ruang: string;
+    nama_ruang: string;
+    kode_fakultas: string;
+}
+
+
+export interface Prodi {
+    id: number;
+    kode_prodi: string;
+    nama: string;
+    kode_fakultas: string;
+
+}
+
 export interface Mahasiswa{
     id: number;
     nim: string;
@@ -38,11 +55,11 @@ export interface Kaprodi {
 
 export interface Fakultas {
     id: number;
-    namaDekan: string;
-    namaFakultas: string;
-    email: string;
-    user_id: number;
-    user: User;
+  
+    nama: string;
+    kode_fakultas : number;
+    
+    
 }
 
 
@@ -54,12 +71,27 @@ export interface AkademikAdmin{
     user: User;
 }
 
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;
     };
     email: boolean;
     
+};
+
+
+
+export type RuangProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+    ruang: Ruang[];
+};
+
+export type ProgdiProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+   
+    prodi: Prodi;
 };
 
 export type IRS<T extends Record<string, unknown>= Record<string, unknown>> = T & {

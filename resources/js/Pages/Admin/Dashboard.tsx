@@ -2,8 +2,8 @@ import React from 'react';
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { PageProps } from "@/types";
-import { url } from 'inspector';
-import { RxExit } from 'react-icons/rx';
+
+import { HiBuildingLibrary } from "react-icons/hi2";
 
 export default function AdminDashboard({auth}: PageProps) {
     const {url} = usePage().props;
@@ -15,7 +15,22 @@ export default function AdminDashboard({auth}: PageProps) {
             user={auth.user}
             header="Dashboard Akademik"
             header1="Notifikasi"
-           
+           sidebarChildren = {
+            <div
+                className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl
+                    ${
+                        url == "/admin/alokasiruang" ? "" : " text-white opacity-100"
+                    }
+                    `}
+                
+            
+            >       
+                <HiBuildingLibrary className='w-8 h-8'/>
+                
+                <Link href={route("admin.alokasiruang")}>Alokasi Ruang</Link>
+            
+            </div>
+           }
             
 
         >

@@ -10,14 +10,13 @@ import { FormEventHandler, useState } from 'react';
 
 
 
-export default function AuthenticatedLayout({
+export default function PageLayout({
     user,
-    header,
-    header1,
+    back,
     children,
     sidebarChildren
     
-}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode; sidebarChildren? : ReactNode  }>) {
+}: PropsWithChildren<{ user: User; back: ReactNode;  sidebarChildren? : ReactNode  }>) {
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
     const [notification, setNotification] = useState<string | null>(null);
@@ -110,9 +109,7 @@ export default function AuthenticatedLayout({
 
                     <div className="flex flex-col items-center justify-start w-4/5 min-h-full bg-white z-10 rounded-3xl">
                         <div className="flex flex-row items-start justify-between w-full mt-12 bg-white h-full">
-                            <h2 className="mb-3 ml-12 text-3xl font-bold leading-tight  text-primary-dark">
-                                {header}
-                            </h2>
+                            {back}
                             <div>
                                 <TextInput
                                     className="w-64 mx-10"
@@ -121,23 +118,7 @@ export default function AuthenticatedLayout({
                                 />
                             </div>
                         </div>
-                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[200px] rounded-xl  m-4 p-8'>
-                            <div className="flex w-40 h-40 rounded-full bg-black"/>
-                            <div className='flex flex-col items-start justify-center mx-16 mb-16'>
-                                <h3 className=' text-md'>
-                                    Selamat datang,
-                                </h3>
-                                <h1 className='text-3xl mb'>
-                                    {auth.user.name}
-                                </h1>
-                                <h3 className='pt-4'>
-                                    {/* NIDS: {auth.user.nids} */}
-                                    Email: {auth.user.email}
-                                    {/* Nomor: {auth.user.nomor} */}
-                                </h3>
-                            </div>
-                            
-                        </div>
+                
                         <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
                         
                             {children}
@@ -147,24 +128,7 @@ export default function AuthenticatedLayout({
                         
                         {/* <main className="w-full h-full px-4">{children}</main> */}
                     </div>
-                    <div className='flex flex-col items-center justify-start bg-blue-200 w-2/6 min-h-full rounded-tr-3xl rounded-br-3xl'>
-                        <div className="flex flex-row items-start justify-between w-full mt-12 h-full ">
-                            <h2 className="mb-3 ml-10 text-3xl font-bold leading-tight text-primary-dark ">
-                                {header1}
-                            </h2>
-                           
-                        </div>
-                        <div className='flex flex-col items-center justify-center w-full'>
-                                <div>
-                                {notification && (
-                                    <div className="fixed top-0 left-0 right-0 p-4 bg-green-500 z-20 text-white text-center">
-                                        {notification}
-                                    </div>
-                                )}
-                                </div>
-                            
-                        </div>
-                    </div>
+                  
                 </div>
             </div>
             

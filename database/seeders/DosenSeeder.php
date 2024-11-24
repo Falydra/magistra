@@ -19,6 +19,11 @@ class DosenSeeder extends Seeder
             'nama' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
             'nomor_telepon' => '1234567890', 
         ],
+        ['nip' => '1971081119970210041',
+            'nidn' => '0011087105',
+            'nama' => 'Sandy Kurniawan, S.Kom., M.Kom.',
+            'nomor_telepon' => '1234567890', 
+        ],
         ]);
     }
 }

@@ -24,7 +24,7 @@ class AdminUserSeeder extends Seeder
             'nama' => 'Admin User',
             
             'nomor_telepon' => '1234567890',
-            'alamat' => 'Admin Address',
+            'alamat' => 'Jl. Prof. Soedarto No.13, Tembalang, Kec. Tembalang, Kota Semarang, Jawa Tengah',
             'role' => 'admin',
             'user_id' => $adminUser->id,
         ]);

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Mahasiswa;
 use Inertia\Inertia;
+use App\Models\Ruang;
 
 class AdminController extends Controller
 {
@@ -17,9 +18,15 @@ class AdminController extends Controller
     }
 
     public function Alokasi(){
-        return Inertia::render('Admin/AlokasiRuang');
+        $ruang = Ruang::with('fakultas')->orderBy('id', 'asc')->paginate(5);
+        return Inertia::render('Admin/AlokasiRuang', [
+            'ruang' => $ruang
+        ]);
     }
 
+    public function Test(){
+        return Inertia::render('Admin/TestPage');
+    }
     public function show($id)
     {
         $user = User::find($id);
@@ -27,6 +34,8 @@ class AdminController extends Controller
             'user' => $user
         ]);
     }
+
+
 
 
     public function create()
