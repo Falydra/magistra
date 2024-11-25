@@ -28,7 +28,7 @@ class DekanUserSeeder extends Seeder
             'nip' => '19696201999031002',
             'nidn' => '0009036902',
             'nomor_telepon' => '0869696969',
-            'alamat' => 'Jl. Ngawi selatan no 69',
+            
         ]);
 
         // Create a corresponding dekan record
