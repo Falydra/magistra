@@ -24,6 +24,64 @@ class AdminController extends Controller
         ]);
     }
 
+    public function creteRuang(){
+        $fakultas = Fakultas::all();
+        return Inertia::render('Admin/TambahRuang', [
+            'fakultas' => $fakultas
+        ]);
+    }
+
+    public function storeRuang(Request $request){
+        $request->validate([
+            'kode_ruang' => 'required|string|unique:ruangs,kode_ruang',
+            'kapasitas' => 'required|integer',
+            'kode_fakultas' => 'required|string|exists:fakultas,kode_fakultas',
+        ]);
+
+        $ruang = new Ruang;
+        $ruang->kode_ruang = $request->kode_ruang;
+        $ruang->kapasitas = $request->kapasitas;
+        $ruang->kode_fakultas = $request->kode_fakultas;
+        $ruang->save();
+
+        return redirect()->route('admin.alokasi')->with('success', 'Ruang berhasil ditambahkan.');
+    }
+
+    public function editRuang($id)
+    {
+        $ruang = Ruang::findOrFail($id);
+        $fakultas = Fakultas::all(); // Ambil data fakultas
+        return Inertia::render('Admin/EditRuang', [
+            'ruang' => $ruang,
+            'fakultas' => $fakultas,
+        ]);
+    }
+
+    public function updateRuang(Request $request, $id)
+    {
+        $request->validate([
+            'kode_ruang' => 'required|string|unique:ruangs,kode_ruang,' . $id,
+            'kapasitas' => 'required|integer',
+            'kode_fakultas' => 'required|string|exists:fakultas,kode_fakultas',
+        ]);
+
+        $ruang = Ruang::findOrFail($id);
+        $ruang->kode_ruang = $request->kode_ruang;
+        $ruang->kapasitas = $request->kapasitas;
+        $ruang->kode_fakultas = $request->kode_fakultas;
+        $ruang->save();
+
+        return redirect()->route('admin.alokasiruang')->with('success', 'Ruang berhasil diperbarui.');
+    }
+
+    public function destroyRuang($id)
+    {
+        $ruang = Ruang::findOrFail($id);
+        $ruang->delete();
+
+        return redirect()->route('admin.alokasiruang')->with('success', 'Ruang berhasil dihapus.');
+    }
+
     public function Test(){
         return Inertia::render('Admin/TestPage');
     }
