@@ -20,13 +20,8 @@ class PembimbingUserSeeder extends Seeder
         ]);
 
         Pembimbing::create([
-            'nama' => 'Sandy Kurniawan, S.Kom., M.Kom.',
-            'nip' => '1234567890',
-            'nidn' => '1234567890',
-            'prodi' => 'Informatika',
-            'email' => 'sandy@lecturer.undip.ac.id',
-            'nomor_telepon' => '1234567890',
-            'alamat' => 'Jl. Prof. Soedarto, SH Tembalang, Semarang',
+            'kelas_perwalian' => 'A',
+            // 'nip'=>''
             'role' => 'pembimbing',
             'user_id' => $pembimbing->id,
         ]);

@@ -16,7 +16,7 @@ class KaprodiUserSeeder extends Seeder
         // Create a kaprodi user
         $kaprodiUser = User::create([
             'name' => 'Dr. Aris Sugiharto, S.Si., M.Kom.',
-            'email' => 'arissugiharto@lecturer.undip.ac.id ',
+            'email' => 'arissugiharto@lecturer.undip.ac.id',
             'password' => Hash::make('aris1234'),
             'role' => 'kaprodi',
         ]);
@@ -24,8 +24,8 @@ class KaprodiUserSeeder extends Seeder
         // Create a corresponding kaprodi record
         Kaprodi::create([
             'tahun_periode' => '2024',
-            'nip' => 1,
-            'kode_prodi' => 12,
+            'nip' => 3,
+            'kode_prodi' => 6,
             'user_id' => $kaprodiUser->id,
         ]);
 

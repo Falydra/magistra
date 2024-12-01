@@ -10,10 +10,6 @@ use App\Models\User;
 
 class KaprodiController extends Controller {
     
-        public function index() {
-            return Inertia::render('Kaprodi/DashboardKaprodi');
-        }
-    
         public function create() {
             return view('kaprodi.create');
         }
@@ -21,7 +17,24 @@ class KaprodiController extends Controller {
         public function monitoring(){
             return Inertia::render('Kaprodi/MonitoringIRS');
         }
-    
+        
+        public function buatJadwal(){
+            return Inertia::render('Kaprodi/BuatJadwal');
+        }
+        public function aturMK(){
+            return Inertia::render('Kaprodi/AturMatkul');
+        }
+        public function tambahMK(){
+            return Inertia::render('Kaprodi/TambahMatkul');
+        }
+
+        public function ringkasanJadwal(){
+            return Inertia::render(('Kaprodi/RingkasanJadwal'));
+        }
+
+        public function index() {
+            return Inertia::render('Kaprodi/DashboardKaprodi');
+        }
         public function store(Request $request) {
             $request->validate([
                 'name' => 'required',

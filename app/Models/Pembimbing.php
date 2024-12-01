@@ -13,11 +13,11 @@ class Pembimbing extends Model
 
     protected $table = 'pembimbing';
     protected $fillable = [
+        'angkatan_perwalian',
+        'kelas_perwakilan',
         'nip',
-        'nidn',
-        'prodi',
-        'nomor_telepon',
-        'alamat',
+        'role',
+        'user_id'
     ];
 
     // morph Pembimbing into User

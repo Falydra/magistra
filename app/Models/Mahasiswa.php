@@ -8,14 +8,20 @@ class Mahasiswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'mahasiswa';
     protected $fillable = [
-        'nim',
-        'program_studi',
-        'semester',
-        'ipk',
-        'alamat',
-        'nomor_telepon',
+        'nim', 
+        'nama', 
+        'email', 
+        'no_telp', 
+        'alamat', 
+        'tahun_masuk', 
+        'ipk', 
+        'sksk', 
+        'kode_prodi', 
+        'kode', 
+        'pembimbing_id', 
+        'role', 
+        'user_id'
     ];
 
     // morph Mahasiswa into User

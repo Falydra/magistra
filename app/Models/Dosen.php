@@ -13,8 +13,19 @@ class Dosen extends Model
         'nip', 
         'nidn', 
         'nama', 
-        'nomor_telepon', 
+        'kode_prodi', 
     ];
+
+    // Relasi many-to-many dengan MataKuliah melalui tabel pivot dosen_pengampu
+    public function mataKuliah()
+    {
+        return $this->belongsToMany(
+            MataKuliah::class,         // Model Mata Kuliah
+            'dosen',          // Nama tabel pivot
+            'dosen_id',                // Foreign key di tabel pivot untuk Dosen
+            'matkul_id'                // Foreign key di tabel pivot untuk Mata Kuliah
+        );
+    }
 
     // morph Pembimbing into User
     public function users() {

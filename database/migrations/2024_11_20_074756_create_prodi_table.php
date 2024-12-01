@@ -16,7 +16,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('kode_prodi')->unique();
             $table->string('nama');
-            $table->foreignId('kode_fakultas')->constrained('fakultas')->onDelete('cascade');
+            $table->string('kode_fakultas');
+            $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
         });
     }
 

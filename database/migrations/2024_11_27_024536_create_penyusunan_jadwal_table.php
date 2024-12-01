@@ -9,11 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+     //Kumpulan jadwal id untuk jadwal_prodi
     public function up(): void
     {
-        Schema::create('hari', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
+        Schema::create('penyusunan_jadwal', function (Blueprint $table) {
+            $table->id(); 
+            $table->foreignId('jadwal_prodi_id')->constrained('jadwal_prodi')->onDelete('cascade');    
+            $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hari');
+        Schema::dropIfExists('penyusunan_jadwal');
     }
 };

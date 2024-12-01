@@ -41,4 +41,13 @@ class MahasiswaController extends Controller
 
         return redirect()->route('mahasiswa.dashboard')->with('success', 'Mahasiswa created successfully.');
     }
+
+    public function getMahasiswaDataIRS()
+    {
+        $mahasiswa = Mahasiswa::select('nama', 'nim', 'tahun_masuk as angkatan', 'ipk', 'sksk')->get();
+
+        // Kembalikan data dalam format JSON
+        return response()->json($mahasiswa);
+    }
+
 }

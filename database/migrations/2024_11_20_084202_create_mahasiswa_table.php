@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email');
             $table->string('no_telp');
-            $table->text('alamat');
             $table->year('tahun_masuk');
             $table->decimal('ipk', 3, 2);
             $table->integer('sksk');

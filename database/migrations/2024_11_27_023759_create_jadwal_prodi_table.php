@@ -9,11 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    // Untuk dekan
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->string('role');	
+        Schema::create('jadwal_prodi', function (Blueprint $table) {
+            $table->id();
+            $table->string('kode_jadwal_prodi');
+            $table->enum('status', ['belum disetujui', 'disetujui', 'ditolak'])->default('belum disetujui');
+            $table->timestamps();
         });
     }
 
@@ -22,9 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('role');
-        });
+        Schema::dropIfExists('jadwal_prodi');
     }
 };

@@ -101,7 +101,7 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({
                         </div>
                     </div>
 
-                    {/* Sidebar Content */}
+                    {/* Notifikasi */}
                     <div className="flex flex-col items-start pl-8 bg-primary-fg w-2/6 min-h-full rounded-tr-3xl rounded-br-3xl">
                         <div className="flex items-center space-x-3 mt-14">
                             <h2 className="text-2xl font-medium text-primary-dark">{header1}</h2>

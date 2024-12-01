@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('pembimbing', function (Blueprint $table) {
             $table->id();
-            $table->string('angkatan_perwalian');
+            $table->string('nip');
             $table->char('kelas_perwalian');
-            $table->foreignId('nip')->constrained('dosen')->onDelete('cascade');
-            $table->string('role')->default('pembimbing');
+            $table->foreign('nip')->references('nip')->on('dosen')->onDelete('cascade');            $table->string('role')->default('pembimbing');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

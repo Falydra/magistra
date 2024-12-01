@@ -21,4 +21,8 @@ class Kernel extends HttpKernel
         // 'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         // 'mahasiswa' => \App\Http\Middleware\EnsureUserIsMahasiswa::class,
     ];
+    protected $middleware = [
+        \App\Http\Middleware\CustomCsrfMiddleware::class,
+        // Middleware lainnya...
+    ];
 }
