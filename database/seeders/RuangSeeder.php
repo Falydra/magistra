@@ -100,7 +100,7 @@ class RuangSeeder extends Seeder
             Ruang::create([
                 'kode_ruang' => $kode,
                 'kapasitas' => 50,
-                'kode_fakultas' => 1, // Replace with the appropriate fakultas ID
+                'kode_fakultas' => 1, 
             ]);
         }
     }

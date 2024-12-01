@@ -43,6 +43,10 @@ class User extends Authenticatable
         return $this->role === $role;
     }
 
+    public function pembimbing()
+    {
+        return $this->hasOne(Pembimbing::class, 'user_id');
+    }
 
     public function entity(){
         return $this->morphTo();

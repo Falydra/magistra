@@ -5,16 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kelas extends Model
+class IRSJadwal extends Model
 {
     use HasFactory;
-    protected $table = 'kelas'; 
-    protected $fillable = [
-        'kelas'
-    ];
+    protected $table = 'irs_jadwal'; // Nama tabel di database
 
-    public function jadwal()
-    {
-        return $this->hasMany(Jadwal::class, 'id_kelas');
-    }
+    protected $fillable = [
+        'id_irs' , 
+        'id_jadwal'          
+    ];
 }

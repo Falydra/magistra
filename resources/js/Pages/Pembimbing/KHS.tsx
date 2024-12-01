@@ -5,7 +5,7 @@ import { PageProps } from "@/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faCircleCheck, faCircleXmark, faKey } from "@fortawesome/free-solid-svg-icons";
 
-export default function PersetujuanIRS({ auth }: PageProps) {
+export default function KHS({ auth }: PageProps) {
     const studentInfo = {
         name: "Raden Rico Dwianda",
         nim: "24060212241084",

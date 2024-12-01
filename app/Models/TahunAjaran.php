@@ -5,16 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kelas extends Model
+class TahunAjaran extends Model
 {
     use HasFactory;
-    protected $table = 'kelas'; 
+    protected $table = 'tahun_ajaran'; 
     protected $fillable = [
-        'kelas'
+        'tahun',
+        'periode',
     ];
 
-    public function jadwal()
+    public function irs()
     {
-        return $this->hasMany(Jadwal::class, 'id_kelas');
+        return $this->hasMany(IRS::class, 'id_tahun_ajaran');
     }
+
 }

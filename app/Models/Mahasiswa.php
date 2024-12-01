@@ -26,4 +26,20 @@ class Mahasiswa extends Model
     public function pembimbing(){
         return $this->belongsTo(Pembimbing::class);
     }
+
+    public function angkatanPerwalian()
+    {
+        return $this->belongsTo(AngkatanPerwalian::class, 'angkatan', 'angkatan_perwalian');
+    }
+
+    public function irs()
+    {
+        return $this->hasOne(Irs::class, 'id_mahasiswa', 'id');
+    }
+
+    public function getTotalSksAttribute()
+    {
+        return $this->jadwal()->sum('mataKuliah.sks');
+    }
+    
 }

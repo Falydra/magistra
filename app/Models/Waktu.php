@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kelas extends Model
+class Waktu extends Model
 {
     use HasFactory;
-    protected $table = 'kelas'; 
+    protected $table = 'waktu'; 
     protected $fillable = [
-        'kelas'
+        'waktu_mulai'
     ];
 
     public function jadwal()
     {
-        return $this->hasMany(Jadwal::class, 'id_kelas');
+        return $this->hasMany(Jadwal::class, 'id_waktu');
     }
 }

@@ -22,4 +22,9 @@ class Ruang extends Model
         'kapasitas',
         'kode_fakultas',
     ];
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'id_ruang');
+    }
 }

@@ -12,25 +12,32 @@ class PembimbingUserSeeder extends Seeder
     public function run()
     {
 
-        $pembimbing = User::create([
+        $pembimbing1 = User::create([
             'name' => '	Sandy Kurniawan, S.Kom., M.Kom.',
             'email' => 'sandy@lecturer.undip.ac.id',
             'password' => Hash::make('sandy123'),
             'role' => 'pembimbing',
         ]);
 
-        Pembimbing::create([
-            'nama' => 'Sandy Kurniawan, S.Kom., M.Kom.',
-            'nip' => '1234567890',
-            'nidn' => '1234567890',
-            'prodi' => 'Informatika',
-            'email' => 'sandy@lecturer.undip.ac.id',
-            'nomor_telepon' => '1234567890',
-            'alamat' => 'Jl. Prof. Soedarto, SH Tembalang, Semarang',
+        $pembimbing2 = User::create([
+            'name' => 'Dr. Sutikno, S.T., M.Cs.',
+            'email' => 'sutikno@lecturer.undip.ac.id',
+            'password' => Hash::make('sutikno123'),
             'role' => 'pembimbing',
-            'user_id' => $pembimbing->id,
         ]);
 
+        Pembimbing::create([
+            'kelas_perwalian' => 'A',
+            'nip' => 2,
+            'role' => 'pembimbing',
+            'user_id' => $pembimbing1->id,
+        ]);
 
+        Pembimbing::create([
+            'kelas_perwalian' => 'B',
+            'nip' => 3,
+            'role' => 'pembimbing',
+            'user_id' => $pembimbing2->id,
+        ]);
     }
 }

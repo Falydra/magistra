@@ -29,4 +29,8 @@ class Pembimbing extends Model
         return $this->hasMany(Mahasiswa::class);
     }
 
+    public function angkatanPerwalian() {
+        return $this->hasMany(AngkatanPerwalian::class, 'pembimbing_id');
+    }
+
 }

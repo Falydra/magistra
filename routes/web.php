@@ -6,6 +6,7 @@ use App\Http\Controllers\Pembimbing\PembimbingController;
 use App\Http\Controllers\Kaprodi\KaprodiController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\IRSController;
 
 use Inertia\Inertia;
 
@@ -28,16 +29,19 @@ Route::get('/admin/alokasiruang', [AdminController::class, 'Alokasi'])->name('ad
 Route::get('/admin/testpage', [AdminController::class, 'Test'])->name('admin.test');
 Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
-Route::get('/pembimbing/dashboard', [PembimbingController::class, 'index'])->name('pembimbing.dashboard');
-Route::get('/pembimbing/persetujuanIRS', [PembimbingController::class, 'persetujuanIRS'])->name('pembimbing.persetujuanIRS');
-Route::get('/pembimbing/detailMahasiswa', [PembimbingController::class, 'detailMahasiswa'])->name('pembimbing.detailMahasiswa');
-Route::get('/pembimbing/khsMahasiswa', [PembimbingController::class, 'khsMahasiswa'])->name('pembimbing.khsMahasiswa');
 
 Route::get('/kaprodi/dashboard', [KaprodiController::class, 'index'])->name('kaprodi.dashboard');
 Route::get('/kaprodi/monitoring', [KaprodiController::class, 'monitoring'])->name('kaprodi.monitoringIRS');
 
-
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pembimbing/dashboard', [PembimbingController::class, 'index'])->name('pembimbing.dashboard');
+    Route::get('/pembimbing/persetujuanIRS', [PembimbingController::class, 'persetujuanIRS'])->name('pembimbing.persetujuanIRS');
+    Route::get('/pembimbing/detailMahasiswa/{id}', [PembimbingController::class, 'detailMahasiswa'])->name('pembimbing.detailMahasiswa');
+    Route::get('/pembimbing/khsMahasiswa', [PembimbingController::class, 'khsMahasiswa'])->name('pembimbing.khsMahasiswa');
+    Route::post('/approve-irs', [IRSController::class, 'approve'])->name('approve.irs');
+    Route::post('/cancel-irs', [IRSController::class, 'cancel'])->name('cancel-irs');
+    // Route::patch('/pembimbing/persetujuanIRS', [IRSController::class, 'allowChange'])->name('allowChange');
+});
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
