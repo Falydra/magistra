@@ -12,8 +12,11 @@ export interface User {
 export interface Ruang {
     id: number;
     kode_ruang: string;
-    nama_ruang: string;
+    kode_gedung: string;
+    kode_prodi: string;
     kode_fakultas: string;
+    is_verif: boolean;
+    kapasitas: number;
 }
 
 
@@ -25,15 +28,34 @@ export interface Prodi {
 
 }
 
+export interface Gedung {
+    id: number;
+    kode_gedung: string;
+    nama: string;
+    kode_prodi: string;
+    kode_fakultas: string;
+
+}
+
 export interface Mahasiswa{
     id: number;
     nim: string;
     nama: string;
-    jurusan: string;
-    angkatan: string;
-    email: string;
+    tahun_masuk: string;
+    no_telp: string;
+    ips: number;
+    sksk: number;
+    kode_registrasi: string;
+    semester: number;
+
+    prodi_id: number;
+    pembimbing_id: number;
+
     user_id: number;
-    user: User;
+    email: string;
+
+    user_id: number;
+    
 }
 
 export interface Pembimbing {
@@ -53,10 +75,11 @@ export interface Kaprodi {
     user: User;
 }
 
-export interface Fakultas {
+export interface Dekan {
     id: number;
-  
-    nama: string;
+    nip: string;
+    kode_fakultas: string;
+    kode_prodi: string;
     kode_fakultas : number;
     
     
@@ -66,9 +89,10 @@ export interface Fakultas {
 export interface AkademikAdmin{
     id: number;
     nama: string;
-    email: string;
+    nomor_telepon: string;
+    alamat: string;
     user_id: number;
-    user: User;
+
 }
 
 
@@ -80,12 +104,50 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     
 };
 
+export type AkademikAdminProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+    akademik: AkademikAdmin;
+}
+
+export type MahasiswaProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    }
+    mahasiswa: Mahasiswa[];
+}
+export type DekanProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    }
+    dekan: Dekan[];
+
+}
+
+export type KaprodiProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+
+    auth: {
+        user: User;
+    }
+    kaprodi: Kaprodi[];
+}
+
+export type PembimbingProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    }
+
+    pembimbing: Pembimbing[];
+}
+
 
 
 export type RuangProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;
     };
+    
     ruang: Ruang[];
 };
 

@@ -10,4 +10,10 @@ class Fakultas extends Model
     use HasFactory;
     protected $table = 'fakultas';
     protected $fillable = ['kode_fakultas', 'nama'];
+
+
+    public function prodi()
+    {
+        return $this->hasMany(Prodi::class);
+    }
 }

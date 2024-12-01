@@ -14,19 +14,22 @@ Route::get('/', function () {
 })->name('welcome');
 
 // Define the regular dashboard route
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/admin/dashboard', function () {
-    return Inertia::render('Admin/Dashboard');
-})->middleware(['auth', 'admin'])->name('admin.dashboard');
 
 
 Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 Route::get('/admin/alokasiruang', [AdminController::class, 'Alokasi'])->name('admin.alokasiruang');
+Route::get('/admin/tambahruang', [AdminController::class, 'creteRuang'])->name('admin.tambahruang');
+Route::post('/admin/tambahruang', [AdminController::class, 'storeRuang'])->name('admin.storeruang');
+Route::patch('/admin/updateruang', [AdminController::class, 'updateRuang'])->name('admin.updateruang');
+Route::delete('/admin/deleteruang', [AdminController::class, 'deleteAllruang'])->name('admin.deleteAllruang');
 Route::get('/admin/testpage', [AdminController::class, 'Test'])->name('admin.test');
+
 Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
+Route::get('/mahasiswa/registrasi', [MahasiswaController::class, 'registrasi'])->name('mahasiswa.registrasi');
+Route::get('/mahasiswa/pembayaran', [MahasiswaController::class, 'pembayaran'])->name('mahasiswa.pembayaran');
+Route::get('/mahasiswa/irs', [MahasiswaController::class, 'irs'])->name('mahasiswa.irs');
+Route::get('/mahasiswa/khs', [MahasiswaController::class, 'khs'])->name('mahasiswa.khs');
+
 
 Route::get('/pembimbing/dashboard', [PembimbingController::class, 'index'])->name('pembimbing.dashboard');
 Route::get('/pembimbing/persetujuanIRS', [PembimbingController::class, 'persetujuanIRS'])->name('pembimbing.persetujuanIRS');

@@ -4,103 +4,61 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Ruang;
+use App\Models\Prodi;
+use App\Models\Fakultas;
+use App\Models\Gedung;
 
 class RuangSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        $ruangan = [
-            'a101',
-            'a102',
-            'a103',
-            'a104',
-            'a105',
-            'a201',
-            'a202',
-            'a203',
-            'a204',
-            'a205',
-            'a301',
-            'a302',
-            'a303',
-            'a304',
-
-            'b101',
-            'b102',
-            'b103',
-            'b104',
-            'b105',
-            'b201',
-            'b202',
-            'b203',
-            'b204',
-            'b205',
-            'b301',
-            'b302',
-            'b303',
-            'b304',
-            'b305',
-
-            'c101',
-            'c102',
-            'c103',
-            'c104',
-            'c105',
-            'c201',
-            'c202',
-            'c203',
-            'c301',
-            'c302',
-            'c303',
-
-            'd101',
-            'd102',
-            'd103',
-            'd104',
-            'd105',
-            'd201',
-            'd202',
-            'd203',
-            'd204',
-            'd205',
-            'd301',
-            'd302',
-            'd303',
-            'd304',
-
-            'e101',
-            'e102',
-            'e103',
-
-            'f101',
-            'f102',
-            'f103',
-            'f104',
-            'f105',
-            'f201',
-            'f202',
-            'f203',
-            'f204',
-            'f205',
-
-            'g201',
-            'g202',
-            'g203',
-            'g204',
-            'g301',
-            'g302',
-            'g303',
-            'g304',
+        $RuangData = [
+            'A101', 'A102', 'A103', 'A104', 'A105', 'A201', 'A202', 'A203', 'A204', 'A205', 'A301', 'A302', 'A303', 'A304',
+            'B101', 'B102', 'B103', 'B104', 'B105', 'B201', 'B202', 'B203', 'B204', 'B205', 'B301', 'B302', 'B303', 'B304', 'B305',
+            'C101', 'C102', 'C103', 'C104', 'C105', 'C201', 'C202', 'C203', 'C301', 'C302', 'C303',
+            'D101', 'D102', 'D103', 'D104', 'D105', 'D201', 'D202', 'D203', 'D204', 'D205', 'D301', 'D302', 'D303', 'D304',
+            'E101', 'E102', 'E103',
+            'F101', 'F102', 'F103', 'F104', 'F105', 'F201', 'F202', 'F203', 'F204', 'F205',
+            'G201', 'G202', 'G203', 'G204', 'G301', 'G302', 'G303', 'G304',
         ];
 
-        foreach ($ruangan as $kode) {
+       
+
+        // Mapping of kode_gedung to kode_prodi
+        
+
+        $kodeFakultas = Fakultas::where('kode_fakultas', '24')->first()->kode_fakultas;
+        $prodiList = [
+            Prodi::where('kode_prodi', '01')->first(),
+            Prodi::where('kode_prodi', '02')->first(),
+            Prodi::where('kode_prodi', '03')->first(),
+            Prodi::where('kode_prodi', '04')->first(),
+            Prodi::where('kode_prodi', '05')->first(),
+            Prodi::where('kode_prodi', '06')->first(),
+        ];
+
+        $prodiMapping = [
+            'A' => $prodiList[0]->kode_prodi,
+            'B' => $prodiList[1]->kode_prodi,
+            'C' => $prodiList[2]->kode_prodi,
+            'D' => $prodiList[3]->kode_prodi,
+            'E' => $prodiList[5]->kode_prodi,
+            'F' => $prodiList[4]->kode_prodi,
+            'G' => $prodiList[4]->kode_prodi,
+        ];
+
+
+
+        foreach ($RuangData as $kodeRuang) {
+            $kodeGedung = substr($kodeRuang, 0, 1); 
+            $kodeProdi = $prodiMapping[$kodeGedung]; 
             Ruang::create([
-                'kode_ruang' => $kode,
+                'kode_ruang' => $kodeRuang,
                 'kapasitas' => 50,
-                'kode_fakultas' => 1, // Replace with the appropriate fakultas ID
+                'kode_fakultas' => $kodeFakultas,
+                'kode_gedung' => $kodeGedung,
+                'kode_prodi' => $kodeProdi,
+                'is_verif' => '0',
             ]);
         }
     }

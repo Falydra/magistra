@@ -13,9 +13,16 @@ return new class extends Migration
     {
         Schema::create('ruang', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_ruang', 10)->unique();
+            $table->string('kode_ruang')->unique();
+            $table->string('kode_gedung');
+            $table->string('kode_prodi');
+            $table->string('kode_fakultas');
+            
+            $table->enum('is_verif', ['1', '0']);	
+            $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
+            $table->foreign('kode_gedung')->references('kode_gedung')->on('gedung')->onDelete('cascade');
             $table->integer('kapasitas');
-            $table->foreignId('kode_fakultas')->constrained('fakultas')->onDelete('cascade'); 
+            $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -35,7 +35,7 @@ class DekanUserSeeder extends Seeder
         Dekan::create([
             'tahun_periode' => '2024',
             'kode_fakultas' => 1,
-            'nip' => $dekanDosen->nip,
+            'nip' => $dekanDosen->id,
             'user_id' => $dekanUser->id,
         ]);
     }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('status_registrasi', function (Blueprint $table) {
             $table->id();
-            $table->string('kode', 3)->unique();
-            $table->string('nama');
+            $table->string('kode_registrasi', 3)->default('100')->unique();
+            $table->string('nama')->default('Aktif');
             $table->timestamps();
         });
     }

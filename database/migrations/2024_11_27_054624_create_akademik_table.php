@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prodi', function (Blueprint $table) {
+        Schema::create('akademik', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('kode_prodi')->unique();
             $table->string('nama');
-            $table->string('kode_fakultas');
-            $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
+            $table->string('nomor_telepon');
+            $table->text('alamat');
+            $table->string('role')->default('admin');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prodi');
+        Schema::dropIfExists('akademik');
     }
 };

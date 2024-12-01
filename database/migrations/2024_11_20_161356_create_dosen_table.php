@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('nip')->unique();
             $table->string('nidn')->unique()->nullable();
             $table->string('nama');
-            $table->string('nomor_telepon');
+            $table->string('kode_prodi');
+            $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
             $table->timestamps();
         });
     }

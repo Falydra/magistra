@@ -17,12 +17,17 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email');
             $table->string('no_telp');
-            $table->text('alamat');
             $table->year('tahun_masuk');
-            $table->decimal('ipk', 3, 2);
+            $table->decimal('ips', 3, 2);
             $table->integer('sksk');
-            $table->foreignId('kode_prodi')->constrained('prodi')->onDelete('cascade');
-            $table->foreignId('kode')->constrained('status_registrasi')->onDelete('cascade');
+            $table->string('kode_prodi');
+            
+            $table->string('kode_registrasi');
+            $table->integer('semester')->default(1);
+            $table->foreign('kode_registrasi' )->references('kode_registrasi')->on('status_registrasi')->onDelete('cascade');
+          
+            $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
+         
             $table->foreignId('pembimbing_id')->constrained('pembimbing')->onDelete('cascade');
             $table->string('role')->default('mahasiswa');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');

@@ -13,10 +13,34 @@ class Mahasiswa extends Model
         'nim',
         'program_studi',
         'semester',
-        'ipk',
-        'alamat',
+        'ips',
+        'sksk',
+        'tahun_masuk',
+        'nama',
+        'email',
         'nomor_telepon',
+        'pembimbing_id',
+        
     ];
+
+    protected static function booted()
+    {
+        static::saving(function ($mahasiswa) {
+            $currentYear = now()->year;
+            $currentMonth = now()->month;
+
+            // Hitung semester
+            $yearsPassed = $currentYear - $mahasiswa->tahun_masuk;
+            $semestersPassed = $yearsPassed * 2;
+
+            if ($currentMonth > 7) {
+                $semestersPassed += 1;
+            }
+
+            $mahasiswa->semester = $semestersPassed;
+        });
+    }
+
 
     // morph Mahasiswa into User
     public function users() {
@@ -25,5 +49,18 @@ class Mahasiswa extends Model
 
     public function pembimbing(){
         return $this->belongsTo(Pembimbing::class);
+    }
+
+    public function prodi(){
+        return $this->belongsTo(Prodi::class);
+    }
+
+
+    public function irs(){
+        return $this->hasMany(Irs::class);
+    }
+
+    public function statusregistrasi(){
+        return $this->belongsTo(StatusRegistrasi::class);
     }
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prodi', function (Blueprint $table) {
+        Schema::create('jadwal_prodi', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_jadwal_prodi')->unique();
+            $table->enum('status', ['Belum disetujui', 'Disetujui', 'Ditolak'])->default('Belum disetujui');
             $table->timestamps();
-            $table->string('kode_prodi')->unique();
-            $table->string('nama');
-            $table->string('kode_fakultas');
-            $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('prodi');
+        Schema::dropIfExists('jadwal_prodi');
     }
 };

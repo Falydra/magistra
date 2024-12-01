@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('kaprodi', function (Blueprint $table) {
             $table->id();
             $table->year('tahun_periode');
-            $table->foreignId('kode_prodi')->constrained('prodi')->onDelete('cascade');
-            $table->foreignId('nip')->constrained('dosen')->onDelete('cascade');
+            $table->string('kode_prodi');
+            $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
+            $table->string('nip');
+            $table->foreign('nip')->references('nip')->on('dosen')->onDelete('cascade');
             $table->string('role')->default('kaprodi');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();

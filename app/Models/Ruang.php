@@ -13,12 +13,21 @@ class Ruang extends Model
         return $this->belongsTo(Fakultas::class, 'kode_fakultas', 'kode_fakultas');
     }
 
+    public function gedung()
+    {
+        return $this->belongsTo(Gedung::class, 'kode_gedung', 'kode_gedung');
+    }
+
+    
+
     protected $table = 'ruang';
 
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'kode_ruang',
+        'kode_gedung',
+        'kode_prodi',
         'kapasitas',
         'kode_fakultas',
     ];

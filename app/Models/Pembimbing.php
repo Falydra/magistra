@@ -14,10 +14,8 @@ class Pembimbing extends Model
     protected $table = 'pembimbing';
     protected $fillable = [
         'nip',
-        'nidn',
-        'prodi',
-        'nomor_telepon',
-        'alamat',
+       
+
     ];
 
     // morph Pembimbing into User

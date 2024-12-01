@@ -13,15 +13,18 @@ return new class extends Migration
     {
         Schema::create('mata_kuliah', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_mk', 8)->unique();
+            $table->string('kode_mk')->unique();
             $table->string('nama');
             $table->integer('sks');
             $table->integer('semester');
             $table->string('jenis');
             $table->integer('kuota');
-            $table->foreignId('dosen_id')->constrained('dosen')->onDelete('cascade');
-            $table->foreignId('dosen_id_2')->nullable()->constrained('dosen')->onDelete('set null');
-            $table->foreignId('dosen_id_3')->nullable()->constrained('dosen')->onDelete('set null');
+            $table->string('dosen_nip');
+            $table->string('dosen_nip_2')->nullable();
+            $table->string('dosen_nip_3')->nullable();
+            $table->foreign('dosen_nip')->references('nip')->on('dosen')->onDelete('cascade');
+            $table->foreign('dosen_nip_2')->nullable()->references('nip')->on('dosen')->onDelete('set null');
+            $table->foreign('dosen_nip_3')->nullable()->references('nip')->on('dosen')->onDelete('set null');
             $table->timestamps();
         });
     }

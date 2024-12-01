@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('dekan', function (Blueprint $table) {
             $table->id();
             $table->year('tahun_periode');
-            $table->foreignId('kode_fakultas')->constrained('fakultas')->onDelete('cascade');
-            $table->foreignId('nip')->constrained('dosen')->onDelete('cascade');
+            $table->string('kode_fakultas');
+            $table->string('nip');
+            $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
+            $table->foreign('nip')->references('nip')->on('dosen')->onDelete('cascade');
             $table->string('role')->default('dekan');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
