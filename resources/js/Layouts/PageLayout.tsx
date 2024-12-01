@@ -54,16 +54,16 @@ export default function PageLayout({
                                 
 
                                     
-                                        <div
+                            <div
                                             className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl ${
-                                                url == "/dashboard" ? "" : " text-white opacity-100"
+                                                url === `/${user.role}/dashboard` ? "" : " text-white opacity-100"
                                             }
                                             `}
                                         >
                                             <TbAppsFilled className='w-8 h-8'/>
                                             
                                             
-                                            <Link href={route("dashboard")}>Dashboard</Link>
+                                            <Link href={route(`${user.role}.dashboard`)}>Dashboard</Link>
                                             
                                         </div>
                                         <div
@@ -89,7 +89,7 @@ export default function PageLayout({
                             </div>
                         </div>
                         <div className='flex mb-24'>
-                            <div className={`flex h-12 items-center justify-between space-x-4    flex-row text-white mr-12 text-xl
+                            <div className={`flex h-12 items-center justify-between space-x-4 flex-row text-white mr-12 text-xl
                                     ${url == "/welcome" ? "": "text-white opacity-50"}
                                 `}>
                                 <RxExit className='w-6 h-6' />
@@ -105,10 +105,10 @@ export default function PageLayout({
                     </div>
                 </div>
                 
-                <div className=' flex flex-row items-center justify-start w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl'>
+                <div className=' flex flex-col items-center justify-center w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl'>
 
-                    <div className="flex flex-col items-center justify-start w-4/5 min-h-full bg-white z-10 rounded-3xl">
-                        <div className="flex flex-row items-start justify-between w-full mt-12 bg-white h-full">
+                    <div className="flex flex-col items-center justify-start w-full h-full  bg-white z-10 rounded-3xl mx-8 ">
+                        <div className="flex flex-row items-start justify-between w-full mt-10 bg-white ">
                             {back}
                             <div>
                                 <TextInput
@@ -119,14 +119,14 @@ export default function PageLayout({
                             </div>
                         </div>
                 
-                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
                         
-                            {children}
+                        
+                        {children}
                             
                             
-                        </div>
+                       
                         
-                        {/* <main className="w-full h-full px-4">{children}</main> */}
+                       
                     </div>
                   
                 </div>

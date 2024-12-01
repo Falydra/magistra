@@ -13,7 +13,8 @@ import { IoMdSearch } from "react-icons/io";
 export default function ProfileLayout({
     user,
     header,
-    children
+    children,
+    
 }: PropsWithChildren<{ user: User; header?: ReactNode }>) {
     const {url} = usePage().props;
     
@@ -40,14 +41,14 @@ export default function ProfileLayout({
                                     
                                         <div
                                             className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl ${
-                                                url == "/dashboard" ? "text-white opacity-1000" : " text-white opacity-50"
+                                                url === `/${user.role}/dashboard` ? "text-white opacity-1000" : " text-white opacity-50"
                                             }
                                             `}
                                         >
                                             <TbAppsFilled className='w-8 h-8'/>
                                             
                                             
-                                            <Link href={route("dashboard")}>Dashboard</Link>
+                                            <Link href={route(`${user.role}.dashboard`)}>Dashboard</Link>
                                             
                                         </div>
                                         <div

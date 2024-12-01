@@ -20,7 +20,10 @@ Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.d
 Route::get('/admin/alokasiruang', [AdminController::class, 'Alokasi'])->name('admin.alokasiruang');
 Route::get('/admin/tambahruang', [AdminController::class, 'creteRuang'])->name('admin.tambahruang');
 Route::post('/admin/tambahruang', [AdminController::class, 'storeRuang'])->name('admin.storeruang');
+Route::delete('/admin/ruang/{id}', [AdminController::class, 'deleteRuang'])->name('admin.deleteruang');
 Route::patch('/admin/updateruang', [AdminController::class, 'updateRuang'])->name('admin.updateruang');
+
+
 Route::delete('/admin/deleteruang', [AdminController::class, 'deleteAllruang'])->name('admin.deleteAllruang');
 Route::get('/admin/testpage', [AdminController::class, 'Test'])->name('admin.test');
 
@@ -38,7 +41,7 @@ Route::get('/pembimbing/khsMahasiswa', [PembimbingController::class, 'khsMahasis
 
 Route::get('/kaprodi/dashboard', [KaprodiController::class, 'index'])->name('kaprodi.dashboard');
 Route::get('/kaprodi/monitoring', [KaprodiController::class, 'monitoring'])->name('kaprodi.monitoringIRS');
-
+Route::get('/dekan/dashboard', [DekanController::class, 'index'])->name('dekan.dashboard');
 
 
 

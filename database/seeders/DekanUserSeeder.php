@@ -27,15 +27,16 @@ class DekanUserSeeder extends Seeder
             'nama' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
             'nip' => '19696201999031002',
             'nidn' => '0009036902',
-            'nomor_telepon' => '0869696969',
+            'kode_prodi' => '06',
             
         ]);
 
         // Create a corresponding dekan record
         Dekan::create([
+            'nama' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
             'tahun_periode' => '2024',
-            'kode_fakultas' => 1,
-            'nip' => $dekanDosen->id,
+            'kode_fakultas' => '24',
+            'nip' => $dekanDosen->nip,
             'user_id' => $dekanUser->id,
         ]);
     }

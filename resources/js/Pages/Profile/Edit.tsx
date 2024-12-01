@@ -12,7 +12,7 @@ export default function Edit({ mustVerifyEmail, status, auth }: PageProps<{ must
         <ProfileLayout
             user={auth.user}
             header="Profile"
-
+            
         >
             <Head title="Profile" />
 

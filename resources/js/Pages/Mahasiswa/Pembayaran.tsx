@@ -1,37 +1,28 @@
-import React from 'react';
-import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, usePage } from "@inertiajs/react";
-import {MahasiswaProps} from "@/types";
-
+import PageLayout from "@/Layouts/PageLayout";
+import { PageProps } from "@/types";
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import { HiBuildingLibrary } from "react-icons/hi2";
 
-export default function MahasiswaDashboard({auth, mahasiswa }: MahasiswaProps) {
-    const {url} = usePage().props;
-    console.log(mahasiswa.nim);
+export default function Pembayaran({auth}: PageProps) {
     
+    const {url} = usePage().props;
 
     return (
-        <Authenticated
-           
-            user={auth.user}
-            header="Dashboard Mahasiswa"
-            header1="Notifikasi"
-            attrChildren = {
-                <>
-                    <h5 className='w-full'>
-                        NIM: {mahasiswa.nim}
-                        
-                    </h5>
-                    <h5 className='w-full'>
-                        IPK : {mahasiswa.ips}
-                    </h5>
-                    <h5 className='w-full'>
-                        Semester :  {mahasiswa.semester}
-                    </h5>
+        <PageLayout
+        user={auth.user}
+        back = {
+            <Link href={route("mahasiswa.dashboard")}>
+                    <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
+                        <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
+                        Registrasi
+                    </h2>
+                </Link>
+        }
 
-                </>
-            }
-           sidebarChildren = {
+        sidebarChildren = {
             <>
                  <div
                 className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl
@@ -90,28 +81,17 @@ export default function MahasiswaDashboard({auth, mahasiswa }: MahasiswaProps) {
             
             </div>
             </>
-           
-            
-           }
-
+        }
+        
+        
+        
+        
         >
-            <Head title="Dashboard" />
 
-            <div className="flex w-full flex-col items-center justify-center">
-                <div className="flex w-full flex-row items-start justify-center">
-                    <Link href={route('admin.alokasiruang')} className='w-full'>
 
-                        <div className="bg-white flex w-full flex-row items-center justify-center h-[100px]">
-                            <HiBuildingLibrary className='w-16 h-16 ml-8'/>
-                            <div className=' flex flex-col w-full items-center justify-center'>
 
-                                <div className=" text-gray-900">Alokasi Ruang</div>
-                                <h1> Manajemen dan Alokasi ruangan</h1>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-        </Authenticated>
+
+        </PageLayout>
     );
+
 }

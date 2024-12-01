@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->year('tahun_periode');
             $table->string('kode_fakultas');
+            $table->string('nama');
             $table->string('nip');
             $table->foreign('kode_fakultas')->references('kode_fakultas')->on('fakultas')->onDelete('cascade');
             $table->foreign('nip')->references('nip')->on('dosen')->onDelete('cascade');

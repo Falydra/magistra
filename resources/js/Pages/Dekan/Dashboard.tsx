@@ -1,47 +1,42 @@
 import React from 'react';
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, usePage } from "@inertiajs/react";
-import { AkademikAdmin, AkademikAdminProps } from "@/types";
+import {DekanProps} from "@/types";
 
 import { HiBuildingLibrary } from "react-icons/hi2";
 
-export default function AdminDashboard({auth, akademik }: AkademikAdminProps) {
+export default function MahasiswaDashboard({auth, dekan }: DekanProps) {
     const {url} = usePage().props;
+   
     
 
     return (
         <Authenticated
-            // title="Admin Dashboard"
+           
             user={auth.user}
-            header="Dashboard Akademik"
+            header="Dashboard dekan"
             header1="Notifikasi"
             attrChildren = {
                 <>
                     <h5 className='w-full'>
-                        Nomor Telp: {akademik.nomor_telepon}
+                        NIM: {dekan.nip}
+                        
                     </h5>
                     <h5 className='w-full'>
-                        Alamat: {akademik.alamat}
+                        Tahun Periode : {dekan.tahun_periode}
                     </h5>
+                    
+
                 </>
             }
            sidebarChildren = {
-            <div
-                className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl
-                    ${
-                        url == "/admin/alokasiruang" ? "" : " text-white opacity-100"
-                    }
-                    `}
+            <>
                 
+    
+            </>
+           
             
-            >       
-                <HiBuildingLibrary className='w-8 h-8'/>
-                
-                <Link href={route("admin.alokasiruang")}>Alokasi Ruang</Link>
-            
-            </div>
            }
-            
 
         >
             <Head title="Dashboard" />

@@ -47,8 +47,6 @@ class AuthenticatedSessionController extends Controller
             } else if ($user->role == 'kaprodi') {
                 return redirect()->route('kaprodi.dashboard');
             }
-            
-            return redirect()->intended('/user/dashboard');
         }
 
         // If authentication fails, redirect back with an error

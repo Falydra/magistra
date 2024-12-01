@@ -15,9 +15,10 @@ export default function AuthenticatedLayout({
     header,
     header1,
     children,
+    attrChildren,
     sidebarChildren
     
-}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode; sidebarChildren? : ReactNode  }>) {
+}: PropsWithChildren<{ user: User; header?: ReactNode; header1?: ReactNode; attrChildren?: ReactNode; sidebarChildren? : ReactNode  }>) {
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
     const [notification, setNotification] = useState<string | null>(null);
@@ -57,14 +58,14 @@ export default function AuthenticatedLayout({
                                     
                                         <div
                                             className={`flex h-12 items-center justify-between space-x-4 flex-row text-white text-xl ${
-                                                url == "/dashboard" ? "" : " text-white opacity-100"
+                                                url === `/${user.role}/dashboard` ? "" : " text-white opacity-100"
                                             }
                                             `}
                                         >
                                             <TbAppsFilled className='w-8 h-8'/>
                                             
                                             
-                                            <Link href={route("dashboard")}>Dashboard</Link>
+                                            <Link href={route(`${user.role}.dashboard`)}>Dashboard</Link>
                                             
                                         </div>
                                         <div
@@ -121,24 +122,28 @@ export default function AuthenticatedLayout({
                                 />
                             </div>
                         </div>
-                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[200px] rounded-xl  m-4 p-8'>
-                            <div className="flex w-40 h-40 rounded-full bg-black"/>
-                            <div className='flex flex-col items-start justify-center mx-16 mb-16'>
-                                <h3 className=' text-md'>
-                                    Selamat datang,
-                                </h3>
-                                <h1 className='text-3xl mb'>
-                                    {auth.user.name}
-                                </h1>
-                                <h3 className='pt-4'>
-                                    {/* NIDS: {auth.user.nids} */}
-                                    Email: {auth.user.email}
-                                    {/* Nomor: {auth.user.nomor} */}
-                                </h3>
+                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[200px] rounded-xl space-x-4'>
+                            <div className="flex w-40 h-32 rounded-full bg-black mx-4"/>
+                            <div className='flex w-full items-center justify-centerflex-col'>
+                                <div className='flex flex-col items-start justify-center'>
+                                    <h3 className=' text-md'>
+                                        Selamat datang,
+                                    </h3>
+                                    <h1 className='text-3xl mb'>
+                                        {auth.user.name}
+                                    </h1>
+                                    {attrChildren}
+                                    <h4 className=''>
+                                    
+                                        Email: {auth.user.email}
+                                        
+                                    </h4>
+                                    
+                                </div>
                             </div>
                             
                         </div>
-                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
+                        <div className='flex flex-col w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
                         
                             {children}
                             

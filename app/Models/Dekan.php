@@ -19,6 +19,6 @@ class Dekan extends Model
 
     // morph Pembimbing into User
     public function users() {
-        return $this->morphOne(User::class, 'entity');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

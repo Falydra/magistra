@@ -14,12 +14,37 @@ class MahasiswaController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Mahasiswa/Dashboard');
+        $user = auth()->user(); 
+        $mahasiswa = $user->mahasiswa; 
+
+        return Inertia::render('Mahasiswa/Dashboard', [
+            'mahasiswa' => $mahasiswa
+        ]);
     }
 
     public function create()
     {
         return view('mahasiswa.create');
+    }
+
+
+    public function registrasi() {
+    
+        return Inertia::render('Mahasiswa/Registrasi');
+
+    }
+
+
+    public function pembayaran() {
+        return Inertia::render('Mahasiswa/Pembayaran');
+    }
+
+    public function irs() {
+        return Inertia::render('Mahasiswa/IRS');
+    }
+
+    public function khs() {
+        return Inertia::render('Mahasiswa/KHS');
     }
 
     public function store(Request $request)

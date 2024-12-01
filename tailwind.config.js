@@ -41,6 +41,7 @@ export default {
     				bg: "#328BC3",
 					fg: "#EAF3F9",
 					dark: "#1f76a9",
+					red: "#E22022",
 					light: "#D6E8F3"
     			},
     			secondary: {

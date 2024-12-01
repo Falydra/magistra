@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             DosenSeeder::class,
             KaprodiUserSeeder::class,
             PembimbingUserSeeder::class,
+            DekanUserSeeder::class,
             StatusRegistrasiSeeder::class,
             MahasiswaUserSeeder::class,
             MataKuliahSeeder::class,

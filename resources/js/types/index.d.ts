@@ -78,9 +78,11 @@ export interface Kaprodi {
 export interface Dekan {
     id: number;
     nip: string;
-    kode_fakultas: string;
-    kode_prodi: string;
-    kode_fakultas : number;
+    nama: string;
+    
+   
+    kode_fakultas : strin;
+    tahun_periode: string
     
     
 }
@@ -115,13 +117,15 @@ export type MahasiswaProps<T extends Record<string, unknown> = Record<string, un
     auth: {
         user: User;
     }
-    mahasiswa: Mahasiswa[];
+    mahasiswa: Mahasiswa;
 }
+
+
 export type DekanProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;
     }
-    dekan: Dekan[];
+    dekan: Dekan;
 
 }
 
