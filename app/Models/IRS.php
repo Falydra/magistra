@@ -5,28 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class IRS extends Models {
+class IRS extends Model
+{
     use HasFactory;
 
     protected $table = 'irs';
-    protected $primaryKey = 'id';
+
     protected $fillable = [
-        'total_sks',
         'nim',
-        'jadwal_id',
+        'total_sks',
         'semester',
         'status',
-
     ];
 
-    public function mahasiswa(){
-        return $this->belongsTo(Mahasiswa::class);
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
     }
 
-    public function jadwal(){
+    public function jadwal()
+    {
         return $this->hasMany(Jadwal::class);
     }
-    
 
+    public function irsJadwal()
+    {
+        return $this->hasMany(IRSJadwal::class, 'id_irs', 'id');
+    }
 }

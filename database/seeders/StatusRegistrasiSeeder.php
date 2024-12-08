@@ -13,7 +13,9 @@ class StatusRegistrasiSeeder extends Seeder
         //Kode 100 for 'Aktif' and 000 for Cuti
         StatusRegistrasi::Insert([
             ['kode_registrasi' => '100', 'nama' => 'Aktif'],
-            ['kode_registrasi' => '000', 'nama' => 'Cuti'],
+            ['kode_registrasi' => '000', 'nama' => 'Belum Memilih'],
+            ['kode_registrasi' => '001', 'nama' => 'Cuti'],
+           
         ]);
     }
 }

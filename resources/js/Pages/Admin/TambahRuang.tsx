@@ -9,6 +9,13 @@ import { usePage } from "@inertiajs/react";
 import { Button } from "@/Components/ui/button";
 import { Inertia } from "@inertiajs/inertia";
 
+import { useToast } from "@/hooks/use-toast"
+
+import { ToastAction } from "@/Components/ui/toast"
+
+import 'react-toastify/dist/ReactToastify.css';
+
+
 interface RuangProps {
     id: number;
     kode_ruang: string;
@@ -36,6 +43,7 @@ interface FormData {
 }
 
 export default function TambahRuang() {
+    const { toast } = useToast();
     const { auth } = usePage().props;
     const { url } = usePage().props;
     const { ruang, filters } = usePage<AlokasiProps>().props;
@@ -97,19 +105,30 @@ export default function TambahRuang() {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(data);
-        post(route('admin.storeruang'));
+        
+        post(route('admin.storeruang'), {
+            onError: (errors) => {
+                toast({
+                    variant: "destructive",
+                    title: "Terjadi Kesalahan",
+                    description: "Gagal menambahkan ruang. Periksa input Anda.",
+                    // action: <ToastAction altText="Coba lagi">Coba Lagi</ToastAction>,
+                    duration: 2500,
+                });
+            },
+            onSuccess: () => {
+                toast({
+                    variant: "default",
+                    className: "bg-green-500",
+                    title: "Berhasil",
+                    description: "Ruang berhasil ditambahkan.",
+                    duration: 2500,
+                });
+            }
+        });
     }
 
-    const fakultasMapping: { [key: string]: string } = {
-        '24': 'Fakultas Sains dan Matematika',
-        '25': 'Fakultas Teknik',
-        '26': 'Fakultas Ekonomi dan Bisnis',
-        '27': 'Fakultas Ilmu Sosial dan Ilmu Politik',
-        '28': 'Fakultas Ilmu Budaya',
-        '29': 'Fakultas Hukum',
-    }
-
+    
     const prodiMapping: { [key: string]: string } = {
         '01': 'Matematika',
         '02': 'Biologi',
@@ -120,7 +139,7 @@ export default function TambahRuang() {
     };
 
     const gedungOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    const fakultasOptions = Object.keys(fakultasMapping);
+    
     const prodiOptions = Object.keys(prodiMapping);
 
     return (
@@ -147,6 +166,7 @@ export default function TambahRuang() {
         >
             <div className="flex w-full flex-col items-center justify-center">
                 <div className="flex flex-col items-center justify-center mt-8 w-full min-h-full bg-white z-10 rounded-3xl">
+                   
                     <form onSubmit={handleSubmit} className="w-full items-center justify-center flex flex-col">
                         <div className='flex flex-col w-3/6 items-center justify-start bg-primary-fg h-full rounded-xl m-4 p-8 border-2 border-t-primary-bg border-l-primary-bg border-r-black border-b-black drop-shadow-sm shadow-slate-600 shadow-md'>
                             <h1 className="text-2xl font-semibold">
@@ -208,24 +228,7 @@ export default function TambahRuang() {
                                 </select>
                                 {errors.kode_prodi && <p className="text-red-500 text-xs italic">{errors.kode_prodi}</p>}
                             </div>
-                            <h2 className="w-3/4 mt-4 items-start justify-center flex flex-col">
-                                Pilih Fakultas
-                            </h2>
-                            <div className="flex w-full justify-center my-2 items-center flex-col">
-                                <select
-                                    className='bg-white border border-gray-300 rounded-md shadow-sm w-3/4 focus:outline-none focus:ring-dcf-orange-500 focus:border-dcf-orange-500 sm:text-sm'
-                                    id="kode_fakultas"
-                                    name="kode_fakultas"
-                                    value={data.kode_fakultas}
-                                    onChange={handleInputChange}
-                                >
-                                    <option value="" disabled>Pilih Fakultas</option>
-                                    {fakultasOptions.map((fakultas) => (
-                                        <option key={String(fakultas)} value={String(fakultas)}>{fakultasMapping[String(fakultas)]}</option>
-                                    ))}
-                                </select>
-                                {errors.kode_fakultas && <p className="text-red-500 text-xs italic">{errors.kode_fakultas}</p>}
-                            </div>
+                            
                             <h2 className="w-3/4 mt-4 items-start justify-center flex flex-col">
                                 Masukkan Kapasitas
                             </h2>
@@ -242,7 +245,20 @@ export default function TambahRuang() {
                                 {errors.kapasitas && <p className="text-red-500 text-xs italic">{errors.kapasitas}</p>}
                             </div>
                             <div className="flex flex-row w-full items-center justify-center space-x-4 text-white font-light">
-                                <button
+                                {/* <Button
+                                variant="outline"
+                                onClick={() => {
+                                    toast({
+                                    variant: "destructive",
+                                    title: "Uh oh! Something went wrong.",
+                                    description: "There was a problem with your request.",
+                                    action: <ToastAction altText="Try again">Try again</ToastAction>,
+                                    })
+                                }}
+                                >
+                                Show Toast
+                                </Button> */}
+                                <button 
                                     className="bg-primary-dark w-40 h-10 rounded-lg"
                                     type="submit"
                                 >

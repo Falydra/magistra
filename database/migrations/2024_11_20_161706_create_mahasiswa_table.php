@@ -19,12 +19,12 @@ return new class extends Migration
             $table->string('no_telp');
             $table->year('tahun_masuk');
             $table->decimal('ips', 3, 2);
-            $table->integer('sksk');
+           
             $table->string('kode_prodi');
             
             $table->string('kode_registrasi');
             $table->integer('semester')->default(1);
-            $table->foreign('kode_registrasi' )->references('kode_registrasi')->on('status_registrasi')->onDelete('cascade');
+          
           
             $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
          

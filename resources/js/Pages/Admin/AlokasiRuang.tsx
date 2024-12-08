@@ -48,21 +48,25 @@
     export default function AlokasiRuang({auth} : {auth: any} ) {
         const {url} = usePage().props;
         const { ruang, filters } = usePage<PaginationProps>().props;
-    
         const [filterGedung, setFilterGedung] = useState<string>(filters.filter_gedung || '');
         const [filterProdi, setFilterProdi] = useState<string>(filters.filter_prodi || '');
         const [filteredRuang, setFilteredRuang] = useState<RuangProps[]>(ruang.data);
         const [showModal, setShowModal] = useState<boolean>(false);
+        const [showModalDeleteSingle, setShowModalDeleteSingle] = useState(false);
         const [selectedRuang, setSelectedRuang] = useState<RuangProps | null>(null);
+        const [selectedIds, setSelectedIds] = useState<number[]>([]);
+      
 
         
 
 
         const handlePageChange = (url: string | null) => {
             if (url) {
-                Inertia.get(url, {filter_gedung: filterGedung, filter_prodi: filterProdi}); // Navigate to the page
+                Inertia.get(url, {filter_gedung: filterGedung, filter_prodi: filterProdi});
             }
         };
+
+
 
         useEffect(() => {
             let filteredData = ruang.data;
@@ -88,17 +92,9 @@
             '06': 'Informatika',
         };
 
-
-
-
-
-
-        
-        
-        
         const handleFilterChangeGedung = (event: React.ChangeEvent<HTMLSelectElement>) => {
             setFilterGedung(event.target.value);
-            // console.log("Filter Gedung:", value);
+           
             Inertia.get(route('admin.alokasiruang'),{ filter_gedung: event.target.value, filter_prodi: filterProdi });
         };
 
@@ -135,12 +131,35 @@
             });
         };
         const handleDelete = (id: number) => {
-            Inertia.delete(route('admin.deleteuang', id), {
+            Inertia.delete(route('admin.deleteruang', { id }), {
                 onSuccess: () => {
                     setFilteredRuang((prevData) => prevData.filter((item) => item.id !== id));
-                }
+                    setShowModalDeleteSingle(false);
+                },
             });
         };
+        
+        const handleDeleteConfirmation = (id: number) => {
+            setSelectedRuang(filteredRuang.find(item => item.id === id) || null);
+            setShowModalDeleteSingle(true);
+        };
+
+        const handleSelectAll = () => {
+            if (selectedIds.length === filteredRuang.length) {
+                setSelectedIds([]);
+            } else {
+                setSelectedIds(filteredRuang.map(item => item.id));
+            }
+        };
+
+        const handleCheckboxChange = (id: number) => {
+            if (selectedIds.includes(id)) {
+                setSelectedIds(selectedIds.filter(selectedId => selectedId !== id));
+            } else {
+                setSelectedIds([...selectedIds, id]);
+            }
+        };
+        
 
         return (
             <PageLayout
@@ -263,77 +282,113 @@
                 )}
                     </div>
                     <div className='w-full overflow-x-auto scrollbar-hidden'>
-                <table className="min-w-full text-center border table-fixed">
-                    <thead className='p-10'>
-                        <tr className='p-10'>
-                            <th className='py-3 border'>No</th>
-                            <th className='py-3 border'>Kode Ruang</th>
-                            <th className='py-3 border '>Kapasitas</th>
-                            <th className='py-3 border '>Kode Gedung</th>
-                            <th className='py-3 border '>Prodi</th>
-                            <th className='py-3 border '>Kode Fakultas</th>
-                            <th className='py-3 border '>Status</th>
-                            <th className='py-3 border '>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody className='text-center'>
-                        {Array.isArray(ruang.data) && ruang.data.length > 0 ? (
-                            ruang.data.map((item, index) => (
-                                <tr key={item.id} className='text-center'>
-                                    <td className='px-8 border'>{(ruang.current_page - 1) * 5 + index + 1}</td>
-                                    <td className='px-8 text-left border'>{item.kode_ruang}</td>
-                                    <td className='px-8 border'>{item.kapasitas}</td>
-                                    <td className='px-8 border'>{item.kode_gedung}</td>
-                                    <td className='px-8 border'>{prodiMapping[item.kode_prodi] ||"Prodi tidak ditemukan"}</td>
-                                    <td className='px-8 border'>{item.kode_fakultas ? "Sains dan Matematika" : "Fakultas tidak ditemukan"}</td>
-                                    <td className='px-8 border '>
-                                        {item.is_verif ? 'Belum Diajukan' : 'Sudah Diajukan'}
-                                    </td>
-                                    <td className='px-8 border flex-row flex gap-2'>
-                                        <button className="text-white bg-primary-dark w-16 h-8 my-1" onClick={() => setShowModal(true)}>
-                                            Edit
-                                        </button>
-                                        {/* <Link
-                                            href={route('admin.editruang', item.id)}
-                                            onClick={() => handleEdit(item)}
-                                            className='bg-primary-dark text-white px-4 py-2 rounded'
-                                        >
-                                            Edit
-                                        </Link> */}
-                                        <Link href={route('admin.deleteruang', { id: item.id } )} className="flex flex-col items-center justify-center">
-                                            <FaTrashAlt className='w-6 h-6   text-red-500'/>
-                                        </Link>
-                                       
-                                    </td>
+                        <table className="min-w-full text-center border table-fixed">
+                            <thead className='p-8'>
+                                <tr className='p-8'>
+                                    <th className='py-3 border'>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedIds.length === filteredRuang.length}
+                                            onChange={handleSelectAll}
+                                        />
+                                    </th>
+                                    <th className='py-3 border'>No</th>
+                                    <th className='py-3 border'>Kode Ruang</th>
+                                    <th className='py-3 border '>Kapasitas</th>
+                                    <th className='py-3 border '>Kode Gedung</th>
+                                    <th className='py-3 border '>Prodi</th>
+                                    <th className='py-3 border '>Kode Fakultas</th>
+                                    <th className='py-3 border '>Status</th>
+                                    <th className='py-3 border '>Aksi</th>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={5} className="text-center">Belum ada data.</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-                <div className="flex justify-between items-center mt-4">
-                        <button
-                            onClick={() => handlePageChange(ruang.prev_page_url)}
-                            disabled={!ruang.prev_page_url}
-                            className={`px-4 py-2 ${ruang.prev_page_url ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded`}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Halaman {ruang.current_page} dari {ruang.last_page}
-                        </span>
-                        <button
-                            onClick={() => handlePageChange(ruang.next_page_url)}
-                            disabled={!ruang.next_page_url}
-                            className={`px-4 py-2 ${ruang.next_page_url ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded`}
-                        >
-                            Next
-                        </button>
+                            </thead>
+                            <tbody className='text-center'>
+                                {Array.isArray(ruang.data) && ruang.data.length > 0 ? (
+                                    ruang.data.map((item, index) => (
+                                        <tr key={item.id} className='text-center'>
+                                            <td className='px-2 border'>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedIds.includes(item.id)}
+                                                    onChange={() => handleCheckboxChange(item.id)}
+                                                />
+                                            </td>
+                                            <td className='px-8 border'>{(ruang.current_page - 1) * 5 + index + 1}</td>
+                                            <td className='px-8 text-left border'>{item.kode_ruang}</td>
+                                            <td className='px-8 border'>{item.kapasitas}</td>
+                                            <td className='px-8 border'>{item.kode_gedung}</td>
+                                            <td className='px-8 border'>{prodiMapping[item.kode_prodi] ||"Prodi tidak ditemukan"}</td>
+                                            <td className='px-8 border'>{item.kode_fakultas ? "Sains dan Matematika" : "Fakultas tidak ditemukan"}</td>
+                                            <td className='px-8 border'>
+                                                {item.is_verif ? 'Belum Diajukan' : 'Sudah Diajukan'}
+                                            </td>
+                                            <td className='px-8 border flex-row flex gap-2'>
+                                                <button className="text-white bg-primary-dark w-16 h-8 my-1" onClick={() => setShowModal(true)}>
+                                                    Edit
+                                                </button>
+                
+                                                <button 
+                                                onClick={() => handleDeleteConfirmation(item.id)}
+                                                >
+                                                    <FaTrashAlt className='w-6 h-6   text-red-500'/>
+                                                </button>
+                                                
+                                                
+
+
+                                            
+                                            </td>
+                                            {showModalDeleteSingle && selectedRuang && (
+                                                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                                    <div className="bg-white p-8 rounded-md shadow-md">
+                                                        <h2 className="text-xl font-semibold mb-4">Are you sure you want to delete this room?</h2>
+                                                        <div className="flex justify-end space-x-4">
+                                                            <button
+                                                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                                                onClick={() => handleDelete(selectedRuang.id)}
+                                                            >
+                                                                Yes
+                                                            </button>
+                                                            <button
+                                                                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                                                                onClick={() => setShowModalDeleteSingle(false)}
+                                                            >
+                                                                No
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                        </tr>
+                                        ))
+                                    ) : (
+                                    <tr>
+                                        <td colSpan={5} className="text-center">Belum ada data.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                        <div className="flex justify-between items-center mt-4">
+                            <button
+                                onClick={() => handlePageChange(ruang.prev_page_url)}
+                                disabled={!ruang.prev_page_url}
+                                className={`px-4 py-2 ${ruang.prev_page_url ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded`}
+                            >
+                                Previous
+                            </button>
+                            <span>
+                                Halaman {ruang.current_page} dari {ruang.last_page}
+                            </span>
+                            <button
+                                onClick={() => handlePageChange(ruang.next_page_url)}
+                                disabled={!ruang.next_page_url}
+                                className={`px-4 py-2 ${ruang.next_page_url ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded`}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
-                </div>
                 </div>
                 
             </PageLayout>

@@ -7,6 +7,7 @@ import { TbAppsFilled } from "react-icons/tb";
 import { RxExit } from "react-icons/rx";
 import { User } from '@/types';
 import { FormEventHandler, useState } from 'react';
+import { Toaster } from '@/Components/ui/toaster';
 
 
 
@@ -36,7 +37,7 @@ export default function PageLayout({
     return (
         <>
             <Head title="Dashboard" />
-            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row">
+            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row overflow-x--hidden">
                 <div className="flex flex-col w-full sm:w-2/5 lg:w-1/5 bg-transparent mt-4 mb-10 ml-4 items-center">
 
                 {/* Sidebar Parent */}
@@ -105,23 +106,18 @@ export default function PageLayout({
                     </div>
                 </div>
                 
-                <div className=' flex flex-col items-center justify-center w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl'>
+                <div className=' flex flex-col items-center justify-center w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl overflow-x-hidden overflow-y-auto '>
 
                     <div className="flex flex-col items-center justify-start w-full h-full  bg-white z-10 rounded-3xl mx-8 ">
                         <div className="flex flex-row items-start justify-between w-full mt-10 bg-white ">
                             {back}
-                            <div>
-                                <TextInput
-                                    className="w-64 mx-10"
-                                    placeholder="Search"
-                                    // icon="search"
-                                />
-                            </div>
+                            
                         </div>
                 
                         
                         
                         {children}
+                        <Toaster/>
                             
                             
                        

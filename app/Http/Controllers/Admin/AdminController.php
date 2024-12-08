@@ -63,7 +63,28 @@ class AdminController extends Controller
 
     public function storeRuang(RuangRequest $request){
         $validated = $request->validated();
-        // Log::info('Validated Data:', $validated); 
+
+        $existingGedung = Ruang::where('kode_gedung', $validated['kode_gedung'])
+            ->where('kode_prodi', '!=', $validated['kode_prodi'])
+            ->first();
+            
+        $existingProdi = Ruang::where('kode_prodi', $validated['kode_prodi'])
+            ->where('kode_gedung', '!=', $validated['kode_gedung'])
+            ->first();
+
+        if ($existingGedung) {
+            return back()->withErrors(['kode_gedung' => 'Gedung ini sudah ditempati oleh prodi lain.'])->withInput();
+        }
+
+        if ($existingProdi) {
+            return back()->withErrors(['kode_prodi' => 'Prodi ini sudah ditempati di gedung lain.'])->withInput();
+        }
+
+        if (strtoupper($validated['kode_ruang'][0]) !== strtoupper($validated['kode_gedung'][0])) {
+            return back()->withErrors(['kode_ruang' => 'Kode ruang harus dimulai dengan huruf yang sama dengan kode gedung.'])->withInput();
+        }
+
+        $validated['kode_fakultas'] = '24';
 
         Ruang::create($validated);
 
@@ -94,12 +115,10 @@ class AdminController extends Controller
         return redirect()->route('admin.tambahruang')->with('success', 'Ruang berhasil diperbarui.');
     }
 
-    public function deleteRuang($id)
-    {
-        $ruang = Ruang::findOrFail($id);
-        $ruang->delete();
-
+    public function destroy($id) {
+        Ruang::find($id)->delete();
         return redirect()->route('admin.alokasiruang')->with('success', 'Ruang berhasil dihapus.');
+
     }
     
 

@@ -17,7 +17,7 @@ class RuangRequest extends FormRequest
             'kode_ruang' => 'required|string|max:255',
             'kode_gedung' => 'required|string|max:255',
             'kode_prodi' => 'required|string|max:255',
-            'kode_fakultas' => 'required|string|exists:fakultas,kode_fakultas',
+            
             'kapasitas' => 'required|integer|min:1',
         ];
     }

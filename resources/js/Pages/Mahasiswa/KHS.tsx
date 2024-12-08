@@ -4,7 +4,9 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { usePage } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
-import { HiBuildingLibrary } from "react-icons/hi2";
+import { FaMoneyBills } from "react-icons/fa6";
+import { HiAcademicCap, HiBuildingLibrary } from "react-icons/hi2";
+import { LuFilePlus2 } from "react-icons/lu";
 
 export default function KHS({auth}: PageProps) {
     
@@ -33,7 +35,7 @@ export default function KHS({auth}: PageProps) {
                 
             
             >       
-                <HiBuildingLibrary className='w-8 h-8'/>
+                <HiAcademicCap className='w-8 h-8'/>
                 
                 <Link href={route("mahasiswa.registrasi")}>Registrasi</Link>
             
@@ -47,7 +49,7 @@ export default function KHS({auth}: PageProps) {
                 
             
             >       
-                <HiBuildingLibrary className='w-8 h-8'/>
+                <FaMoneyBills className='w-8 h-8'/>
                 
                 <Link href={route("mahasiswa.pembayaran")}>Pembayaran</Link>
             
@@ -61,7 +63,7 @@ export default function KHS({auth}: PageProps) {
                 
             
             >       
-                <HiBuildingLibrary className='w-8 h-8'/>
+                <LuFilePlus2 className='w-8 h-8'/>
                 
                 <Link href={route("mahasiswa.irs")}>IRS</Link>
             

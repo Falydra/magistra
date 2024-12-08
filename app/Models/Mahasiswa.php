@@ -41,6 +41,12 @@ class Mahasiswa extends Model
         });
     }
 
+    public function getTotalSksAttribute()
+    {
+      
+        return $this->irs()->sum('total_sks');
+    }
+
 
     public function user()
     {
@@ -48,7 +54,7 @@ class Mahasiswa extends Model
     }
 
     public function pembimbing(){
-        return $this->belongsTo(Pembimbing::class);
+        return $this->belongsTo(Pembimbing::class, );
     }
 
     public function prodi(){
@@ -57,7 +63,7 @@ class Mahasiswa extends Model
 
 
     public function irs(){
-        return $this->hasMany(Irs::class);
+        return $this->hasMany(Irs::class, 'nim', 'nim');
     }
 
     public function statusregistrasi(){

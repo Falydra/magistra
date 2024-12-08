@@ -26,8 +26,18 @@ class MataKuliah extends Model
     }
 
     public function ruang(){
-        return $this->belongsToMany(Ruang::class);
+        return $this->belongsToMany(Ruang::class, 'kode_ruang', 'kode_ruang');
     }
+
+    public function jadwal(){
+        return $this->belongsToMany(Jadwal::class, 'kode_mk', 'kode_mk');
+    }
+
+    public function prodi(){
+        return $this->belongsToMany(Prodi::class);
+    }
+
+    
 
 
 

@@ -82,11 +82,11 @@ class MahasiswaUserSeeder extends Seeder
                 'nama' => $student['nama'],
                 'email' => $user->email,
                 'no_telp' => '0812345678' . $index,
-                'kode_registrasi' => '100',
+                'kode_registrasi' => '000',
                 
                 'tahun_masuk' => $tahunMasuk,
                 'ips' => number_format(rand(200, 400) / 100, 2), // IPK antara 2.00 - 4.00
-                'sksk' => rand(20, 144), // SKS acak
+                
                 'kode_prodi' => $prodiList[5]->kode_prodi,
                 
                 'pembimbing_id' => ($tahunMasuk == '2021' || $tahunMasuk == '2022') ? 1 : 2, // Pembimbing 1 untuk 2021-2022, Pembimbing 2 untuk 2023-2024

@@ -16,11 +16,12 @@ return new class extends Migration
             $table->integer('total_sks');
             //Nim
             $table->string('nim');
+            $table->integer('semester');
             
-            $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Ditolak']);
-            //foreign jadwalid
-            $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
-            //foreign nim
+            $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Diizinkan', 'Dibatalkan']);
+
+            
+
             $table->foreign('nim')->references('nim')->on('mahasiswa')->onDelete('cascade');
            
         

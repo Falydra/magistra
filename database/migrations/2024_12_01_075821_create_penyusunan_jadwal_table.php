@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('penyusunan_jadwal', function (Blueprint $table) {
             $table->id();
             $table->string('kode_jadwal_prodi');
-           
             $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
             $table->foreign('kode_jadwal_prodi')->references('kode_jadwal_prodi')->on('jadwal_prodi')->onDelete('cascade');
 
