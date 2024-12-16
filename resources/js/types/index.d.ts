@@ -22,7 +22,7 @@ export interface Ruang {
     kode_gedung: string;
     kode_prodi: string;
     kode_fakultas: string;
-    is_verif: boolean;
+    is_verif: string;
     kapasitas: number;
 }
 
@@ -61,6 +61,8 @@ export interface Mahasiswa{
     dosen_pembimbing: string;
     user_id: number;
     email: string;
+    hasMadeIRS: boolean;
+    latest_irs?: IRS;
 }
 
 export interface Pembayaran {
@@ -193,6 +195,8 @@ export interface Jadwal {
     kelas: string;
     nama: string;
     semester: number;
+    kode_prodi: string;
+    program_studi: string;
     sks: number;
     kuota: number;
     jenis: string;
@@ -217,6 +221,13 @@ export interface AkademikAdmin{
 
 }
 
+export interface Angkatan {
+    id: number;
+    angkatan_perwalian: string;
+    id_pembimbing: number;
+
+}
+
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
@@ -225,7 +236,13 @@ export type PageProps<T extends Record<string, unknown> = Record<string, unknown
     email: boolean;
     
 };
-
+export type AngkatanProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+    angkatan: Angkatan;
+    
+};
 export type AkademikAdminProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: {
         user: User;

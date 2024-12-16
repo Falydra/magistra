@@ -62,7 +62,6 @@ class MahasiswaUserSeeder extends Seeder
             ['nim' => '24060122120007', 'nama' => 'Titah Mohamad Sahputra'],
             ['nim' => '24060122130086', 'nama' => 'Thoriq Hadiwinata']
         ];
-        
 
         $years = ['2021', '2022', '2023', '2024'];
         $statuses = ['100', '000'];
@@ -77,22 +76,22 @@ class MahasiswaUserSeeder extends Seeder
 
             $tahunMasuk = $years[$index % count($years)];
 
-            Mahasiswa::create([
+            $mahasiswa = Mahasiswa::create([
                 'nim' => $student['nim'],
                 'nama' => $student['nama'],
                 'email' => $user->email,
                 'no_telp' => '0812345678' . $index,
                 'kode_registrasi' => '000',
-                
                 'tahun_masuk' => $tahunMasuk,
                 'ips' => number_format(rand(200, 400) / 100, 2), // IPK antara 2.00 - 4.00
-                
                 'kode_prodi' => $prodiList[5]->kode_prodi,
-                
                 'pembimbing_id' => ($tahunMasuk == '2021' || $tahunMasuk == '2022') ? 1 : 2, // Pembimbing 1 untuk 2021-2022, Pembimbing 2 untuk 2023-2024
                 'role' => 'mahasiswa',
                 'user_id' => $user->id,
             ]);
+
+            // Call the createIRSAndJadwal method
+            $mahasiswa->createIRSAndJadwal();
         }
     }
 }

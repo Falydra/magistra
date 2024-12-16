@@ -23,11 +23,9 @@ class IRS extends Model
         return $this->belongsTo(Mahasiswa::class, 'nim', 'nim');
     }
 
-    public function jadwal()
-    {
-        return $this->hasMany(Jadwal::class);
+    public function jadwal(){
+        return $this->belongsToMany(Jadwal::class, 'irs_jadwal', 'id_irs', 'id_jadwal');
     }
-
     public function irsJadwal()
     {
         return $this->hasMany(IRSJadwal::class, 'id_irs', 'id');

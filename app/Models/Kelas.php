@@ -17,6 +17,9 @@ class Kelas extends Model
         'kapasitas',
     ];
 
-   
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'kelas', 'kelas');
+    }
 
 }

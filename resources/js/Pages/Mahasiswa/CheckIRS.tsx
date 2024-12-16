@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import PageLayout from "@/Layouts/PageLayout";
 import { PageProps, MahasiswaProps, IRSProps, JadwalProps, IRSJadwalProps } from '@/types';
@@ -10,43 +10,51 @@ import { HiAcademicCap, HiBuildingLibrary } from 'react-icons/hi2';
 import { LuFilePlus2 } from 'react-icons/lu';
 import { CiPaperplane } from "react-icons/ci";
 import { IoSendSharp } from "react-icons/io5";
-
+import { use } from 'framer-motion/client';
 
 export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps & IRSJadwalProps & IRSProps) {
-    const {url} = usePage().props;
+    const { url } = usePage().props;
     const { auth } = usePage().props;
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const selectedJadwalIds = irsJadwal.map(j => j.id);
 
+    console.log(irs);
 
-    const handleSubmit = async (status: string) => {
+    
+
+    const handleSubmit = async () => {
         try {
-            const response = await fetch('/api/submit-irs', { // Ganti dengan endpoint backend yang sesuai
+            const response = await fetch('/submit-irs', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    mahasiswa_id: mahasiswa.id, // ID mahasiswa untuk referensi
-                    status: irs[0].status,                    // Status pengajuan IRS
+                    mahasiswa_nim: mahasiswa.nim,
+                    irs_id: irs[0].id, // ID IRS
+                    jadwal_ids: selectedJadwalIds, // Array ID jadwal yang dipilih
                 }),
             });
     
             if (!response.ok) {
-                throw new Error(`Error: ${response.statusText}`);
+                // throw new Error(Error: ${response.statusText});
             }
     
             const data = await response.json();
     
             if (data.success) {
-                alert('IRS berhasil diajukan ke pembimbing.');
-                // Tindakan tambahan seperti reload halaman atau update data
+                alert(data.message);
+                window.location.reload();
             } else {
-                alert('Terjadi kesalahan dalam pengajuan IRS.');
+                alert(data.message || 'Terjadi kesalahan.');
             }
         } catch (error) {
             console.error('Error submitting IRS:', error);
             alert('Gagal mengajukan IRS. Silakan coba lagi.');
         }
     };
+
+    // console.log(irsJadwal);
 
     return (
         <PageLayout
@@ -100,6 +108,7 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                 <div className="w-full overflow-y-auto min-h-[1000px]">
                     <table className="w-full mb-6 border border-gray-300">
                         <tbody>
+                            
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Nama</td>
                                 <td className="border px-2 py-1">{mahasiswa.nama}</td>
@@ -112,10 +121,19 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                                 <td className="border px-2 py-1 font-semibold">Program Studi</td>
                                 <td className="border px-2 py-1">{mahasiswa.prodi}</td>
                             </tr>
-                            <tr>
-                                <td className="border px-2 py-1 font-semibold">Semester</td>
-                                <td className="border px-2 py-1">{mahasiswa.semester}</td>
-                            </tr>
+                            {irs.map((irs) => (
+                                <tr key={irs.id}>
+                                    <td className="border px-2 py-1 font-semibold">Semester</td>
+                                    <td className="border px-2 py-1">{irs.semester}</td>
+                                </tr>
+                            ))}
+                            {irs.map((irs) => (
+                                <tr key={irs.id}>
+                                    <td className="border px-2 py-1 font-semibold">Total SKS</td>
+                                    <td className="border px-2 py-1">{irs.total_sks}</td>
+                                </tr>
+                            ))}
+                            
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Maksimum SKS</td>
                                 <td className="border px-2 py-1">
@@ -155,78 +173,33 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                             <th className='py-3 border'>SKS</th>
                             <th className='py-3 border'>Kelas</th>
                             <th className='py-3 border'>Ruang</th>
-                           
                             <th className='py-3 border'>Jadwal</th>
                         </tr>
                     </thead>
                     <tbody className='text-center scrollbar-hidden overflow-y-auto '>
-                        {irsJadwal.map((irsItem, index) => {
-                            const isFirstOccurrence = index === 0 || irsItem.kode_mk !== irsJadwal[index - 1].kode_mk;
-
-                            return (
-                                <React.Fragment key={irsItem.id}>
-                                    <tr className="border">
-                                        {isFirstOccurrence && (
-                                            <>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {index + 1}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {irsItem.kode_mk}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {irsItem.nama}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {irsItem.sks}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {irsItem.kelas}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                    {irsItem.kode_ruang}
-                                                </td>
-                                                <td className="py-3 border" rowSpan={irsJadwal.filter(j => j.kode_mk === irsItem.kode_mk).length}>
-                                                {irsItem.hari}, {irsItem.waktu_mulai} - {irsItem.waktu_akhir}
-                                                </td>
-
-                                                
-                                            </>
-                                        )}
-                                       
-                                    </tr>
-                                    {index === 11 && (
-                                        <tr className="border">
-                                            <td className="py-3 border" colSpan={8}>
-                                                {/* //Show the kode_sks from irs */}
-                                                Total Sks yang diambil: {irs[0].total_sks}
-                                                
-                                               
-                                            </td>
-                                        </tr>
-                                    )}
-                                </React.Fragment>
-                            );
-                        })}
+                        {irsJadwal.map((jadwal, index) => (
+                            <tr key={jadwal.id} className='border'>
+                                <td className='py-3 border'>{index + 1}</td>
+                                <td className='py-3 border'>{jadwal.kode_mk}</td>
+                                <td className='py-3 border'>{jadwal.nama}</td>
+                                <td className='py-3 border'>{jadwal.sks}</td>
+                                <td className='py-3 border'>{jadwal.kelas}</td>
+                                <td className='py-3 border'>{jadwal.kode_ruang}</td>
+                                <td className='py-3 border'>{jadwal.hari} {jadwal.waktu_mulai} - {jadwal.waktu_akhir}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 <div className='w-full flex flex-row items-center justify-end'>
                     <button 
-                    onChange={() => handleSubmit("Belum Disetujui")}
+                    onClick={handleSubmit}
                     className='w-60 h-12 mt-4 text-white bg-primary-green flex-row flex justify-center items-center rounded-lg self-end'>
-                        
-                    
                     Ajukan ke Pembimbing
                     <IoSendSharp className='w-6 h-6 ml-2 text-white '/>   
                     </button>
                 </div>
-                </div>
-                
-                
-                   
-                
-                
             </div>
+        </div>
         </PageLayout>
     );
 }

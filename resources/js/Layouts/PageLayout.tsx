@@ -8,6 +8,8 @@ import { RxExit } from "react-icons/rx";
 import { User } from '@/types';
 import { FormEventHandler, useState } from 'react';
 import { Toaster } from '@/Components/ui/toaster';
+import { Separator } from '@/Components/ui/separator';
+import { Avatar } from '@/Components/ui/avatar';
 
 
 
@@ -15,9 +17,10 @@ export default function PageLayout({
     user,
     back,
     children,
-    sidebarChildren
+    sidebarChildren,
+    header,
     
-}: PropsWithChildren<{ user: User; back: ReactNode;  sidebarChildren? : ReactNode  }>) {
+}: PropsWithChildren<{ user: User; back: ReactNode;  sidebarChildren? : ReactNode, header?: string  }>) {
     const { auth } = usePage<PageProps>().props;
     const { url } = usePage<PageProps>().props;
     const [notification, setNotification] = useState<string | null>(null);
@@ -37,8 +40,8 @@ export default function PageLayout({
     return (
         <>
             <Head title="Dashboard" />
-            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row overflow-x--hidden">
-                <div className="flex flex-col w-full sm:w-2/5 lg:w-1/5 bg-transparent mt-4 mb-10 ml-4 items-center">
+            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row overflow-x-hidden overflow-y-hidden">
+                <div className="flex flex-col w-full sm:w-2/5 lg:w-3/12 bg-transparent mt-4 mb-10 ml-4 items-center">
 
                 {/* Sidebar Parent */}
                     <div className="flex flex-col items-center w-full h-screen min-h-screen justify-between  overflow-y-auto lg:fixed lg:w-1/5 sm:w2/5 bg-dark-500 scrollbar-hidden z-5 mt-12">
@@ -106,14 +109,32 @@ export default function PageLayout({
                     </div>
                 </div>
                 
-                <div className=' flex flex-col items-center justify-center w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl overflow-x-hidden overflow-y-auto '>
+                <div className=' flex flex-col items-center justify-center w-full m-4  bg-white md:w-[2000px] h-full rounded-3xl overflow-x-hidden '>
 
-                    <div className="flex flex-col items-center justify-start w-full h-full  bg-white z-10 rounded-3xl mx-8 ">
-                        <div className="flex flex-row items-start justify-between w-full mt-10 bg-white ">
-                            {back}
+                    <div className="flex flex-col text-left items-center justify-start w-full h-screen  bg-white z-10 rounded-3xl ">
+                        <div className="flex flex-row items-start justify-between w-full bg-white">
+                            <div className="flex flex-row items-start justify-start mr-9 w-full mt-2 bg-white ">
+                                {back}
+
+                            </div>
                             
+                            <div className='flex flex-row items-end justify-end mr-10 w-full bg-white gap-12'>
+                                <TextInput
+                                    className="flex flex-row items-start justify-start w-4/12 mt-6 "
+                                    placeholder="Search"
+                                    // icon="search"
+                                />
+                                <Avatar className='bg-black flex items-center justify-center mt-6'/>
+                            </div>
+                            
+                           
                         </div>
-                
+                        
+                        
+                        <Separator className="bg-black bg-opacity-60 mt-2 "/>
+                        <h2 className="self-start ml-10 text-3xl font-bold leading-tight  text-primary-dark">
+                            {header}
+                        </h2>
                         
                         
                         {children}

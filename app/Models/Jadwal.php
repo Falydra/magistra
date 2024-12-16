@@ -28,11 +28,11 @@ class Jadwal extends Model {
     }
 
     public function waktu() {
-        return $this->belongsTo(Waktu::class, 'waktu_mulai');
+        return $this->belongsTo(Waktu::class, 'waktu_mulai', 'waktu_mulai');	
     }
 
     public function mataKuliah() {
-        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mk');
+        return $this->belongsTo(MataKuliah::class, 'kode_mk', 'kode_mk'); 
     }
 
     public function ruang() {
@@ -75,5 +75,17 @@ class Jadwal extends Model {
 
     public function irs() {
         return $this->belongsToMany(Irs::class, 'jadwal_irs', 'id_jadwal', 'id_irs');
+    }
+
+    // Model Relasi Jadwal Sausan
+    // mataKuliah, ruang, waktuMulai 
+    public function kelasJadwal()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas', 'kelas');
+    }
+
+    public function irsJadwal()
+    {
+    return $this->belongsTo(IRSJadwal::class, 'id_jadwal', 'id');
     }
 }

@@ -20,18 +20,19 @@ class DatabaseSeeder extends Seeder
             RuangSeeder::class,
             AdminUserSeeder::class,
             DosenSeeder::class,
+            DekanUserSeeder::class,
             KaprodiUserSeeder::class,
             PembimbingUserSeeder::class,
             StatusRegistrasiSeeder::class,
-            MahasiswaUserSeeder::class,
             MataKuliahSeeder::class,
             WaktuSeeder::class,
             KelasSeeder::class,
-            AngkatanPerwalianSeeder::class,
             JadwalSeeder::class,
+            MahasiswaUserSeeder::class,
+            AngkatanPerwalianSeeder::class,
             JadwalProdiSeeder::class,
             PenyusunanJadwalSeeder::class,
-            IrsSeeder::class,
+            // IrsSeeder::class,
             IrsJadwalSeeder::class
             
         ]);

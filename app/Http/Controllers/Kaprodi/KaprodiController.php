@@ -35,9 +35,14 @@ class KaprodiController extends Controller {
             return Inertia::render(('Kaprodi/RingkasanJadwal'));
         }
 
-        public function index() {
-            return Inertia::render('Kaprodi/DashboardKaprodi');
+        public function index(Request $request) {
+            return Inertia::render('Kaprodi/DashboardKaprodi', [
+                'auth' => ['user' => $request->user(),
+                ],
+                'kaprodi' => $request->user()->kaprodi,
+            ]);
         }
+
         public function getProdi()
         {
             try {
@@ -58,20 +63,22 @@ class KaprodiController extends Controller {
         }
 
         public function getRuangByProdi()
-    {
-        $user = Auth::user();
-        if ($user->role !== 'kaprodi') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-        }
+        {
+            $user = Auth::user();
+            if ($user->role !== 'kaprodi') {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
 
-        $kaprodi = Kaprodi::where('user_id', $user->id)->first();
-        if (!$kaprodi) {
-            return response()->json(['success' => false, 'message' => 'Prodi tidak ditemukan untuk kaprodi ini.'], 404);
-        }
+            $kaprodi = Kaprodi::where('user_id', $user->id)->first();
+            if (!$kaprodi) {
+                return response()->json(['success' => false, 'message' => 'Prodi tidak ditemukan untuk kaprodi ini.'], 404);
+            }
 
-        $ruang = Ruang::where('kode_prodi', $kaprodi->kode_prodi)->get();
-        return response()->json(['success' => true, 'data' => $ruang]);
-    }
+            $ruang = Ruang::where('kode_prodi', $kaprodi->kode_prodi)
+            ->where('is_verif', '2') 
+            ->get();
+                return response()->json(['success' => true, 'data' => $ruang]);
+        }
 
         public function store(Request $request) {
             $request->validate([

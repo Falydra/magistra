@@ -24,7 +24,15 @@ class Pembimbing extends Model
     }
 
     public function mahasiswa(){
-        return $this->hasMany(Mahasiswa::class);
+        return $this->hasMany(Mahasiswa::class, 'pembimbing_id');
     }
 
+    public function angkatanPerwalian() {
+        return $this->hasMany(AngkatanPerwalian::class, 'pembimbing_id');
+    }
+
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'nip', 'nip');
+    }
 }

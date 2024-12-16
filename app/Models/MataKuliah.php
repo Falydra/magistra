@@ -15,14 +15,30 @@ class MataKuliah extends Model
     protected $table = 'mata_kuliah';
 
     protected $fillable = [
-        'kode',
-        'nama',
-        'sks',
-        'semester',
-    ];
+        'kode_mk', 
+        'nama', 
+        'sks', 
+        'semester', 
+        'jenis', 
+        'kuota', 
+        'jumlah_kelas',
+        'dosen_nip', 
+        'dosen_nip_2', 
+        'dosen_nip_3'];
 
-    public function dosen(){
-        return $this->belongsToMany(Dosen::class);
+    public function dosenUtama()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_nip', 'nip');
+    }
+
+    public function dosenKedua()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_nip_2', 'nip');
+    }
+
+    public function dosenKetiga()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_nip_3', 'nip');
     }
 
     public function ruang(){
@@ -35,6 +51,11 @@ class MataKuliah extends Model
 
     public function prodi(){
         return $this->belongsToMany(Prodi::class);
+    }
+
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'kode_mk');
     }
 
     

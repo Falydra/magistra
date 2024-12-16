@@ -8,36 +8,37 @@ use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Kaprodi;
 use App\Models\Dekan;
+use App\Models\Fakultas;
+
 
 
 class DekanUserSeeder extends Seeder
 {
     public function run()
     {
-        // Create a dekan user
+        // Create a dekan user using Dosen Nip
+        $deosenNip = Dosen::where('nip', '19696201999031002')->first();
+        $kode_fakulta = Fakultas::where('kode_fakultas', '24')->first();
         $dekanUser = User::create([
             'name' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
             'email' => 'ngadiwiyana@lecturer.undip.ac.id',
-            'password' => Hash::make('ngadiwiyana1234'),
+            'password' => Hash::make('ngadi123'),
             'role' => 'dekan',
         ]);
 
+        // Assign the dekan user to the dekan user
+    
 
-        $dekanDosen = Dosen::create([
+        // Create a dekan user
+        $dekan = Dekan::create([
+            'nip' => $deosenNip->nip,
+            'tahun_periode' => 2021,
+            'kode_fakultas' => $kode_fakulta->kode_fakultas,
             'nama' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
-            'nip' => '19696201999031002',
-            'nidn' => '0009036902',
-            'kode_prodi' => '06',
-            
-        ]);
-
-        // Create a corresponding dekan record
-        Dekan::create([
-            'nama' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
-            'tahun_periode' => '2024',
-            'kode_fakultas' => '24',
-            'nip' => $dekanDosen->nip,
             'user_id' => $dekanUser->id,
         ]);
+
+     
+
     }
 }

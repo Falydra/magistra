@@ -1,6 +1,6 @@
 import TextInput from '@/Components/TextInput';
 import { Link } from '@inertiajs/react';
-import PembimbingLayout from '@/Layouts/PembimbingLayout'; // Pastikan nama impor sesuai dengan nama file
+import PembimbingLayout from '@/Layouts/PembimbingLayout'; 
 import { PageProps } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import { useState, useEffect } from 'react';

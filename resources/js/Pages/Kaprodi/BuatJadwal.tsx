@@ -63,7 +63,7 @@ const BuatJadwal: React.FC = () => {
 
 const formatTime = (time: string): string => {
     if (time.length === 5) {
-        return `${time}:00`; // Tambahkan ":00" jika waktu hanya jam dan menit
+        return `${time}:00`; // Tambahkan ":00" karena waktu hanya jam dan menit
     }
     return time;
 };
@@ -158,6 +158,8 @@ const formatTime = (time: string): string => {
         .catch((err) => console.error(err));
 }, [selectedMataKuliah]);
 
+console.log(previewData?.mataKuliah)
+
 useEffect(() => {
   fetch(`/get-jadwal?kelas=${selectedKelas}&kode_mk=${selectedMataKuliah}`)
       .then((response) => response.json())
@@ -229,6 +231,7 @@ const handleReset = () => {
     ruang: null,
     waktu: {mulai:"", akhir:""},
   }); 
+  setAvailabilityMessage(null);
 };
 
 const handleStartTimeChange = (value: string) => {
@@ -258,16 +261,16 @@ const handleStartTimeChange = (value: string) => {
   const checkAvailability = async () => {
     if (!selectedRuang || !selectedKelas || !selectedHari || !selectedStartTime || !endTime || !selectedMataKuliah) {
       alert("Lengkapi seluruh data!");
-      return; 
-  }
-
-    const selectedMk = mataKuliahList.find((mk) => mk.kode_mk === selectedMataKuliah); 
-    const sks = selectedMk?.sks || 0; 
-    const kodeMk = selectedMk?.label.split(' - ')[0] || 'KODE MK'; 
-
+      return;
+    }
+  
+    const selectedMk = mataKuliahList.find((mk) => mk.kode_mk === selectedMataKuliah);
+    const sks = selectedMk?.sks || 0;
+    const kodeMk = selectedMk?.label.split(" - ")[0] || "KODE MK";
+  
     // Set preview data sebelum cek ketersediaan
     setPreviewData({
-      mataKuliah: selectedMk?.label.split(' - ')[1] || "Nama Mata Kuliah",
+      mataKuliah: selectedMk?.label.split(" - ")[1] || "Nama Mata Kuliah",
       kodeMk,
       sks,
       kelas: String(selectedKelas),
@@ -278,13 +281,32 @@ const handleStartTimeChange = (value: string) => {
         akhir: calculateEndTime(selectedStartTime, sks),
       },
     });
-
+  
+    const currentPath = window.location.pathname;
+  
+    // Debug untuk memeriksa path yang diterima
+    console.log("Current Path:", currentPath);
+  
+    // Tentukan URL berdasarkan path
+    let url = null;
+    if (currentPath === "/kaprodi/penyusunan-jadwal/buat-jadwal") {
+      url = "/cek-jadwal-new";
+    } else if (currentPath === "/kaprodi/penyusunan-jadwal/edit-jadwal") {
+      url = "/cek-jadwal-edit";
+    }
+  
+    // Jika URL tidak ditemukan, tampilkan pesan
+    if (!url) {
+      alert("Halaman tidak dikenali. Tidak dapat melanjutkan cek ketersediaan.");
+      return;
+    }
+  
     try {
-      const response = await fetch('/cek-jadwal', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "",
         },
         body: JSON.stringify({
           id: jadwalId,
@@ -335,8 +357,8 @@ const handleSubmitJadwal = async () => {
   };
 
   // Debugging data yang dikirim ke backend
-  console.log("Data sent to backend:", JSON.stringify(dataToSend, null, 2));
-
+  console.log("Data yang dikirim ke backend:", dataToSend);
+  
   const url = jadwalId ? '/update-jadwal' : '/buat-jadwal';
   const method = jadwalId ? 'POST' : 'POST';
   try {
@@ -352,7 +374,8 @@ const handleSubmitJadwal = async () => {
       const responseData = await response.json();
       if (response.ok && responseData.success) {
           alert(jadwalId ? "Jadwal berhasil diperbarui!" : "Jadwal berhasil dibuat!");
-          window.location.href = "/kaprodi/penyusunan-jadwal/ringkasan-jadwal";
+          handleReset();      
+          setAvailabilityMessage(null);
       } else {
           alert(`Gagal ${jadwalId ? "memperbarui" : "membuat"} jadwal: ${responseData.message || "Terjadi kesalahan."}`);
       }
@@ -361,6 +384,12 @@ const handleSubmitJadwal = async () => {
       alert("Terjadi kesalahan saat memproses permintaan.");
   }
 };
+console.log(mataKuliahList);
+console.log(ruangList);
+console.log(kelasList);
+
+
+
 
 // ===============================================================
 //                            BODY                               |
@@ -529,7 +558,7 @@ const handleSubmitJadwal = async () => {
           <button
             type="button"
             onClick={handleSubmitJadwal}
-            disabled={availabilityMessage !== "Jadwal tersedia"}
+            disabled={!availabilityMessage || availabilityMessage !== "Jadwal tersedia"}
             className={`flex items-center justify-center gap-2 text-white text-lg font-semibold rounded-md px-6 py-1 focus:ring-4 ${
               availabilityMessage === "Jadwal tersedia"
                 ? 'bg-button-green hover:bg-button-hv_green focus:ring-green-500'

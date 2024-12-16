@@ -132,14 +132,14 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
                             )}
                         </div>
                         
-                        <div className='flex w-5/12 items-center flex-col rounded-l-custom text-start z-11' style={{ backgroundColor: '#2E689A' }}>
-                            <h2 className='text-2xl mt-4'>
+                        <div className='flex w-6/12 items-center justify-center flex-col rounded-l-custom text-start z-11' style={{ backgroundColor: '#2E689A' }}>
+                            <h2 className='text-2xl mt-12'>
                                 Welcome To
                             </h2>
                             <h1 className='text-4xl font-bold text-yellow-500'>
                                 MAGISTRA
                             </h1>
-                            <img className='w-auto h-96 mt-3.5 ' src='/images/image-young-ceo-manager-korean-working-woman-holding-tablet-smiling-standing-white-background-removebg-preview 1.png' />
+                            <img className='w-auto h-96 mb-5' src='/images/image-young-ceo-manager-korean-working-woman-holding-tablet-smiling-standing-white-background-removebg-preview 1.png' />
                         </div>
                     </div>
                 </div>

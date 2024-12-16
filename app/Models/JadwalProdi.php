@@ -14,7 +14,7 @@ class JadwalProdi extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'kode_jadwal_prodi',
-        
+        'kode_prodi',
         'status',
     ];
 

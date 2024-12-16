@@ -264,7 +264,7 @@ export default function TambahRuang() {
                                 >
                                     Tambah Ruang
                                 </button>
-                                <Button className="bg-primary-red w-24 h-10">
+                                <Button className="bg-primary-red w-24 h-10" onClick={() => Inertia.visit(route("admin.alokasiruang"))}>
                                     Batal
                                 </Button>
                             </div>

@@ -16,7 +16,13 @@ class AdminController extends Controller
 
     public function index()
     {
+
+        $user = auth()->user();
         $akademik = Akademik::orderBy('id', 'asc')->first();
+
+
+        
+      
        return Inertia::render('Admin/Dashboard', [
            'akademik' => $akademik
        ]);
@@ -26,6 +32,10 @@ class AdminController extends Controller
 
         $query = Ruang::query();
 
+        // const handlePaginate = (perPage: number) => {
+            
+        // }
+
         if ($request->has('filter_gedung') && $request->filter_gedung) {
             $query->where('kode_gedung', $request->filter_gedung);
         }
@@ -33,10 +43,18 @@ class AdminController extends Controller
             $query->where('kode_prodi', $request->filter_prodi);
         }
 
-        $ruang = $query->orderBy('id', 'asc')->paginate(5)->appends($request->only(['filter_gedung', 'filter_prodi']));
+        // rewrite this code to use pagination by request perPage
+        $perPage = $request->get('perPage', 5);
+
+        $ruang = $query
+            ->orderBy('id', 'asc')
+            ->paginate($perPage)
+            ->appends($request->only(['filter_gedung', 'filter_prodi', 'perPage']));
+
         return Inertia::render('Admin/AlokasiRuang', [
             'ruang' => $ruang,
             'filters' => $request->only(['filter_gedung', 'filter_prodi']),
+            'perPage' => $perPage,
         ]);
     }
 
@@ -64,24 +82,34 @@ class AdminController extends Controller
     public function storeRuang(RuangRequest $request){
         $validated = $request->validated();
 
-        $existingGedung = Ruang::where('kode_gedung', $validated['kode_gedung'])
-            ->where('kode_prodi', '!=', $validated['kode_prodi'])
-            ->first();
-            
-        $existingProdi = Ruang::where('kode_prodi', $validated['kode_prodi'])
-            ->where('kode_gedung', '!=', $validated['kode_gedung'])
+        // $existingGedung = Ruang::where('kode_gedung', $validated['kode_gedung'])
+        //     ->where('kode_prodi', $validated['kode_prodi'])
+        //     ->first();
+
+      
+        // $existingProdi = Ruang::where('kode_prodi', $validated['kode_prodi'])
+        //     ->where('kode_gedung', '!=', $validated['kode_gedung'])
+        //     ->first();
+
+        $existingRuang = Ruang::where('kode_ruang', $validated['kode_ruang'])
+            ->where('kode_prodi', '!=',  $validated['kode_prodi'])
             ->first();
 
-        if ($existingGedung) {
-            return back()->withErrors(['kode_gedung' => 'Gedung ini sudah ditempati oleh prodi lain.'])->withInput();
-        }
+       
 
-        if ($existingProdi) {
-            return back()->withErrors(['kode_prodi' => 'Prodi ini sudah ditempati di gedung lain.'])->withInput();
-        }
+        // if ($existingGedung) {
+        //     return back()->withErrors(['kode_gedung' => 'Gedung ini sudah ditempati di prodi lain.'])->withInput();
+        // }
+        // if ($existingProdi) {
+        //     return back()->withErrors(['kode_prodi' => 'Prodi ini sudah ditempati di gedung lain.'])->withInput();
+        // }
 
         if (strtoupper($validated['kode_ruang'][0]) !== strtoupper($validated['kode_gedung'][0])) {
             return back()->withErrors(['kode_ruang' => 'Kode ruang harus dimulai dengan huruf yang sama dengan kode gedung.'])->withInput();
+        }
+
+        if ($existingRuang) {
+            return back()->withErrors(['kode_ruang' => 'Kode ruang ini sudah ditempati di prodi lain.'])->withInput();
         }
 
         $validated['kode_fakultas'] = '24';

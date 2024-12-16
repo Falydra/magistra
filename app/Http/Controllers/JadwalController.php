@@ -9,6 +9,7 @@ use App\Models\Waktu;
 use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class JadwalController extends Controller
@@ -30,64 +31,45 @@ class JadwalController extends Controller
         'data' => $jadwal->get(),
     ]);
 }
-    public function checkAvailability(Request $request)
+
+public function checkAvailability(Request $request)
 {
-    try {
-        Log::info('Data yang diterima di backend:', $request->all());
+    Log::info('Data yang diterima di backend:', $request->all());
 
-        // Validasi data
-        $validated = $request->validate([
-            'id' => 'nullable|integer|exists:jadwal,id', // ID untuk edit
-            'ruang' => 'required|string|exists:ruang,kode_ruang',
-            'kelas' => 'required|string|exists:kelas,kelas',
-            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
-            'waktu_mulai' => 'required|exists:waktu,waktu_mulai',
-            'waktu_akhir' => 'required|date_format:H:i:s|after:waktu_mulai',
-            'mata_kuliah' => 'required|string|exists:mata_kuliah,kode_mk',
-        ]);
+    // Validasi data yang diterima
+    $validated = $request->validate([
+        'id' => 'nullable|integer|exists:jadwal,id', // ID jika edit
+        'ruang' => 'required|string|exists:ruang,kode_ruang',
+        'kelas' => 'required|string|exists:kelas,kelas',
+        'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
+        'waktu_mulai' => 'required|date_format:H:i:s',
+        'waktu_akhir' => 'required|date_format:H:i:s|after:waktu_mulai',
+        'mata_kuliah' => 'required|string|exists:mata_kuliah,kode_mk',
+    ]);
 
-        $mataKuliah = MataKuliah::where('kode_mk', $validated['mata_kuliah'])->first();
-        if (!$mataKuliah) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mata kuliah tidak ditemukan.',
-            ], 422);
-        }
-        $validated['kode_mk'] = $mataKuliah->kode_mk;
-        $validated['mata_kuliah'] = $mataKuliah->nama;
+    $currentRoute = Route::currentRouteName(); 
+    Log::info('Nama route yang diakses:', ['route_name' => $currentRoute]);
+    $mataKuliah = MataKuliah::where('kode_mk', $validated['mata_kuliah'])->first();
+    $validated['kode_mk'] = $mataKuliah->kode_mk;
+    $validated['mata_kuliah'] = $mataKuliah->nama;
 
-        // 1. Cek jika mata kuliah dan kelas sudah dijadwalkan, kecuali jika ID sama
+    // 1. Validasi untuk jadwal baru
+    if ($currentRoute === 'cekJadwalNew') {
+        // 1a) Validasi jadwal sudah terjadwal
         $existingJadwal = Jadwal::where('kelas', $validated['kelas'])
             ->where('kode_mk', $validated['kode_mk'])
-            ->when(isset($validated['id']), function ($query) use ($validated) {
-                $query->where('id', '!=', $validated['id']); // Abaikan jadwal yang sedang diedit
-            })
             ->exists();
 
         if ($existingJadwal) {
-            // Tambahkan log untuk membantu debugging
-            Log::info('Existing schedule conflict detected.', [
-                'kelas' => $validated['kelas'],
-                'kode_mk' => $validated['kode_mk'],
-                'ignored_id' => $validated['id'] ?? null,
-                'jadwal_conflicts' => Jadwal::where('kelas', $validated['kelas'])
-                    ->where('kode_mk', $validated['kode_mk'])
-                    ->get() // Ambil semua jadwal yang menyebabkan konflik
-                    ->toArray(),
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => "{$validated['mata_kuliah']} untuk kelas {$validated['kelas']} telah dijadwalkan.",
             ]);
         }
 
-        // 2. Cek konflik pada ruang, waktu, dan hari, kecuali jika ID sama
+        // 1a) Validasi konflik ruang dan waktu
         $conflictDetails = Jadwal::where('hari', $validated['hari'])
             ->where('kode_ruang', $validated['ruang'])
-            ->when(isset($validated['id']), function ($query) use ($validated) {
-                $query->where('id', '!=', $validated['id']); // Abaikan jadwal yang sedang diedit
-            })
             ->where(function ($query) use ($validated) {
                 $query->whereBetween('waktu_mulai', [$validated['waktu_mulai'], $validated['waktu_akhir']])
                       ->orWhereBetween('waktu_akhir', [$validated['waktu_mulai'], $validated['waktu_akhir']])
@@ -109,85 +91,42 @@ class JadwalController extends Controller
             'success' => true,
             'message' => 'Jadwal tersedia!',
         ]);
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Validation Error:', $e->errors());
+    // 2. Validasi untuk edit jadwal    
+    } elseif ($currentRoute === 'cekJadwalEdit') {
+        // 2a) Ruang, hari, waktu bentrok
+        $conflictDetails = Jadwal::where('hari', $validated['hari'])
+            ->where('kode_ruang', $validated['ruang'])
+            ->where(function ($query) use ($validated) {
+                $query->where('id', '!=', $validated['id']); // Abaikan jadwal dengan ID yang sedang diedit
+            })
+            ->where(function ($query) use ($validated) {
+                $query->whereBetween('waktu_mulai', [$validated['waktu_mulai'], $validated['waktu_akhir']])
+                      ->orWhereBetween('waktu_akhir', [$validated['waktu_mulai'], $validated['waktu_akhir']])
+                      ->orWhere(function ($subQuery) use ($validated) {
+                          $subQuery->where('waktu_mulai', '<=', $validated['waktu_mulai'])
+                                   ->where('waktu_akhir', '>=', $validated['waktu_akhir']);
+                      });
+            })
+            ->exists();
+
+        if ($conflictDetails) {
+            return response()->json([
+                'success' => false,
+                'message' => "Ruang pada jam tersebut telah digunakan.",
+            ]);
+        }
+
         return response()->json([
-            'success' => false,
-            'message' => 'Validasi gagal!',
-            'errors' => $e->errors(),
-        ], 422);
-    } catch (\Exception $e) {
-        Log::error('Error Exception:', ['error' => $e->getMessage()]);
-        return response()->json([
-            'success' => false,
-            'message' => $e->getMessage(),
-        ], 500);
+            'success' => true,
+            'message' => 'Jadwal tersedia untuk diedit!',
+        ]);
     }
+
+    return response()->json([
+        'success' => false,
+        'message' => 'Route tidak valid.',
+    ], 400);
 }
-
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         // Validasi data input
-    //         $validated = $request->validate([
-    //             'ruang' => 'required|string|exists:ruang,kode_ruang',
-    //             'kelas' => 'required|string|exists:kelas,kelas',
-    //             'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
-    //             'waktu_mulai' => 'required|date_format:H:i:s|exists:waktu,waktu_mulai',
-    //             'waktu_akhir' => 'required|date_format:H:i:s|after:waktu_mulai',
-    //             'mata_kuliah' => 'required|string|exists:mata_kuliah,kode_mk',
-    //         ]);
-        
-    //         // Ambil data dari tabel lain
-    //         $waktuMulai = Waktu::where('waktu_mulai', $validated['waktu_mulai'])->first();
-    //         $ruang = Ruang::where('kode_ruang', $validated['ruang'])->first();
-    //         $mataKuliah = MataKuliah::where('kode_mk', $validated['mata_kuliah'])->first();
-    //         $kelas = Kelas::where('kelas', $validated['kelas'])->first();
-    
-    //         if (!$ruang || !$kelas || !$mataKuliah || !$waktuMulai) {
-    //             Log::error('Data referensi tidak ditemukan.', [
-    //                 'ruang' => $ruang,
-    //                 'kelas' => $kelas,
-    //                 'mata_kuliah' => $mataKuliah,
-    //                 'waktu_mulai' => $waktuMulai,
-    //             ]);
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Data referensi tidak ditemukan.',
-    //             ], 422);
-    //         }
-    
-
-    //         Jadwal::create([
-    //             'kode_ruang' => $ruang->kode_ruang,
-    //             'kelas' => $kelas->kelas, 
-    //             'hari' => $validated['hari'],
-    //             'waktu_mulai' => $waktuMulai->waktu_mulai, 
-    //             'waktu_akhir' => $validated['waktu_akhir'],
-    //             'kode_mk' => $mataKuliah->kode_mk,
-    //         ]);
-    
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Jadwal berhasil disimpan.',
-    //         ]);
-
-    //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         Log::error('Validation Error:', $e->errors());
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Validasi gagal!!',
-    //             'errors' => $e->errors(),
-    //         ], 422);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error Exception:', ['error' => $e->getMessage()]);
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Terjadi kesalahan saat menyimpan jadwal.',
-    //         ], 500);
-    //     }
-    // }
-
     public function store(Request $request)
 {
     $validated = $request->validate([
@@ -215,13 +154,13 @@ class JadwalController extends Controller
     public function index()
     {
         try {
-            $jadwal = Jadwal::with(['kelasJadwal', 'waktuMulai', 'ruang', 'mataKuliah.dosenUtama', 'mataKuliah.dosenKedua', 'mataKuliah.dosenKetiga'])->get();        
+            $jadwal = Jadwal::with(['kelasJadwal', 'waktu', 'ruang', 'mataKuliah.dosenUtama', 'mataKuliah.dosenKedua', 'mataKuliah.dosenKetiga'])->get();        
         
             $formattedJadwal = $jadwal->map(function ($item) {
                 return [
                     'id' => $item->id,
                     'hari' => $item->hari,
-                    'waktu_mulai' => $item->waktuMulai->waktu_mulai ?? null,
+                    'waktu_mulai' => $item->waktu->waktu_mulai ?? null,
                     'waktu_akhir' => $item->waktu_akhir,
                     'kelas' => $item->kelasJadwal->kelas ?? null,
                     'ruang' => $item->ruang->kode_ruang ?? null,
@@ -238,8 +177,6 @@ class JadwalController extends Controller
                     ])->filter()->join(', '),
                 ];
             });
-
-        \Log::info('Formatted Jadwal:', $formattedJadwal->toArray());
 
             return response()->json(['success' => true, 'data' => $formattedJadwal]);
         } catch (\Exception $e) {
@@ -269,30 +206,6 @@ class JadwalController extends Controller
         ]);
     }
 
-    // public function update(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'kelas' => 'required|string',
-    //         'hari' => 'required|string',
-    //         'ruang' => 'required|string',
-    //         'waktu_mulai' => 'required|date_format:H:i',
-    //         'waktu_akhir' => 'required|date_format:H:i|after:waktu_mulai',
-    //         'kode_mk' => 'required|string|exists:mata_kuliah,kode_mk',
-    //     ]);
-    
-    //     $jadwal = Jadwal::where('kode_mk', $validated['kode_mk'])
-    //         ->where('kelas', $validated['kelas'])
-    //         ->first();
-    
-    //     if (!$jadwal) {
-    //         return response()->json(['success' => false, 'message' => 'Jadwal tidak ditemukan.'], 404);
-    //     }
-    
-    //     $jadwal->update($validated);
-    
-    //     return response()->json(['success' => true, 'message' => 'Jadwal berhasil diperbarui.']);
-    // }
-
     public function update(Request $request)
     {
         $validated = $request->validate([
@@ -321,43 +234,6 @@ class JadwalController extends Controller
     
         return response()->json(['success' => true, 'message' => 'Jadwal berhasil diperbarui.']);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    // public function edit(Jadwal $jadwal)
-    // {
-    //     $ruangs = Ruang::all();
-    //     $kelas = Kelas::all();
-    //     $waktus = Waktu::all();
-    //     $mataKuliahs = MataKuliah::all();
-    //     $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-
-    //     return view('jadwal.edit', compact('jadwal', 'ruangs', 'kelas', 'waktus', 'mataKuliahs', 'days'));
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    // public function update(Request $request, Jadwal $jadwal)
-    // {
-    //     $validated = $request->validate([
-    //         'ruang_id' => 'required|exists:ruang,id',
-    //         'kelas_id' => 'required|exists:kelas,id',
-    //         'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu',
-    //         'waktu_mulai_id' => 'required|exists:waktu,id',
-    //         'waktu_akhir' => 'required|date_format:H:i',
-    //         'matkul_id' => 'required|exists:mata_kuliah,id',
-    //     ]);
-
-    //     $jadwal->update($validated);
-
-    //     return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
-    // }
-
-    /**
-     * Remove the specified resource from storage.
-     */
 
     public function destroy($id)
     {

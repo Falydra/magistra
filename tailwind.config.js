@@ -25,6 +25,9 @@ export default {
     			md: 'calc(var(--radius) - 2px)',
     			sm: 'calc(var(--radius) - 4px)'
     		},
+			width: {
+				'11/12': '93.6666666667%',
+			},
     		colors: {
 			
     			background: 'hsl(var(--background))',
@@ -51,8 +54,16 @@ export default {
 					txt1: "#1E77AF"
     			},
 				button: {
-					btngreen: "#34AF41",
-					btnred: "#F54749",
+					green: "#34AF41",
+					hv_green: "#289232",
+					red: "#F54749",
+					hv_red: "#E22022",
+					yellow: "#C38614",
+					hv_yellow: "#AA740F",
+					hv_light:"#BFE1F6",
+					blue: "#2E689A",
+					hv_blue: "#004F87"
+
 				},
 				table:{
 					head: "#EAF3F9",

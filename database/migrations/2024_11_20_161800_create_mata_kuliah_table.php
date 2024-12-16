@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('semester');
             $table->string('jenis');
             $table->integer('kuota');
+            $table->integer('jumlah_kelas');
             $table->string('dosen_nip');
             $table->string('dosen_nip_2')->nullable();
             $table->string('dosen_nip_3')->nullable();

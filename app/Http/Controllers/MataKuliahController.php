@@ -64,109 +64,136 @@ class MataKuliahController extends Controller
         ]
     ]);
 }
-    
-//     // Update data mata kuliah
-//     public function updateMataKuliah(Request $request)
-//     {
-//     // Validasi data dari frontend
-//     $validated = $request->validate([
-//         'kode_mk' => 'required|string|exists:mata_kuliah,kode_mk',
-//         'semester' => 'required|integer|min:1|max:8',
-//         'sks' => 'required|integer|min:1|max:4',
-//         'jumlah_kelas' => 'required|integer|min:1|max:10',
-//         'kuota' => 'required|integer|min:1|max:200',
-//         'dosen_nip' => 'nullable|string|exists:dosen,nip', // Dosen utama
-//         'dosen_nip_2' => 'nullable|string|exists:dosen,nip', // Dosen kedua
-//         'dosen_nip_3' => 'nullable|string|exists:dosen,nip', // Dosen ketiga
-//     ]);
-
-//     // Cari mata kuliah berdasarkan kode
-//     $mataKuliah = MataKuliah::where('kode_mk', $validated['kode_mk'])->first();
-//     if (!$mataKuliah) {
-//         return response()->json(['success' => false, 'message' => 'Mata kuliah tidak ditemukan'], 404);
-//     }
-
-//     // Update data mata kuliah
-//     $mataKuliah->update([
-//         'semester' => $validated['semester'],
-//         'sks' => $validated['sks'],
-//         'jumlah_kelas' => $validated['jumlah_kelas'],
-//         'kuota' => $validated['kuota'],
-//         'dosen_nip' => $validated['dosen_nip'],
-//         'dosen_nip_2' => $validated['dosen_nip_2'],
-//         'dosen_nip_3' => $validated['dosen_nip_3'],
-//     ]);
-
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Mata kuliah berhasil diperbarui.'
-//     ]);
-// }
 
 public function updateMataKuliah(Request $request)
 {
-    // Validasi data dari frontend
+    try {
+        $validated = $request->validate([
+            'kode_mk' => 'required|string|exists:mata_kuliah,kode_mk',
+            'semester' => 'required|integer|min:1|max:8',
+            'sks' => 'required|integer|min:1|max:4',
+            'jumlah_kelas' => 'required|integer|min:1|max:10',
+            'kuota' => 'required|integer|min:1|max:200',
+            'dosen_nip' => 'nullable|string|exists:dosen,nip',
+            'dosen_nip_2' => 'nullable|string|exists:dosen,nip',
+            'dosen_nip_3' => 'nullable|string|exists:dosen,nip',
+        ]);
+
+
+        // Validasi kode_mk agar tidak digunakan oleh mata kuliah lain
+        $existingMatkul = MataKuliah::where('kode_mk', '!=', $validated['kode_mk'])
+            ->where('kode_mk', $validated['kode_mk'])
+            ->exists();
+
+        if ($existingMatkul) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kode mata kuliah sudah digunakan oleh mata kuliah lain.',
+            ], 422);
+        }
+        $mataKuliah = MataKuliah::where('kode_mk', $validated['kode_mk'])->first();
+        if (!$mataKuliah) {
+            return response()->json(['success' => false, 'message' => 'Mata kuliah tidak ditemukan'], 404);
+        }
+        // Simpan SKS lama jika ada perubahan
+        $oldSks = $mataKuliah->sks;
+
+        $mataKuliah->update([
+            'semester' => $validated['semester'],
+            'sks' => $validated['sks'],
+            'jumlah_kelas' => $validated['jumlah_kelas'],
+            'kuota' => $validated['kuota'],
+            'dosen_nip' => $validated['dosen_nip'],
+            'dosen_nip_2' => $validated['dosen_nip_2'],
+            'dosen_nip_3' => $validated['dosen_nip_3'],
+        ]);
+    
+        // Jika SKS berubah, perbarui waktu akhir di jadwal
+        if ($oldSks != $validated['sks']) {
+            $jadwals = Jadwal::where('kode_mk', $validated['kode_mk'])->get();
+            foreach ($jadwals as $jadwal) {
+                $startTime = \Carbon\Carbon::createFromFormat('H:i:s', $jadwal->waktu_mulai);
+                $newEndTime = $startTime->addMinutes($validated['sks'] * 50); // Misalnya 1 SKS = 50 menit
+    
+                $jadwal->update([
+                    'waktu_akhir' => $newEndTime->format('H:i:s'),
+                ]);
+            }
+        } 
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Mata kuliah dan jadwal berhasil diperbarui.',
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error saat memperbarui mata kuliah:', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan saat memperbarui mata kuliah.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function tambahMatkul(Request $request)
+{
+    try{
     $validated = $request->validate([
-        'kode_mk' => 'required|string|exists:mata_kuliah,kode_mk',
+        'nama' => 'required|string|max:255',
         'semester' => 'required|integer|min:1|max:8',
+        'kode_mk' => 'required|string|unique:mata_kuliah,kode_mk|max:10',
         'sks' => 'required|integer|min:1|max:4',
         'jumlah_kelas' => 'required|integer|min:1|max:10',
         'kuota' => 'required|integer|min:1|max:200',
-        'dosen_nip' => 'nullable|string|exists:dosen,nip', // Dosen utama
-        'dosen_nip_2' => 'nullable|string|exists:dosen,nip', // Dosen kedua
-        'dosen_nip_3' => 'nullable|string|exists:dosen,nip', // Dosen ketiga
+        'jenis' => 'required|string|in:Wajib,Pilihan',
+        'dosen_pengampu' => 'required|array|min:1|max:3', // Maksimal 3 dosen pengampu
+        'dosen_pengampu.*' => 'nullable|string|exists:dosen,nip', // Validasi setiap NIP dosen
     ]);
 
-    Log::info('Data validasi untuk update mata kuliah:', $validated);
+     $existingMatkul = MataKuliah::where('nama', $validated['nama'])
+     ->orWhere('kode_mk', $validated['kode_mk'])
+     ->exists();
 
-    // Cari mata kuliah berdasarkan kode
-    $mataKuliah = MataKuliah::where('kode_mk', $validated['kode_mk'])->first();
-    if (!$mataKuliah) {
-        Log::error('Mata kuliah tidak ditemukan.');
-        return response()->json(['success' => false, 'message' => 'Mata kuliah tidak ditemukan'], 404);
+    if ($existingMatkul) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menambahkan mata kuliah! (Nama mata kuliah telah digunakan)',
+        ], 422); 
     }
 
-    // Simpan SKS lama untuk membandingkan apakah ada perubahan
-    $oldSks = $mataKuliah->sks;
-
-    // Update data mata kuliah
-    $mataKuliah->update([
+    $mataKuliah = MataKuliah::create([
+        'nama' => $validated['nama'],
         'semester' => $validated['semester'],
+        'kode_mk' => $validated['kode_mk'],
         'sks' => $validated['sks'],
         'jumlah_kelas' => $validated['jumlah_kelas'],
         'kuota' => $validated['kuota'],
-        'dosen_nip' => $validated['dosen_nip'],
-        'dosen_nip_2' => $validated['dosen_nip_2'],
-        'dosen_nip_3' => $validated['dosen_nip_3'],
+        'jenis' => $validated['jenis'],
+        'dosen_nip' => $validated['dosen_pengampu'][0] ?? null,
+        'dosen_nip_2' => $validated['dosen_pengampu'][1] ?? null,
+        'dosen_nip_3' => $validated['dosen_pengampu'][2] ?? null,
     ]);
-
-    Log::info('Mata kuliah berhasil diperbarui.');
-
-    // Jika SKS berubah, perbarui waktu akhir di jadwal
-    if ($oldSks != $validated['sks']) {
-        Log::info("SKS berubah dari $oldSks menjadi {$validated['sks']}");
-
-        $jadwals = Jadwal::where('kode_mk', $validated['kode_mk'])->get();
-        Log::info('Jadwal yang terkait dengan mata kuliah:', $jadwals->toArray());
-
-        foreach ($jadwals as $jadwal) {
-            // Hitung waktu akhir baru berdasarkan startTime + sks * duration
-            $startTime = \Carbon\Carbon::createFromFormat('H:i:s', $jadwal->waktu_mulai);
-            $newEndTime = $startTime->addMinutes($validated['sks'] * 50); // Misalnya 1 SKS = 50 menit
-
-            $jadwal->update([
-                'waktu_akhir' => $newEndTime->format('H:i:s'),
-            ]);
-
-            Log::info("Jadwal ID {$jadwal->id} diperbarui dengan waktu akhir baru: {$newEndTime->format('H:i:s')}");
-        }
-    } else {
-        Log::info('SKS tidak berubah, tidak ada jadwal yang diperbarui.');
-    }
 
     return response()->json([
         'success' => true,
-        'message' => 'Mata kuliah dan jadwal berhasil diperbarui.',
+        'message' => 'Mata kuliah berhasil ditambahkan.',
+        'data' => $mataKuliah,
     ]);
+} catch (\Illuminate\Validation\ValidationException $e) {
+    // Tangani error validasi
+    return response()->json([
+        'success' => false,
+        'message' => 'Gagal menambahkan mata kuliah! Lengkapi seluruh data.',
+        'errors' => $e->errors(), 
+    ], 422);
+} catch (\Exception $e) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Gagal menambahkan mata kuliah! (Kode mata kuliah telah digunakan)',
+        'error' => $e->getMessage(),
+    ], 500);
+}
 }
 }

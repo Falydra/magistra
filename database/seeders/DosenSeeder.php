@@ -187,6 +187,13 @@ class DosenSeeder extends Seeder
             'nama' => 'Satriawan Rasyid Purnama, S.Kom., M.Cs.',
             'nomor_telepon' => '1234567890',
             ],
+            [
+                'nip' => '19696201999031002',// Kondisi untuk mencari dosen berdasarkan NIP
+                'nama' => 'Dr. Ngadiwiyana, S.Si., M.Si.',
+                'nidn' => '0009036902',
+    
+                'nomor_telepon' => '1234567890',
+            ]
 
         ];
 

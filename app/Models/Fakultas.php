@@ -16,4 +16,10 @@ class Fakultas extends Model
     {
         return $this->hasMany(Prodi::class);
     }
+
+    public function ruang()
+    {
+    return $this->hasMany(Ruang::class, 'kode_fakultas');
+    }
+
 }

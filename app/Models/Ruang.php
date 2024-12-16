@@ -18,8 +18,6 @@ class Ruang extends Model
         return $this->belongsTo(Gedung::class, 'kode_gedung', 'kode_gedung');
     }
 
-    
-
     protected $table = 'ruang';
 
     protected $primaryKey = 'id';
@@ -31,4 +29,9 @@ class Ruang extends Model
         'kapasitas',
         'kode_fakultas',
     ];
+
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'kode_ruang', 'kode_ruang');
+    }
 }

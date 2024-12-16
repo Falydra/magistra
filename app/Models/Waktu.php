@@ -14,5 +14,8 @@ class Waktu extends Model
         'waktu_mulai',
         
     ];
-
+    public function jadwal()
+    {
+        return $this->hasMany(Jadwal::class, 'waktu', 'waktu');
+    }
 }

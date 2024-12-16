@@ -5,8 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\MataKuliah;
+
 use App\Models\Dosen;
 use App\Models\Ruang;
+
+
 
 class MataKuliahSeeder extends Seeder
 {
@@ -19,8 +22,7 @@ class MataKuliahSeeder extends Seeder
         $dosenNips = Dosen::pluck('nip')->toArray();
         $kapasitasList = Ruang::pluck('kapasitas')->toArray();
 
-        MataKuliah::insert([
-
+        $mataKuliahList = [
             //Semester 1
             [
                 'kode_mk' => 'PAIK6102',
@@ -28,6 +30,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[0] ?? 45, // Default to 45 if kapasitas is not available
                 'dosen_nip' => $dosenNips[0] ?? null,
                 'dosen_nip_2' => $dosenNips[1] ?? null,
@@ -39,6 +42,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45, // Default to 45 if kapasitas is not available
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_2' => $dosenNips[4] ?? null,
@@ -50,17 +54,20 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_2' => $dosenNips[23] ?? null,
                 'dosen_nip_3' => $dosenNips[13] ?? null,
+
             ],
             [
                 'kode_mk' => 'PAIK6105',
-                'nama' => 'Aljabar Liniier',
+                'nama' => 'Aljabar Linier',
                 'sks' => 3,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[7] ?? null,
                 'dosen_nip_2' => $dosenNips[3] ?? null,
@@ -72,6 +79,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 4,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_2' => $dosenNips[19] ?? null,
@@ -83,6 +91,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 1,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[22] ?? null,
                 'dosen_nip_2' => $dosenNips[3] ?? null,
@@ -94,6 +103,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[25] ?? null,
                 'dosen_nip_2' => $dosenNips[3] ?? null,
@@ -105,6 +115,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 1,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[25] ?? null,
                 'dosen_nip_2' => $dosenNips[3] ?? null,
@@ -118,6 +129,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[25] ?? null,
                 'dosen_nip_2' => $dosenNips[39] ?? null,
@@ -129,6 +141,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 4,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[8] ?? null,
                 'dosen_nip_2' => $dosenNips[11] ?? null,
@@ -140,28 +153,20 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[22] ?? null,
                 'dosen_nip_2' => $dosenNips[10] ?? null,
                 'dosen_nip_3' => $dosenNips[13] ?? null,
             ],
-            [
-                'kode_mk' => 'PAIK6204',
-                'nama' => 'Aljabar Linier',
-                'sks' => 3,
-                'semester' => 2,
-                'jenis' => 'Wajib',
-                'kuota' => $kapasitasList[1] ?? 50,
-                'dosen_nip' => $dosenNips[12] ?? null,
-                'dosen_nip_2' => $dosenNips[29] ?? null,
-                'dosen_nip_3' => $dosenNips[5] ?? null,
-            ],
+           
             [
                 'kode_mk' => 'UUW00004',
                 'nama' => 'Bahasa Indonesia',
                 'sks' => 2,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[22] ?? null,
                 'dosen_nip_2' => $dosenNips[64] ?? null,
@@ -173,6 +178,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[12] ?? null,
                 'dosen_nip_2' => $dosenNips[29] ?? null,
@@ -180,10 +186,11 @@ class MataKuliahSeeder extends Seeder
             ],
             [
                 'kode_mk' => 'UUW00011',
-                'nama' => 'Pendnipikan Agama Islam',
+                'nama' => 'Pendidikan Agama Islam',
                 'sks' => 2,
                 'semester' => 2,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[7] ?? null,
                 'dosen_nip_2' => $dosenNips[45] ?? null,
@@ -197,6 +204,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 4,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_2' => $dosenNips[14] ?? null,
@@ -208,6 +216,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 4,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[13] ?? null,
                 'dosen_nip_2' => $dosenNips[23] ?? null,
@@ -219,6 +228,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[21] ?? null,
                 'dosen_nip_2' => $dosenNips[11] ?? null,
@@ -230,6 +240,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[11] ?? null,
                 'dosen_nip_2' => $dosenNips[8] ?? null,
@@ -241,6 +252,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[12] ?? null,
                 'dosen_nip_2' => $dosenNips[19] ?? null,
@@ -252,6 +264,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 3,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_5' => $dosenNips[5] ?? null,
@@ -265,6 +278,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[14] ?? null,
                 'dosen_nip_2' => $dosenNips[17] ?? null,
@@ -276,6 +290,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[15] ?? null,
                 'dosen_nip_2' => $dosenNips[16] ?? null,
@@ -287,6 +302,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[14] ?? null,
                 'dosen_nip_2' => $dosenNips[13] ?? null,
@@ -298,6 +314,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_2' => $dosenNips[7] ?? null,
@@ -309,6 +326,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[9] ?? null,
                 'dosen_nip_2' => $dosenNips[23] ?? null,
@@ -320,6 +338,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 4,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_2' => $dosenNips[7] ?? null,
@@ -333,6 +352,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 4,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -344,6 +364,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[15] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -352,9 +373,10 @@ class MataKuliahSeeder extends Seeder
             [
                 'kode_mk' => 'PAIK6503',
                 'nama' => 'Sistem Informasi',
-                'sks' => 4,
+                'sks' => 3,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -366,6 +388,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[8] ?? null,
                 'dosen_nip_2' => $dosenNips[9] ?? null,
@@ -377,6 +400,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[5] ?? null,
                 'dosen_nip_2' => $dosenNips[22] ?? null,
@@ -388,6 +412,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[15] ?? null,
                 'dosen_nip_2' => $dosenNips[27] ?? null,
@@ -399,6 +424,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 5,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[9] ?? null,
                 'dosen_nip_2' => $dosenNips[20] ?? null,
@@ -412,6 +438,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 6,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_5' => $dosenNips[6] ?? null,
@@ -423,6 +450,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 6,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[19] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -434,6 +462,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 6,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[20] ?? null,
                 'dosen_nip_2' => $dosenNips[12] ?? null,
@@ -446,21 +475,23 @@ class MataKuliahSeeder extends Seeder
                 'semester' => 6,
                 'jenis' => 'Wajib',
                 'kuota' => 250,
+
                 'dosen_nip' => $dosenNips[4] ?? null,
                 'dosen_nip_2' => $dosenNips[3] ?? null,
                 'dosen_nip_3' => $dosenNips[23] ?? null,
-            ],
+           ],
             [
                 'kode_mk' => 'PAIK6605',
                 'nama' => 'Manajemen Proyek',
                 'sks' => 3,
                 'semester' => 6,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[13] ?? null,
                 'dosen_nip_2' => $dosenNips[8] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
-            ],
+           ],
 
             // Semester 7
             [
@@ -469,10 +500,12 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 2,
                 'semester' => 7,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[5] ?? null,
                 'dosen_nip_2' => $dosenNips[20] ?? null,
                 'dosen_nip_3' => $dosenNips[6] ?? null,
+
             ],
             [
                 'kode_mk' => 'PAIK6702',
@@ -480,6 +513,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Wajib',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[21] ?? null,
                 'dosen_nip_2' => $dosenNips[29] ?? null,
@@ -491,6 +525,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[9] ?? null,
                 'dosen_nip_2' => $dosenNips[14] ?? null,
@@ -502,6 +537,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[9] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -513,6 +549,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[15] ?? null,
                 'dosen_nip_2' => $dosenNips[30] ?? null,
@@ -524,6 +561,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[3] ?? null,
                 'dosen_nip_5' => $dosenNips[6] ?? null,
@@ -535,6 +573,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[13] ?? null,
                 'dosen_nip_2' => $dosenNips[8] ?? null,
@@ -546,6 +585,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[16] ?? null,
                 'dosen_nip_2' => $dosenNips[19] ?? null,
@@ -557,6 +597,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[16] ?? null,
                 'dosen_nip_2' => $dosenNips[23] ?? null,
@@ -568,6 +609,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[10] ?? null,
                 'dosen_nip_2' => $dosenNips[22] ?? null,
@@ -579,6 +621,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 50,
                 'dosen_nip' => $dosenNips[20] ?? null,
                 'dosen_nip_2' => $dosenNips[12] ?? null,
@@ -590,11 +633,12 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 7,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 45,
                 'dosen_nip' => $dosenNips[5] ?? null,
                 'dosen_nip_2' => null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
-            ],
+           ],
 
             // Semester 8
             [
@@ -603,17 +647,19 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[8] ?? null,
                 'dosen_nip_2' => $dosenNips[19] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
-            ],
+           ],
             [
                 'kode_mk' => 'PAIK6802',
                 'nama' => 'Topik Khusus SC & KG',
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[7] ?? null,
                 'dosen_nip_2' => $dosenNips[10] ?? null,
@@ -625,6 +671,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[27] ?? null,
                 'dosen_nip_2' => $dosenNips[14] ?? null,
@@ -636,6 +683,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[8] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
@@ -647,6 +695,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[26] ?? null,
                 'dosen_nip_2' => $dosenNips[27] ?? null,
@@ -658,6 +707,7 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[27] ?? null,
                 'dosen_nip_2' => $dosenNips[14] ?? null,
@@ -669,10 +719,12 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[14] ?? null,
                 'dosen_nip_2' => $dosenNips[26] ?? null,
                 'dosen_nip_3' => $dosenNips[6] ?? null,
+
             ],
             [
                 'kode_mk' => 'PAIK6808',
@@ -680,10 +732,13 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[11] ?? null,
                 'dosen_nip_2' => $dosenNips[13] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
+
+
             ],
             [
                 'kode_mk' => 'PAIK6809',
@@ -691,10 +746,12 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[15] ?? null,
                 'dosen_nip_2' => $dosenNips[20] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
+
             ],
             [
                 'kode_mk' => 'PAIK6810',
@@ -702,10 +759,12 @@ class MataKuliahSeeder extends Seeder
                 'sks' => 3,
                 'semester' => 8,
                 'jenis' => 'Pilihan',
+
                 'kuota' => $kapasitasList[1] ?? 30,
                 'dosen_nip' => $dosenNips[6] ?? null,
                 'dosen_nip_2' => $dosenNips[17] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
+
             ],
 
             [
@@ -715,6 +774,7 @@ class MataKuliahSeeder extends Seeder
                 'semester' => 8,
                 'jenis' => 'Wajib',
                 'kuota' => 250,
+
                 'dosen_nip' => $dosenNips[19] ?? null,
                 'dosen_nip_2' => $dosenNips[23] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
@@ -726,11 +786,18 @@ class MataKuliahSeeder extends Seeder
                 'semester' => 7,
                 'jenis' => 'Wajib',
                 'kuota' => 250,
+
                 'dosen_nip' => $dosenNips[23] ?? null,
                 'dosen_nip_2' => $dosenNips[22] ?? null,
                 'dosen_nip_3' => $dosenNips[3] ?? null,
             ],
 
-        ]);   
+        ];   
+        // Tambahkan atribut 'jumlah_kelas' dengan default 4
+        foreach ($mataKuliahList as &$mataKuliah) {
+            $mataKuliah['jumlah_kelas'] = 4;
+        }
+        // Insert ke database
+        MataKuliah::insert($mataKuliahList);
     }
 }

@@ -22,10 +22,19 @@ interface FormData {
   total_sks: number;
 }
 
+interface SessionData extends PageProps {
+  session: {
+      selected_ids: number[];
+      total_sks: number;
+  };
+ 
+}
+
 export default function IRSMahasiswa({  mahasiswa, irs, matakuliah, jadwal, kelas, ruang}: MahasiswaProps & IRSProps & MatakuliahProps & JadwalProps & KelasProps & RuangProps) {
     const { url } = usePage().props;
     const { auth } = usePage().props;
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const { session } = usePage<SessionData>().props;
     const [totalSKS, setTotalSKS] = useState(0);
     
     const [filteredJadwal, setFilteredJadwal] = useState(jadwal);
@@ -37,7 +46,7 @@ export default function IRSMahasiswa({  mahasiswa, irs, matakuliah, jadwal, kela
     const jenis = ["Wajib", "Pilihan"];
   
     
-
+    
 
     
        
@@ -149,45 +158,44 @@ export default function IRSMahasiswa({  mahasiswa, irs, matakuliah, jadwal, kela
 
     const selectedJadwal = jadwal.find(j => j.kode_mk === kodeMk && j.kelas === kelas);
     if (selectedJadwal) {
-        setSelectedIds((prev) => {
-            // Remove previous jadwalId for the same mata_kuliah
-            const newSelectedIds = prev.filter(id => {
-                const jadwalItem = jadwal.find(j => j.id === id);
-                return jadwalItem?.kode_mk !== kodeMk;
-            });
-            return [...newSelectedIds, selectedJadwal.id];
+        setData({
+            ...data,
+            id_jadwal: [...data.id_jadwal.filter(id => jadwal.find(j => j.id === id)?.kode_mk !== kodeMk), selectedJadwal.id],
         });
     }
-};
+};  
 
 
-    const handleSubmit = () => {
-      post(route('mahasiswa.storeirs'), {
-        onSuccess: () => {
-            toast({
-                variant: "default",
-                title: "Mata Kuliah Berhasil Ditambahkan",
-                description: "Total SKS: " + totalSKS,
-                duration: 2500,
-            });
-            setSelectedIds([]);
-            setTotalSKS(0);
-        },
-        onError: (errors) => {
-            if (errors.id_jadwal) {
-                toast({
-                    variant: "destructive",
-                    title: "Mata Kuliah Gagal Ditambahkan",
-                    description: errors.id_jadwal,
-                    duration: 2500,
-                });
-            }
-        },
-    });
-    };
+  const handleSubmit = () => {
+    console.log('Data dikirim:', data); // Debug sebelum pengiriman
+    const routeName = mahasiswa.hasMadeIRS ? 'mahasiswa.updateIRS' : 'mahasiswa.storeirs';
+    post(route(routeName), {
+        id_jadwal: data.id_jadwal,
+        total_sks: data.total_sks,
+    } as Record<string, any>);
+  };
 
     const maxSKS = mahasiswa.ips > 3.00 ? 24 : 21;
-    
+    useEffect(() => {
+    // Memuat data dari session jika tersedia
+    const savedIds = session?.selected_ids || [];
+    const savedTotalSKS = session?.total_sks || 0;
+
+    // Set nilai default jika data tidak ada
+    setSelectedIds(savedIds);
+    setTotalSKS(savedTotalSKS);
+
+    // Tandai kelas yang telah dipilih berdasarkan data sesi
+    const savedKelas: Record<string, string> = {};
+    savedIds.forEach(id => {
+        const jadwalItem = jadwal.find(j => j.id === id);
+        if (jadwalItem) {
+            savedKelas[jadwalItem.kode_mk] = jadwalItem.kelas;
+        }
+    });
+    setSelectedKelas(savedKelas);
+}, [jadwal, session]);
+
     
     
 

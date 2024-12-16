@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('kode_prodi');
             $table->string('kode_fakultas');
             
-            $table->enum('is_verif', ['1', '0']);	
+            $table->enum('is_verif', ['0', '1', '2', '3']);	
             $table->foreign('kode_prodi')->references('kode_prodi')->on('prodi')->onDelete('cascade');
             $table->foreign('kode_gedung')->references('kode_gedung')->on('gedung')->onDelete('cascade');
             $table->integer('kapasitas');

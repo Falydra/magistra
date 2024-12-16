@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('semester');
             
             $table->enum('status', ['Belum Disetujui', 'Disetujui', 'Diizinkan', 'Dibatalkan']);
+            $table->enum('is_submitted', ['1', '0'])->default('0');
 
             
 

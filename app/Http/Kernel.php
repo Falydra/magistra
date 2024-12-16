@@ -16,9 +16,13 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $routeMiddleware = [
+
+
+    protected $Middleware = [
         // ...
         // 'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
         // 'mahasiswa' => \App\Http\Middleware\EnsureUserIsMahasiswa::class,
+        \App\Http\Middleware\CustomCsrfMiddleware::class,
     ];
+
 }

@@ -39,7 +39,7 @@ export default function AuthenticatedLayout({
         <>
             <Head title="Dashboard" />
             <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row">
-                <div className="flex flex-col w-full sm:w-2/5 lg:w-1/5 bg-transparent mt-4 mb-10 ml-4 items-center">
+                <div className="flex flex-col w-full sm:w-2/5 lg:w-3/12 bg-transparent mt-4 mb-10 ml-4 items-center">
 
                 {/* Sidebar Parent */}
                     <div className="flex flex-col items-center w-full h-screen min-h-screen justify-between  overflow-y-auto lg:fixed lg:w-1/5 sm:w2/5 bg-dark-500 scrollbar-hidden z-5 mt-12">
@@ -107,7 +107,7 @@ export default function AuthenticatedLayout({
                     </div>
                 </div>
                 
-                <div className=' flex flex-row items-center justify-start w-full m-4 min-h-full bg-white md:w-[2000px] rounded-3xl'>
+                <div className=' flex flex-row items-center justify-center w-full m-4 bg-white md:w-[2000px]  rounded-3xl'>
 
                     <div className="flex flex-col items-center justify-start w-4/5 min-h-full bg-white z-10 rounded-3xl">
                         <div className="flex flex-row items-start justify-between w-full mt-12 bg-white h-full">

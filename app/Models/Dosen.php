@@ -20,4 +20,19 @@ class Dosen extends Model
     public function users() {
         return $this->morphOne(User::class, 'entity');
     }
+
+    public function pembimbing()
+    {
+        return $this->hasMany(Pembimbing::class, 'nip', 'nip');
+    }
+
+    public function mataKuliah()
+    {
+        return $this->belongsToMany(
+            MataKuliah::class,         // Model Mata Kuliah
+            'dosen',          // Nama tabel pivot
+            'dosen_id',                // Foreign key di tabel pivot untuk Dosen
+            'matkul_id'                // Foreign key di tabel pivot untuk Mata Kuliah
+        );
+    }
 }
