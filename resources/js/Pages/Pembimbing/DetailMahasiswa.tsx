@@ -17,11 +17,11 @@ interface Waktu{
     waktu_mulai:Date;
 }
 interface Jadwal {
-    kode_mk?: MataKuliah;
-    sks?: MataKuliah;
-    mata_kuliah?: MataKuliah;
+    kode_mk?: string;
+    sks: number;
+    mata_kuliah?: string;
     kelas: string;
-    ruang?:Ruang;
+    ruang?:string;
     hari: string;
     waktu_mulai?: Waktu;
     waktu_akhir: string;
@@ -80,13 +80,13 @@ export default function DetailMahasiswa({ auth, student, jadwal, semester, irs }
         </Link>
     );
     const courses = jadwal?.map((jadwal: Jadwal, index: number) => ({
-        code: jadwal.kode_mk || "Tidak tersedia",
-        name: jadwal.mata_kuliah || "Tidak tersedia",
-        sks: jadwal.sks || 0,
-        class: jadwal.kelas || "Tidak tersedia",
-        room: jadwal.ruang || "Tidak tersedia",
-        status: irs.status || "Tidak tersedia",
-        schedule: `${jadwal.hari || "Tidak tersedia"}, ${jadwal.waktu_mulai || "Tidak tersedia"} - ${jadwal.waktu_akhir || "Tidak tersedia"}`,
+        code: jadwal.kode_mk,
+        name: jadwal.mata_kuliah,
+        sks: jadwal.sks,
+        class: jadwal.kelas,
+        room: jadwal.ruang,
+        status: irs.status,
+        schedule: `${jadwal.hari}, ${jadwal.waktu_mulai} - ${jadwal.waktu_akhir}`,
     })) || [];
 
     console.log("Jadwal mahasiswa:", courses);
@@ -100,28 +100,38 @@ export default function DetailMahasiswa({ auth, student, jadwal, semester, irs }
         if (confirm("Apakah Anda yakin ingin menyetujui IRS ini?")) {
             Inertia.post(
                 route('irs.approve', { id: studentId }),
-                {},
+                { semester: parseInt(semester) }, 
                 {
                     onSuccess: () => {
-                        alert('IRS telah disetujui!');
                         Inertia.visit(`/pembimbing/detailMahasiswa/${studentId}`);
                     },
+                    onError: (error) => {
+                        console.error("Terjadi error saat menyetujui IRS:", error);
+                    }
                 }
             );
         }
     };
     // Batalkan
-    const handleCancel = () => {
-        if (student.irs?.status === "Dibatalkan") {
+    const handleCancel = (studentId: number) => {
+        if (irs.status === "Dibatalkan") {
             alert("IRS untuk mahasiswa ini sudah dibatalkan!");
-            return; 
+            return;
         }
-        if (confirm('Apakah Anda yakin ingin membatalkan IRS ini?')) {
-            Inertia.post(route('irs.cancel', { id: student.id }), {}, {
-                onSuccess: () => {
-                    Inertia.visit('/pembimbing/detailMahasiswa');
-                },
-            });
+    
+        if (confirm("Apakah Anda yakin ingin membatalkan IRS ini?")) {
+            Inertia.post(
+                route('irs.cancel', { id: studentId }), 
+                { semester: parseInt(semester) },
+                {
+                    onSuccess: () => {
+                        Inertia.visit(`/pembimbing/detailMahasiswa/${studentId}`);
+                    },
+                    onError: (error) => {
+                        console.error("Terjadi error saat membatalkan IRS:", error);
+                    },
+                }
+            );
         }
     };
     
@@ -166,7 +176,7 @@ export default function DetailMahasiswa({ auth, student, jadwal, semester, irs }
                             </tr>
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Semester</td>
-                                <td className="border px-2 py-1">{student.semester}</td>
+                                <td className="border px-2 py-1">{semester}</td>
                             </tr>
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Maksimum SKS</td>
@@ -235,7 +245,7 @@ export default function DetailMahasiswa({ auth, student, jadwal, semester, irs }
                         <FontAwesomeIcon icon={faCircleCheck} className="ml-2" />
                     </button>
 
-                    <button onClick={handleCancel} className="bg-button-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg flex items-center">
+                    <button onClick={() => handleCancel(student.id)} className="bg-button-red hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg flex items-center">
                         Batalkan IRS
                         <FontAwesomeIcon icon={faCircleXmark} className="ml-2" />
                     </button>

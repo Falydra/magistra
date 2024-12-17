@@ -8,64 +8,77 @@ import { Link } from '@inertiajs/react';
 import { FaMoneyBills } from 'react-icons/fa6';
 import { HiAcademicCap, HiBuildingLibrary } from 'react-icons/hi2';
 import { LuFilePlus2 } from 'react-icons/lu';
-import { CiPaperplane } from "react-icons/ci";
 import { IoSendSharp } from "react-icons/io5";
-import { use } from 'framer-motion/client';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from '@/Components/ui/breadcrumb';
+import { Inertia } from '@inertiajs/inertia';
+import { toast } from '@/hooks/use-toast';
 
-export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps & IRSJadwalProps & IRSProps) {
+export default function CheckIRS({ mahasiswa, irsJadwal, irs, mahasiswaDetail }: MahasiswaProps & IRSJadwalProps & IRSProps) {
     const { url } = usePage().props;
     const { auth } = usePage().props;
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const selectedJadwalIds = irsJadwal.map(j => j.id);
 
     console.log(irs);
-
-    
+    console.log(mahasiswa);
+    console.log(irsJadwal);
 
     const handleSubmit = async () => {
-        try {
-            const response = await fetch('/submit-irs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    mahasiswa_nim: mahasiswa.nim,
-                    irs_id: irs[0].id, // ID IRS
-                    jadwal_ids: selectedJadwalIds, // Array ID jadwal yang dipilih
-                }),
+        const conflicts = selectedJadwalIds.some((id, index) => {
+            const jadwal1 = irsJadwal.find(j => j.id === id);
+            return selectedJadwalIds.some((otherId, otherIndex) => {
+                if (index !== otherIndex) {
+                    const jadwal2 = irsJadwal.find(j => j.id === otherId);
+                    if (jadwal1 && jadwal2) {
+                        return (
+                            jadwal1.hari === jadwal2.hari &&
+                            jadwal1.waktu_mulai < jadwal2.waktu_akhir &&
+                            jadwal1.waktu_akhir > jadwal2.waktu_mulai
+                        );
+                    }
+                }
+                return false;
             });
-    
-            if (!response.ok) {
-                // throw new Error(Error: ${response.statusText});
-            }
-    
-            const data = await response.json();
-    
-            if (data.success) {
-                alert(data.message);
-                window.location.reload();
-            } else {
-                alert(data.message || 'Terjadi kesalahan.');
-            }
-        } catch (error) {
-            console.error('Error submitting IRS:', error);
-            alert('Gagal mengajukan IRS. Silakan coba lagi.');
+        });
+
+        if (conflicts) {
+            toast({
+                variant: 'destructive',
+                title: 'Konflik Jadwal',
+                description: 'Ada konflik jadwal, silahkan pilih jadwal yang tidak bertabrakan.',
+                className: 'bg-primary-red',
+            });
+            return;
         }
+
+        Inertia.post(route('mahasiswa.submitIRS'), {
+            mahasiswa_nim: mahasiswa.nim,
+            irs_id: irs[0].id,
+            jadwal_ids: selectedJadwalIds,
+        });
     };
 
-    // console.log(irsJadwal);
+    console.log(selectedJadwalIds);
+    
 
     return (
         <PageLayout
             user={auth.user}
             back={
-                <Link href={route("mahasiswa.dashboard")}>
-                    <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
-                        <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
-                        IRS
-                    </h2>
-                </Link>
+                <>
+                <Breadcrumb className="ml-10 mt-8 text-black">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/mahasiswa/dashboard">Dashboard</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    
+                                <BreadcrumbItem>
+                            <BreadcrumbPage>Check IRS</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </>
             }
             sidebarChildren={
                 <>
@@ -104,11 +117,10 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                 </>
             }
         >
-            <div className="w-full overflow-x-hidden overflow-y-auto px-12 h-screen">
-                <div className="w-full overflow-y-auto min-h-[1000px]">
+            <div className="flex flex-col w-11/12 items-center justify-center mx-12 my-8 overflow-y-auto">
+                <div className="w-full overflow-y-auto overflow-x-auto">
                     <table className="w-full mb-6 border border-gray-300">
                         <tbody>
-                            
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Nama</td>
                                 <td className="border px-2 py-1">{mahasiswa.nama}</td>
@@ -133,7 +145,6 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                                     <td className="border px-2 py-1">{irs.total_sks}</td>
                                 </tr>
                             ))}
-                            
                             <tr>
                                 <td className="border px-2 py-1 font-semibold">Maksimum SKS</td>
                                 <td className="border px-2 py-1">
@@ -155,7 +166,8 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                                         mahasiswa.status_irs === "Disetujui"
                                             ? " bg-primary-green text-green-600"
                                             : mahasiswa.status_irs === "Belum Disetujui" || mahasiswa.status_irs === "Dibatalkan"
-                                            ? " bg-primary-yellow text-yellow-600"
+                                            ? " bg-primary-yellow text-yellow-600"  :  mahasiswa.status_irs === "Diajukan"
+                                            ? " bg-button-hv_yellow bg-opacity-25 text-yellow-600"
                                             : " bg-primary-red text-red-600"
                                     }`}
                                 >
@@ -165,41 +177,41 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs }: MahasiswaProps &
                         </tbody>
                     </table>
                     <table className="min-w-full text-center border table-fixed">
-                    <thead className='p-8 '>
-                        <tr className='p-8'>
-                            <th className='py-3 border'>No</th>
-                            <th className='py-3 border'>Kode MK</th>
-                            <th className='py-3 border'>Mata Kuliah</th>
-                            <th className='py-3 border'>SKS</th>
-                            <th className='py-3 border'>Kelas</th>
-                            <th className='py-3 border'>Ruang</th>
-                            <th className='py-3 border'>Jadwal</th>
-                        </tr>
-                    </thead>
-                    <tbody className='text-center scrollbar-hidden overflow-y-auto '>
-                        {irsJadwal.map((jadwal, index) => (
-                            <tr key={jadwal.id} className='border'>
-                                <td className='py-3 border'>{index + 1}</td>
-                                <td className='py-3 border'>{jadwal.kode_mk}</td>
-                                <td className='py-3 border'>{jadwal.nama}</td>
-                                <td className='py-3 border'>{jadwal.sks}</td>
-                                <td className='py-3 border'>{jadwal.kelas}</td>
-                                <td className='py-3 border'>{jadwal.kode_ruang}</td>
-                                <td className='py-3 border'>{jadwal.hari} {jadwal.waktu_mulai} - {jadwal.waktu_akhir}</td>
+                        <thead className='p-8 '>
+                            <tr className='p-8'>
+                                <th className='py-3 border'>No</th>
+                                <th className='py-3 border'>Kode MK</th>
+                                <th className='py-3 border'>Mata Kuliah</th>
+                                <th className='py-3 border'>SKS</th>
+                                <th className='py-3 border'>Kelas</th>
+                                <th className='py-3 border'>Ruang</th>
+                                <th className='py-3 border'>Jadwal</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <div className='w-full flex flex-row items-center justify-end'>
-                    <button 
-                    onClick={handleSubmit}
-                    className='w-60 h-12 mt-4 text-white bg-primary-green flex-row flex justify-center items-center rounded-lg self-end'>
-                    Ajukan ke Pembimbing
-                    <IoSendSharp className='w-6 h-6 ml-2 text-white '/>   
-                    </button>
+                        </thead>
+                        <tbody className='text-center  '>
+                            {irsJadwal.map((jadwal, index) => (
+                                <tr key={jadwal.id} className='border'>
+                                    <td className='py-3 border'>{index + 1}</td>
+                                    <td className='py-3 border'>{jadwal.kode_mk}</td>
+                                    <td className='py-3 border'>{jadwal.nama}</td>
+                                    <td className='py-3 border'>{jadwal.sks}</td>
+                                    <td className='py-3 border'>{jadwal.kelas}</td>
+                                    <td className='py-3 border'>{jadwal.kode_ruang}</td>
+                                    <td className='py-3 border'>{jadwal.hari} {jadwal.waktu_mulai} - {jadwal.waktu_akhir}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className='w-full flex flex-row items-center justify-end'>
+                        <button 
+                            onClick={handleSubmit}
+                            className='w-60 h-12 mt-4 text-white bg-primary-green flex-row flex justify-center items-center rounded-lg self-end'>
+                            Ajukan ke Pembimbing
+                            <IoSendSharp className='w-6 h-6 ml-2 text-white '/>   
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
         </PageLayout>
     );
 }

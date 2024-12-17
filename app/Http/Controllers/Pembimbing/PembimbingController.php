@@ -14,6 +14,7 @@ use App\Models\Jadwal;
 use App\Models\IRSJadwal;
 use App\Models\AngkatanPerwalian;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class PembimbingController extends Controller {
     
@@ -30,12 +31,12 @@ class PembimbingController extends Controller {
             return redirect()->route('pembimbing.dashboard')->with('error', 'Pembimbing tidak ditemukan.');
         }
     
-        // Ambil angkatan perwalian dari pembimbing
+        // angkatan perwalian dari pembimbing
         $angkatanPerwalian = $pembimbing->angkatanPerwalian()->pluck('angkatan_perwalian');
     
         // Mengambil mahasiswa berdasarkan angkatan yang diinginkan dan memastikan mahasiswa memiliki IRS
         $mahasiswa = Mahasiswa::with(['irs' => function ($query) {
-            $query->orderBy('semester', 'desc'); // Urutkan IRS berdasarkan semester desc
+            $query->orderBy('semester', 'desc'); 
         }])
             ->whereIn('tahun_masuk', $angkatanPerwalian)
             ->whereHas('pembimbing', function ($query) use ($pembimbing) {
@@ -43,28 +44,25 @@ class PembimbingController extends Controller {
             })
             ->whereHas('irs')
             ->paginate(5);
-    
-        // Transformasi data mahasiswa
+
         $mahasiswa->getCollection()->transform(function ($mahasiswa) {
-            // Ambil IRS yang sesuai dengan semester mahasiswa saat ini
+            // Mengambil IRS yang sesuai dengan semester mahasiswa saat ini
             $latestIrs = $mahasiswa->irs->filter(function ($irs) use ($mahasiswa) {
                 return $irs->semester == $mahasiswa->semester;
             })->first();
     
-            // Tambahkan properti latest_irs
             $mahasiswa->latest_irs = $latestIrs
                 ? [
                     'status' => $latestIrs->status,
                     'total_sks' => $latestIrs->total_sks,
                     'semester' => $latestIrs->semester,
                 ]
-                : null; // Jika tidak ada IRS yang sesuai, tetapkan null
+                : null; 
     
-            unset($mahasiswa->irs); // Hapus relasi IRS agar tidak redundant
+            unset($mahasiswa->irs); 
             return $mahasiswa;
         });
     
-        // Mengembalikan data ke frontend
         return Inertia::render('Pembimbing/PersetujuanIRS', [
             'students' => $mahasiswa,
             'angkatanPerwalian' => $angkatanPerwalian,
@@ -73,7 +71,6 @@ class PembimbingController extends Controller {
     
     public function detailMahasiswa($id)
 {
-    // Ambil data mahasiswa dengan relasi IRS dan jadwal melalui pivot
     $student = Mahasiswa::with([
         'prodi',
         'pembimbing.dosen',
@@ -81,20 +78,15 @@ class PembimbingController extends Controller {
         'irs.jadwal.ruang',
     ])->findOrFail($id);
 
-    // Ambil IRS terbaru berdasarkan semester desc
     $irs = $student->irs()->orderBy('semester', 'desc')->first();
     $irsStatus = IRS::where('irs.nim', '=', $student->nim)->orderBy('semester', 'desc')->first();
 
     $formattedJadwal = [];
     if ($irs) {
-        // Ambil daftar jadwal melalui pivot
         $irsJadwals = $irs->irsJadwal;
 
-        // Format data jadwal untuk dikirim ke frontend
         $formattedJadwal = $irsJadwals->map(function ($irsJadwal) {
             $jadwal = $irsJadwal->jadwal;
-
-            // Tangani kemungkinan relasi yang kosong
             $mataKuliah = $jadwal->mataKuliah ?? null;
             $ruang = $jadwal->ruang ?? null;
 
@@ -111,13 +103,11 @@ class PembimbingController extends Controller {
         });
     }
 
-    // Debugging log untuk memverifikasi data
-    \Log::info('Data Mahasiswa:', [
+    Log::info('Data Mahasiswa:', [
         'student' => $student,
         'jadwal' => $formattedJadwal,
     ]);
 
-    // Kirim data ke frontend
     return inertia('Pembimbing/DetailMahasiswa', [
         'student' => $student,
         'irs' => $irsStatus,

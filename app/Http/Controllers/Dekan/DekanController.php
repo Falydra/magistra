@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dekan;
 use App\Models\Ruang;
+use App\Models\JadwalProdi;
+use App\Models\PenyusunanJadwal;
 use Inertia\Inertia;
 
 
@@ -35,7 +37,7 @@ class DekanController extends Controller
 
 
         //where is verif = '1' or where is verif = '2'
-        $ruangan = $ruangan->where('is_verif', '1')->orWhere('is_verif', '2')->orWhere('is_verif', '3')->orderBy('id', 'asc')->paginate($perPage)->appends($request->only(['filter_prodi']));
+        $ruangan = $ruangan->where('is_verif', '1')->orWhere('is_verif', '2')->orWhere('is_verif', '3')->orderBy('id', 'asc')->paginate($perPage)->appends($request->only(['filter_prodi', 'perPage']));
 
 
         // $ruangan = $ruangan->where('is_verif', '1', )->orderBy('id', 'asc')->paginate($perPage)->appends($request->only(['filter_prodi']));
@@ -48,26 +50,27 @@ class DekanController extends Controller
     }
 
     public function showJadwal(Request $request) {
-        //Take kode prodi from ruang where kode ruang jadwal = kode ruang ruang then join kode_prodi ruang = kode_prodi prodi
-        $jadwal = Ruang::query()->join('jadwal', 'ruang.kode_ruang', '=', 'jadwal.kode_ruang')
-        ->join('prodi', 'ruang.kode_prodi', '=', 'prodi.kode_prodi')
-        ->select('jadwal.*', 'prodi.nama as program_studi', 'prodi.kode_prodi as kode_prodi');
-    
-        //dont select from status cause jadwal dont have status
+        $user = auth()->user();
+        $dekan = Dekan::where('user_id', $user->id)->first();
+
+       $jadwalProdi = JadwalProdi::all();
+
+
+
         
         
 
 
-        if ($request->has('filter_prodi') && $request->filter_prodi) {
-            $jadwal->where('kode_prodi', $request->filter_prodi);
-        }
+        // if ($request->has('filter_prodi') && $request->filter_prodi) {
+        //     $jadwalProdi->where('kode_prodi', $request->filter_prodi);
+        // }
         
 
-        $jadwal = $jadwal->orderBy('id', 'asc')->paginate(5)->appends($request->only(['filter_prodi']));
+        // $jadwalProdi = $jadwalProdi->orderBy('id', 'asc')->paginate(5)->appends($request->only(['filter_prodi',]));
 
         return Inertia::render('Dekan/PersetujuanJadwal', [
-            'jadwal' => $jadwal,
-            'filters' => $request->only(['filter_prodi'])
+            'jadwalProdi' => $jadwalProdi,
+            // 'filters' => $request->only(['filter_prodi'])
         ]);
     }
 

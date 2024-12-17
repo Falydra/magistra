@@ -138,7 +138,7 @@ export default function TambahRuang() {
         '06': 'Informatika',
     };
 
-    const gedungOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const gedungOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'K'];
     
     const prodiOptions = Object.keys(prodiMapping);
 

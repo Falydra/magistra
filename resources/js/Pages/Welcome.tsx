@@ -34,7 +34,7 @@ export default function Welcome({status, canResetPassword}: {status?: string, ca
     return (
         <Layout >
             <Head title="Login - Magistra" />
-            <div className="relative h-screen overflow-y-hidden">
+            <div className="relative h-screen overflow-y-hidden font-sans">
                 {/* Background image */}
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/clean-empty-library-hall.png')" }}></div>
                 

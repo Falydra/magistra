@@ -6,26 +6,71 @@ use Illuminate\Http\Request;
 use App\Models\IRS;
 use Inertia\Inertia;
 use App\Models\Mahasiswa;
-
+use Illuminate\Support\Facades\Log;
 class DetailMahasiswaController extends Controller
 {
     // Setujui IRS
     public function approveIRS(Request $request, $id)
     {
+        $validated = $request->validate([
+            'semester' => 'required|integer', 
+        ]);
+    
         $mahasiswa = Mahasiswa::findOrFail($id);
-
-        
-
+    
+        $irs = $mahasiswa->irs()
+            ->where('semester', $validated['semester'])
+            ->where('status', '!=', 'Disetujui')
+            ->first();
+    
+        if ($irs) {
+            $irs->status = 'Disetujui';
+            $irs->save(); 
+    
+            Log::info('IRS disetujui.', [
+                'nim' => $mahasiswa->nim,
+                'semester' => $validated['semester'],
+                'status' => $irs->status,
+            ]);
+        } else {
+            Log::warning('IRS tidak ditemukan atau sudah disetujui.', [
+                'nim' => $mahasiswa->nim,
+                'semester' => $validated['semester'],
+            ]);
+        }
+    
         return Inertia::location(route('pembimbing.detailMahasiswa', ['id' => $mahasiswa->id]));
     }
     // Batalkan IRS
-    public function cancelIRS($mahasiswaId)
+    public function cancelIRS(Request $request, $id)
     {
-        $mahasiswa = Mahasiswa::findOrFail($mahasiswaId);
-        if ($mahasiswa->irs && $mahasiswa->irs->status !== 'Dibatalkan') {
-            $mahasiswa->irs->update(['status' => 'Dibatalkan']);
+        $validated = $request->validate([
+            'semester' => 'required|integer', 
+        ]);
+    
+        $mahasiswa = Mahasiswa::findOrFail($id);
+    
+        $irs = $mahasiswa->irs()
+            ->where('semester', $validated['semester'])
+            ->where('status', '!=', 'Dibatalkan')
+            ->first();
+    
+        if ($irs) {
+            $irs->status = 'Dibatalkan';
+            $irs->save(); 
+    
+            Log::info('IRS dibatalkan.', [
+                'nim' => $mahasiswa->nim,
+                'semester' => $validated['semester'],
+                'status' => $irs->status,
+            ]);
+        } else {
+            Log::warning('IRS tidak ditemukan atau sudah dibatalkan.', [
+                'nim' => $mahasiswa->nim,
+                'semester' => $validated['semester'],
+            ]);
         }
-
+    
         return Inertia::location(route('pembimbing.detailMahasiswa', ['id' => $mahasiswa->id]));
     }
 

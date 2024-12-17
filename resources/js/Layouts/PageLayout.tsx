@@ -40,7 +40,7 @@ export default function PageLayout({
     return (
         <>
             <Head title="Dashboard" />
-            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row overflow-x-hidden overflow-y-hidden">
+            <div className="flex-col font-medium hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row overflow-x-hidden overflow-y-hidden">
                 <div className="flex flex-col w-full sm:w-2/5 lg:w-3/12 bg-transparent mt-4 mb-10 ml-4 items-center">
 
                 {/* Sidebar Parent */}
@@ -49,12 +49,12 @@ export default function PageLayout({
                         <div className='flex flex-col items-center justify-between'>
                             {/* Magistra Logo */}
                             <div className='flex w-full items-center justify-center text-3xl text-white'>
-                                <h1 className=' font-thin'>
+                                <h1 className=' font-semibold   '>
                                     MAGISTRA
                                 </h1>
                             </div>
                             {/* Sidebar Menu */}
-                            <div className="flex flex-col items-start  mt-8 text-center justify-center space-y-2">
+                            <div className="flex flex-col items-start  mt-8 text-center justify-center space-y-2 font-sans">
                                 
 
                                     
@@ -132,7 +132,7 @@ export default function PageLayout({
                         
                         
                         <Separator className="bg-black bg-opacity-60 mt-2 "/>
-                        <h2 className="self-start ml-10 text-3xl font-bold leading-tight  text-primary-dark">
+                        <h2 className="self-start ml-10 text-3xl font-bold leading-tight  text-primary-bg">
                             {header}
                         </h2>
                         

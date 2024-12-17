@@ -1,6 +1,6 @@
 import PageLayout from "@/Layouts/PageLayout";
 import react, { useEffect } from "react";
-import { PageProps, Ruang, RuangProps } from "@/types";
+import { PageProps } from "@/types";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useForm, usePage } from "@inertiajs/react";
@@ -15,9 +15,19 @@ import { toast } from "@/hooks/use-toast";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/Components/ui/breadcrumb";
 
 
+interface RuangProps {
+    id: number;
+    kode_ruang: string;
+    kode_gedung: string;
+    kode_prodi: string;
+    kode_fakultas: string;
+    kapasitas: number;
+    is_verif: string;
+}
+
 interface PaginationProps extends PageProps {
     ruangan: {
-        data: Ruang[];
+        data: RuangProps[];
         current_page: number;
         last_page: number;
         per_page: number;
@@ -33,14 +43,14 @@ interface PaginationProps extends PageProps {
     
 }
 
-export default function TestPage({auth, ruang}: RuangProps) {
+export default function TestPage({auth}: {auth: any}) {
     const {url} = usePage().props;
     const {ruangan, filters} = usePage<PaginationProps>().props;
     const [showModal, setShowModal] = useState<boolean>(false);
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
-    const [selectedruangan, setSelectedruangan] = useState<Ruang | null>(null);
+    const [selectedruangan, setSelectedruangan] = useState<RuangProps | null>(null);
     const [filterProdi, setFilterProdi] = useState<string>(filters.filter_prodi || '');
-    const [filteredRuang, setFilteredRuang] = useState<Ruang[]>(ruangan.data);
+    const [filteredRuang, setFilteredRuang] = useState<RuangProps[]>(ruangan.data);
     
 
 
@@ -55,10 +65,10 @@ export default function TestPage({auth, ruang}: RuangProps) {
     };
 
     const {data, setData, patch, errors} = useForm({
-        selectedIds: selectedIds || []
+        selectedIds: [] as number[]
     })
 
-    console.log(ruangan.data);
+   
 
 
 
@@ -66,7 +76,7 @@ export default function TestPage({auth, ruang}: RuangProps) {
         let filterData = ruangan.data;
 
         if (filterProdi) {
-            filterData = filterData.filter(ruangan => ruangan.kode_prodi === filterProdi);
+            filterData = filterData.filter(ruangan => ruangan.kode_prodi.toLowerCase().includes(filterProdi.toLowerCase()));
         }
 
         setFilteredRuang(filterData);  
@@ -74,8 +84,7 @@ export default function TestPage({auth, ruang}: RuangProps) {
 
     }, [filterProdi, ruangan.data]);
 
-    console.log(filteredRuang);
-
+   
 
 
 
@@ -157,8 +166,13 @@ export default function TestPage({auth, ruang}: RuangProps) {
         const handleRejectSubmit = (e: React.FormEvent) => {
             e.preventDefault();
             if (data.selectedIds.length === 0) {
-              alert("Pilih ruang terlebih dahulu.");
-              return;
+                toast({
+                    variant: "destructive",
+                    className: "bg-red-500",
+                    title: "Gagal memperbarui status ruang",
+                    description: "Pilih ruang terlebih dahulu.",
+                    duration: 2500
+                })
             }
         
             patch(route("dekan.rejectstatus"), {
@@ -182,8 +196,7 @@ export default function TestPage({auth, ruang}: RuangProps) {
     const prodiOptions = Object.keys(prodiMapping);
     const paginateOptions = [5, 10, 25, 50, 100];
 
-    console.log(data.selectedIds);
-    console.log(ruangan.data);  
+     
 
     const handlePaginate = (perPage: number) => {
         Inertia.get(route('dekan.ruang'), {
@@ -191,6 +204,10 @@ export default function TestPage({auth, ruang}: RuangProps) {
             perPage,
         });
     };
+
+    console.log(filteredRuang);
+    console.log(ruangan.data);
+
 
 
     return (
@@ -320,21 +337,21 @@ export default function TestPage({auth, ruang}: RuangProps) {
                                 
                     <div className='w-full overflow-x-auto overflow-y-auto'>
                         <table className="min-w-full text-center border table-fixed">
-                            <thead className='p-8'>
+                            <thead className='p-8 bg-primary-bg bg-opacity-35'>
                                 <tr className='p-8'>
-                                    <th className='py-3 border'>
+                                    <th className='py-3 border border-primary-bg'>
                                         <input
                                             type="checkbox"
                                             checked={selectedIds.length === filteredRuang.length}
                                             onChange={handleSelectAll}
                                         />
                                     </th>
-                                    <th className='py-3 border'>No</th>
-                                    <th className='py-3 border'>Kode Ruang</th>
-                                    <th className='py-3 border '>Kapasitas</th>
+                                    <th className='py-3 border border-primary-bg'>No</th>
+                                    <th className='py-3 border border-primary-bg'>Kode Ruang</th>
+                                    <th className='py-3 border  border-primary-bg'>Kapasitas</th>
                                     
-                                    <th className='py-3 border '>Status</th>
-                                    <th className='py-3 border '>Aksi</th>
+                                    <th className='py-3 border border-primary-bg'>Status</th>
+                                    <th className='py-3 border border-primary-bg'>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody className='text-center items-center'>
@@ -352,7 +369,7 @@ export default function TestPage({auth, ruang}: RuangProps) {
                                             <td className='px-8 text-center border'>{item.kode_ruang}</td>
                                             <td className='px-8 border'>{item.kapasitas}</td>
                                           
-                                            <td className='px-8 border items-center flex-col justify-center '>
+                                            <td className='px-8 border items-center flex-col justify-center w-3/12 '>
                                             {item.is_verif === '1' ? 
                                                 <div className="w-full rounded-md self-center bg-yellow-500 h-8 items-center flex-col flex justify-center text-center bg-opacity-55 text-md ">
                                                     <h2 className="text-center">

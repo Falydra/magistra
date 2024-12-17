@@ -82,7 +82,7 @@ class Mahasiswa extends Model
     }
 
 
-    public function getHasMadeIRSAttribute()
+    public function hasMadeIRS()
     {
         return $this->irs()->exists();
     }

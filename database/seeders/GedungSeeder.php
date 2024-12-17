@@ -29,6 +29,7 @@ class GedungSeeder extends Seeder
             ['kode_gedung' => 'F', 'kode_prodi' => '05'],
             ['kode_gedung' => 'G', 'kode_prodi' => '05'],
             ['kode_gedung' => 'E', 'kode_prodi' => '06'],
+            ['kode_gedung' => 'K', 'kode_prodi' => '03']
         ];
 
         if ($fakultas1) {

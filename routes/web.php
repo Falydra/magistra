@@ -1,13 +1,15 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\RuangController;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
+use App\Http\Controllers\Mahasiswa\SubmitIRSController;
+use App\Http\Controllers\Mahasiswa\IRSController;
 use App\Http\Controllers\Pembimbing\PembimbingController;
 use App\Http\Controllers\Dekan\DekanController;
+use App\Http\Controllers\Dekan\JadwalApprovalController;
 use App\Http\Controllers\Kaprodi\KaprodiController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\RuangController;
-use App\Http\Controllers\Mahasiswa\IRSController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MataKuliahController;
 use App\Http\Controllers\JadwalController;
@@ -50,12 +52,14 @@ Route::patch('/mahasiswa/updateStatus', [MahasiswaController::class, 'updateStat
 // Route::patch('/mahasiswa/updateStatusBayar', [MahasiswaController::class, 'updateStatusBayar'])->name('mahasiswa.updatestatusbayar');
 
 Route::get('/mahasiswa/pembayaran', [MahasiswaController::class, 'pembayaran'])->name('mahasiswa.pembayaran');
-Route::get('/mahasiswa/irs', [IRSController::class, 'index'])->name('mahasiswa.irs');
+Route::get('/mahasiswa/irs-mahasiswa', [IRSController::class, 'index'])->name('mahasiswa.irs');
 Route::get('/mahasiswa/tambahirs', [IRSController::class, 'create'])->name('mahasiswa.tambahirs');
 
 Route::get('mahasiswa/check-irs', [IRSController::class, 'checkIRS'])->name('mahasiswa.checkIRS');
-Route::post('/mahasiswa/check-irs', [IRSController::class, 'store'])->name('mahasiswa.storeirs');
-Route::post('/submit-irs', [IRSController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
+Route::post('/mahasiswa/irs', [IRSController::class, 'store'])->name('mahasiswa.storeirs');
+Route::post('/mahasiswa/ajukan-irs', [SubmitIRSController::class, 'submitIRS'])->name('mahasiswa.submitIRS');
+Route::post('/mahasiswa/irs/{id}', [IRSController::class, 'updateIRS'])->name('mahasiswa.updateIRS');
+
 Route::delete('/mahasiswa/irs/{id}', [IRSController::class, 'destroy'])->name('mahasiswa.deleteIRS');
 Route::get('/mahasiswa/khs', [MahasiswaController::class, 'khs'])->name('mahasiswa.khs');
 
@@ -110,6 +114,7 @@ Route::get('/dekan/persetujuanjadwal', [DekanController::class, 'showJadwal'])->
 Route::patch('/dekan/updateStatus', [DekanController::class, 'updateStatus'])->name('dekan.updatestatus');
 Route::patch('/dekan/rejectStatus', [DekanController::class, 'rejectStatus'])->name('dekan.rejectstatus');
 Route::patch('/dekan/resetstatus', [DekanController::class, 'resetStatus'])->name('dekan.resetstatus');
+Route::post('/dekan/approve', [JadwalApprovalController::class, 'approveJadwal'])->name('dekan.approve');
 
 
 

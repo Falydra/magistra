@@ -1,70 +1,55 @@
 <?php
 
-    namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Mahasiswa;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Http\Request;
-    use App\Http\Requests\IRSRequest;
-    use App\Http\Requests\IRSJadwalRequest;
-    use App\Models\Mahasiswa;
-    use Inertia\Inertia;
-    use App\Models\Kelas;
-    use App\Models\Jadwal;
-    use App\Models\IRS;
-    use App\Models\Hari;
-    use App\Models\Ruang;
-    use App\Models\MataKuliah;
-    use App\Models\IRSJadwal;
-    use Carbon\Carbon;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\IRSRequest;
+use App\Http\Requests\IRSJadwalRequest;
+use App\Models\Mahasiswa;
+use Inertia\Inertia;
+use App\Models\Kelas;
+use App\Models\Jadwal;
+use App\Models\IRS;
+use App\Models\Hari;
+use App\Models\Ruang;
+use App\Models\MataKuliah;
+use App\Models\IRSJadwal;
+use Carbon\Carbon;
 
-
-
-    class IRSController extends Controller
+class IRSController extends Controller
+{
+    public function index()
     {
-        public function index()
-    {
-        $user = auth()->user();
-        $mahasiswa = $user->mahasiswa;  
-
-        
-
-
-            
-            $irs = IRS::join('mahasiswa', 'irs.nim', '=', 'mahasiswa.nim')
-                ->select('irs.*', 'mahasiswa.nama', 'mahasiswa.tahun_masuk', 'mahasiswa.kode_registrasi')
-                ->where('irs.nim', $mahasiswa->nim)
-                ->get();
-
-        
-            return Inertia::render('Mahasiswa/IRS', [
-                'mahasiswa' => $mahasiswa,
-            
-                'irs' => $irs,
-            
-            ]);
-    }
-
-    public function create(Request $request){
         $user = auth()->user();
         $mahasiswa = $user->mahasiswa;
 
-        // if ($mahasiswa->hasMadeIRS) {
-        //     return redirect()->back()->with('error', 'IRS hanya dapat dibuat sekali.');
-        // }   
-
         $irs = IRS::join('mahasiswa', 'irs.nim', '=', 'mahasiswa.nim')
-            ->select('irs.total_sks', 'irs.status')
+            ->select('irs.*', 'mahasiswa.nama', 'mahasiswa.tahun_masuk', 'mahasiswa.kode_registrasi')
             ->where('irs.nim', $mahasiswa->nim)
+            ->get();
+
+        return Inertia::render('Mahasiswa/IRS', [
+            'mahasiswa' => $mahasiswa,
+            'irs' => $irs,
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        $user = auth()->user();
+        $mahasiswa = $user->mahasiswa;
+        $mahasiswa->hasMadeIRS = IRS::where('nim', $mahasiswa->nim)
+            ->where('semester', $mahasiswa->semester)
+            ->exists();
+
+            $irs = IRS::join('mahasiswa', 'irs.nim', '=', 'mahasiswa.nim')
+            ->select('irs.id', 'irs.total_sks', 'irs.status', 'irs.semester')
+            ->where('irs.semester', $mahasiswa->semester)
             ->orderBy('irs.semester', 'desc')
             ->get();
 
-            
-
-    
-
         $matakuliah = MataKuliah::all();
-        
-    
         $hari = Hari::all();
         $ruang = Ruang::all();
 
@@ -81,9 +66,13 @@
                 'd1.nama as dosen_1',
                 'd2.nama as dosen_2',
                 'd3.nama as dosen_3'
-            );
-        
-
+            )
+            ->where(function ($query) use ($mahasiswa) {
+                $query->where('mata_kuliah.semester', $mahasiswa->semester)
+                    ->orWhere('mata_kuliah.semester', $mahasiswa->semester - 2)
+                    ->orWhere('mata_kuliah.semester', $mahasiswa->semester - 4)
+                    ->orWhere('mata_kuliah.semester', $mahasiswa->semester - 6);
+            });
 
         if ($request->has('filterSemester') && $request->filterSemester) {
             $jadwalQuery->where('mata_kuliah.semester', $request->filterSemester);
@@ -93,37 +82,31 @@
             $jadwalQuery->where('mata_kuliah.sks', $request->filterSKS);
         }
 
-
         if ($request->has('filterJenis') && $request->filterJenis) {
             $jadwalQuery->where('mata_kuliah.jenis', $request->filterJenis);
         }
 
-        
         $jadwal = $jadwalQuery->get();
         $kelas = Kelas::whereIn('kelas', $jadwal->pluck('kelas')->toArray())->get();
 
-
         return Inertia::render('Mahasiswa/TambahIRS', [
             'mahasiswa' => $mahasiswa,
-            // load('irs')->toArray() + [
-        // 'hasMadeIRS' => $mahasiswa->hasMadeIRS,
-            
             'kelas' => $kelas,
             'jadwal' => $jadwal,
             'hari' => $hari,
             'ruang' => $ruang,
             'irs' => $irs,
             'matakuliah' => $matakuliah,
+
             'session' => [
                 'selected_ids' => session('selected_ids', []),
                 'total_sks' => session('total_sks', 0),
             ],
-
-            'filters' => $request->only(['filterSKS', 'filterSemester', 'filterJenis']),	
+            'filters' => $request->only(['filterSKS', 'filterSemester', 'filterJenis']),
         ]);
-        }
+    }
 
-        public function store(IRSRequest $request, IRSJadwalRequest $request2)
+    public function store(IRSRequest $request, IRSJadwalRequest $request2)
     {
         $user = auth()->user();
         $mahasiswa = $user->mahasiswa;
@@ -131,7 +114,7 @@
         $validated2 = $request2->validated();
 
         // Cek apakah mahasiswa sudah membuat IRS pada semester ini
-        $existingIRS = IRS::where('nim', $mahasiswa->nim)
+        $existingIRS = IRS::where('nim', '=',  $mahasiswa->nim)
             ->where('semester', $mahasiswa->semester)
             ->first();
 
@@ -150,10 +133,15 @@
         ]);
 
         foreach ($validated2['id_jadwal'] as $value) {
-            IRSJadwal::create([
-                'id_irs' => $irs->id,
-                'id_jadwal' => $value,
-            ]);
+            $jadwal = Jadwal::find($value);
+            if ($jadwal) {
+                $priority = $this->getPriority($mahasiswa->semester, $jadwal->semester);
+                $this->handlePriorityQueue($jadwal, $mahasiswa, $priority);
+                IRSJadwal::create([
+                    'id_irs' => $irs->id,
+                    'id_jadwal' => $value,
+                ]);
+            }
         }
 
         // Simpan data ke session
@@ -165,59 +153,90 @@
         return redirect()->route('mahasiswa.checkIRS')->with('success', 'IRS berhasil dibuat.');
     }
 
-    public function updateIRS(Request $request)
+    private function getPriority($studentSemester, $courseSemester)
     {
-        $user = auth()->user();
-        $mahasiswa = $user->mahasiswa;
-
-        $irs = IRS::where('nim', $mahasiswa->nim)
-            ->where('semester', $mahasiswa->semester)
-            ->firstOrFail();
-
-        $validatedData = $request->validate([
-            'id_jadwal' => 'required|array',
-            'id_jadwal.*' => 'exists:jadwal,id',
-            'total_sks' => 'required|integer|max:' . ($mahasiswa->ips > 3.00 ? 24 : 21),
-        ]);
-
-        // Update IRS dan jadwal
-        $irs->update(['total_sks' => $validatedData['total_sks']]);
-        IRSJadwal::where('id_irs', $irs->id)->delete();
-
-        foreach ($validatedData['id_jadwal'] as $jadwalId) {
-            IRSJadwal::create([
-                'id_irs' => $irs->id,
-                'id_jadwal' => $jadwalId,
-            ]);
+        if ($studentSemester == $courseSemester) {
+            return 1;
+        } elseif ($studentSemester > $courseSemester) {
+            return 2;
+        } else {
+            return 3;
         }
-
-        // Update session
-        session([
-            'selected_ids' => $validatedData['id_jadwal'],
-            'total_sks' => $validatedData['total_sks'],
-        ]);
-
-        return redirect()->route('mahasiswa.checkIRS')->with('success', 'IRS berhasil diperbarui.');
     }
 
+    private function handlePriorityQueue($jadwal, $mahasiswa, $priority)
+    {
+        $currentRegistrations = IRSJadwal::where('id_jadwal', $jadwal->id)->count();
+        if ($currentRegistrations < $jadwal->kuota) {
+            return;
+        }
+
+        if ($priority == 1) {
+            $lowerPriorityRegistrations = IRSJadwal::join('irs', 'irs_jadwal.id_irs', '=', 'irs.id')
+                ->join('mahasiswa', 'irs.nim', '=', 'mahasiswa.nim')
+                ->where('irs_jadwal.id_jadwal', $jadwal->id)
+                ->where('mahasiswa.semester', '!=', $jadwal->semester)
+                ->orderBy('mahasiswa.semester', 'desc')
+                ->get();
+
+            if ($lowerPriorityRegistrations->isNotEmpty()) {
+                $registrationToRemove = $lowerPriorityRegistrations->first();
+                IRSJadwal::where('id', $registrationToRemove->id)->delete();
+            }
+        }
+    }
+
+    public function updateIRS(Request $request, $id)
+{
+    $user = auth()->user();
+    $mahasiswa = $user->mahasiswa;
+
+    $irs = IRS::findOrFail($id);
+    $validated = $request->validate([
+        'id_jadwal' => 'required|array',
+        'id_jadwal.*' => 'required|exists:jadwal,id',
+        'total_sks' => 'required|integer',
+    ]);
+
+    \Log::info('Request Data:', $request->all());
+
+    $irs->update([
+        'id_jadwal' => json_encode($validated['id_jadwal']),
+        'total_sks' => $validated['total_sks'],
+    ]);
+
+    $irsJadwal = IRSJadwal::where('id_irs', $irs->id)->get();
+    //insert if there was e new jadwal id
+    foreach ($validated['id_jadwal'] as $value) {
+        $jadwal = Jadwal::find($value);
+        if ($jadwal) {
+            $priority = $this->getPriority($mahasiswa->semester, $jadwal->semester);
+            $this->handlePriorityQueue($jadwal, $mahasiswa, $priority);
+            $irsJadwal = IRSJadwal::firstOrCreate([
+                'id_irs' => $irs->id,
+                'id_jadwal' => $value,
+            ]);
+        }
+    }
+
+    return redirect()->route('mahasiswa.checkIRS')->with('success', 'IRS berhasil diubah.');
+}
 
 
     public function checkIRS(Request $request)
     {
         $user = auth()->user();
         $mahasiswa = $user->mahasiswa;
-    
+
         $semester = $request->get('semester', null); // Ambil parameter semester jika ada, default null
-    
+
         $irs = IRS::join('mahasiswa', 'irs.nim', '=', 'mahasiswa.nim')
             ->select('irs.id', 'irs.total_sks', 'irs.status', 'irs.semester')
             ->where('irs.nim', $mahasiswa->nim)
-            ->when($semester, function ($query, $semester) {
-                return $query->where('irs.semester', $semester); // Filter berdasarkan semester jika tersedia
-            })
+            ->where('irs.semester', $request->get('semester', $mahasiswa->semester))
             ->orderBy('irs.semester', 'desc')
             ->get();
-    
+
         $mahasiswa = Mahasiswa::join('prodi', 'mahasiswa.kode_prodi', '=', 'prodi.kode_prodi')
             ->leftJoin('pembimbing as p1', 'mahasiswa.pembimbing_id', '=', 'p1.id')
             ->leftJoin('dosen as d1', 'p1.nip', '=', 'd1.nip')
@@ -235,7 +254,7 @@
             })
             ->orderBy('irs.semester', 'desc')
             ->first();
-    
+
         $irsJadwal = IRSJadwal::join('irs', 'irs_jadwal.id_irs', '=', 'irs.id')
             ->join('jadwal', 'irs_jadwal.id_jadwal', '=', 'jadwal.id')
             ->join('mata_kuliah', 'jadwal.kode_mk', '=', 'mata_kuliah.kode_mk')
@@ -254,100 +273,29 @@
                 'd3.nama as dosen_3'
             )
             ->where('irs.nim', $mahasiswa->nim)
-            ->when($semester, function ($query, $semester) {
-                return $query->where('irs.semester', $semester); // Filter berdasarkan semester jika tersedia
-            })
+            ->where('irs.semester', $request->get('semester', $mahasiswa->semester))
             ->get();
-    
+
         return Inertia::render('Mahasiswa/CheckIRS', [
             'mahasiswa' => $mahasiswa,
             'irsJadwal' => $irsJadwal,
             'irs' => $irs,
         ]);
     }
-    
 
-        public function ajukanIRS(Request $request)
+    public function destroy(Request $request, $id)
     {
-        try {
-            // Validasi input
-            $validated = $request->validate([
-                'mahasiswa_nim' => 'required|string|exists:mahasiswa,nim', // NIM harus ada di tabel mahasiswa
-                'irs_id' => 'required|integer|exists:irs,id',            // IRS ID harus valid
-                'jadwal_ids' => 'required|array',                       // Harus ada array jadwal IDs
-                'jadwal_ids.*' => 'integer|exists:irs_jadwal,id',       // Setiap jadwal ID harus valid di tabel pivot irs_jadwal
-            ]);
+        $irs = IRS::findOrFail($id);
+        $user = auth()->user();
+        $mahasiswa = $user->mahasiswa;
 
-            \Log::info('Data berhasil divalidasi:', $validated);
-
-            // Dapatkan data mahasiswa dan IRS terkait
-            $mahasiswa = Mahasiswa::where('nim', $validated['mahasiswa_nim'])->first();
-            $irs = IRS::findOrFail($validated['irs_id']);
-
-            // Periksa apakah IRS terkait dengan mahasiswa
-            if ($irs->nim !== $mahasiswa->nim) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'IRS tidak sesuai dengan NIM mahasiswa.',
-                ], 422);
-            }
-
-            // Perbarui status IRS
-            $irs->update([
-                'status' => 'diajukan', // Status pengajuan
-            ]);
-
-            // Simpan jadwal terkait IRS di tabel pivot jika perlu (opsional)
-            foreach ($validated['jadwal_ids'] as $jadwalId) {
-                $pivot = IRSJadwal::where('irs_id', $irs->id)
-                    ->where('id', $jadwalId)
-                    ->first();
-
-                if ($pivot) {
-                    $pivot->update([
-                        'status' => 'diajukan', // Update status di tabel pivot
-                    ]);
-                }
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'IRS berhasil diajukan ke pembimbing.',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Tangkap validasi error
-            return response()->json([
-                'success' => false,
-                'message' => 'Validasi gagal.',
-                'errors' => $e->errors(),
-            ], 422);
-        } catch (\Exception $e) {
-            // Tangkap error umum lainnya
-            \Log::error('Error saat mengajukan IRS:', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Terjadi kesalahan saat mengajukan IRS.',
-            ], 500);
-        }
+        if ($irs->semester < $mahasiswa->semester) {
+            return redirect()->route('mahasiswa.deleteIRS');
         }
 
-        public function destroy(Request $request, $id)
-        {
+        $irs->delete();
+        session()->forget(['selected_ids', 'total_sks']);
 
-            
-                                            
-            $irs = IRS::findOrFail($id);
-            $user = auth()->user();
-            $mahasiswa = $user->mahasiswa;
-            // with this logic
-            // IRS with the semester < mahasiswa semester, the trash icon will be disabled
-            if ($irs->semester < $mahasiswa->semester) {
-                return redirect()->route('mahasiswa.deleteIRS');
-            }
-
-
-            $irs->delete();
-
-            return redirect()->route('mahasiswa.irs');
-        }
+        return redirect()->route('mahasiswa.irs');
     }
+}

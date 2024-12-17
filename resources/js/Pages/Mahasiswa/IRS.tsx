@@ -12,6 +12,8 @@ import { FaMoneyBills, FaPlus } from "react-icons/fa6";
 import { HiAcademicCap, HiBuildingLibrary } from "react-icons/hi2";
 import { LuFilePlus2 } from "react-icons/lu";
 import { FaPen } from "react-icons/fa6";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/Components/ui/breadcrumb";
+import { toast } from "@/hooks/use-toast";
 
 interface DataIRS extends PageProps {
     irs: IRS[]
@@ -32,7 +34,22 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
     
 
     const handleDelete = (id: number) => {
-        Inertia.delete(route("mahasiswa.deleteIRS", { id }));
+        Inertia.delete(route("mahasiswa.deleteIRS", { id }),
+    {
+        onSuccess: () => {
+            // Reset all selected IDs, checkboxes, radio buttons, and total SKS
+            toast({
+                variant: "default",
+                className: "bg-green-500",
+                title: "Berhasil",
+                description: "IRS berhasil dihapus",
+                duration: 2500,
+               
+            })
+        }
+    })
+        
+        ;
     };
 
     const currentSemesterIRS = irs.find((item) => item.semester === mahasiswa.semester);
@@ -46,12 +63,20 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
             <PageLayout
                 user={auth.user}
                 back={
-                    <Link href={route("mahasiswa.dashboard")}>
-                        <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
-                            <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
-                            IRS
-                        </h2>
-                    </Link>
+                    <>
+                        <Breadcrumb className="ml-10 mt-8 text-black">
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="/admin/dashboard">Dashboard</BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                            <BreadcrumbSeparator />
+                                            
+                                        <BreadcrumbItem>
+                                    <BreadcrumbPage>IRS</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </>
                 }
                 sidebarChildren={
                     <>
@@ -118,12 +143,20 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
             <PageLayout
                 user={auth.user}
                 back={
-                    <Link href={route("mahasiswa.dashboard")}>
-                        <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
-                            <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
-                            IRS
-                        </h2>
-                    </Link>
+                    <>
+                        <Breadcrumb className="ml-10 mt-8 text-black">
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="/admin/dashboard">Dashboard</BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                            <BreadcrumbSeparator />
+                                            
+                                        <BreadcrumbItem>
+                                    <BreadcrumbPage>IRS</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </>
                 }
                 sidebarChildren={
                     <>
@@ -177,12 +210,20 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
         <PageLayout
             user={auth.user}
             back={
-                <Link href={route("mahasiswa.dashboard")}>
-                    <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
-                        <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
-                        IRS
-                    </h2>
-                </Link>
+                <>
+                <Breadcrumb className="ml-10 mt-8 text-black">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/mahasiswa/dashboard">Dashboard</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    
+                                <BreadcrumbItem>
+                            <BreadcrumbPage>IRS</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </>
             }
             sidebarChildren={
                 <>
@@ -222,7 +263,7 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
             }
         >
             <div className="flex flex-col w-full h-screen items-start justify-start space-y-2">
-                <div className="flex w-full flex-row items-center justify-start ml-12">
+                <div className="flex w-full flex-row items-center justify-start ml-10 mt-2   text-primary-bg">
                     <h1 className="text-2xl font-semibold">{mahasiswa.nama} |</h1>
                     <h1 className="text-2xl font-semibold">| {mahasiswa.nim}</h1>
                 </div>
@@ -250,7 +291,7 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
                         <div>
                             <Button
                                 variant="default"
-                                className="rounded-md bg-primary-green w-32 h-10 mr-12 flex text-center  items-center justify-center text-white"
+                                className="rounded-md bg-primary-green w-32 h-10 mr-10 flex text-center  items-center justify-center text-white"
                                 onClick={() => Inertia.get(route("mahasiswa.tambahirs"))}
                             >
                                 <FaPlus className="w-6 h-6 self-start" />
@@ -259,7 +300,7 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
                         </div>
                     )}
                 </div>
-                <div className='w-full overflow-x-auto scrollbar-hidden px-12'>
+                <div className='w-full overflow-x-auto scrollbar-hidden px-10'>
                     <table className="min-w-full text-center border table-fixed">
                         <thead className='p-8'>
                             <tr className='p-8'>
@@ -291,10 +332,13 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
                                                 </Button>
                                             </Link>
                                         </td>
-                                        <td className="py-3 border">
-                                            <Link href={route("mahasiswa.irs")}>
-                                                <Button variant="default">Edit</Button>
-                                            </Link>
+                                        <td className=" border space-x-2 items-center flex-col justify-center text-white">
+                                            {index + 1 < mahasiswa.semester ?
+                                              <Button variant="default" className="bg-yellow-400 cursor-not-allowed" disabled>Edit</Button>
+                                                :
+                                                 <Button variant="default" className="bg-yellow-400" onClick={() => Inertia.visit('/mahasiswa/tambahirs')}>Edit</Button>
+                                            }
+                                         
 
                                             {index + 1 < mahasiswa.semester ?
                                                 <Button variant="default" className="bg-red-500 text-white cursor-not-allowed" disabled>

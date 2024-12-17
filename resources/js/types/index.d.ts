@@ -167,6 +167,7 @@ export interface Kelas {
 export interface JadwalProdi {
     id: number;
     kode_jadwal_prodi: string;
+    kode_prodi: string;
     status: string;
 }
 
@@ -255,6 +256,7 @@ export type MahasiswaProps<T extends Record<string, unknown> = Record<string, un
         user: User;
     }
     mahasiswa: Mahasiswa;
+    mahasiswaDetail: Mahasiswa;
 }
 
 export type PembayaranProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -338,4 +340,11 @@ export type IRSJadwalProps<T extends Record<string, unknown> = Record<string, un
         user: User;
     }
     irsJadwal: IRSJadwal[];
+}
+
+export type JadwalProdiProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    }
+    jadwalProdi: JadwalProdi[];
 }

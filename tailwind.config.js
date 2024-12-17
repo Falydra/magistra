@@ -17,7 +17,7 @@ export default {
     	extend: {
 			
     		fontFamily: {
-    			sans: ['Poppins', ...defaultTheme.fontFamily.sans]
+    			sans: ['Poppins']
     		},
     		borderRadius: {
     			custom: '5.0rem',

@@ -11,6 +11,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { FaMoneyBills, FaPlus } from "react-icons/fa6";
 import { HiAcademicCap, HiBuildingLibrary } from "react-icons/hi2";
 import { LuFilePlus2 } from "react-icons/lu";
+import { FaPen } from "react-icons/fa6";
 import { toast } from "@/hooks/use-toast";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/Components/ui/breadcrumb";
 
@@ -29,7 +30,9 @@ interface SessionData extends PageProps {
 export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas, ruang }: MahasiswaProps & IRSProps & MatakuliahProps & JadwalProps & KelasProps & RuangProps) {
   const { url } = usePage().props;
   const { auth } = usePage().props;
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { session } = usePage<SessionData>().props;
+  const [totalSKS, setTotalSKS] = useState(0);
   const [filteredJadwal, setFilteredJadwal] = useState(jadwal);
   const [filterSKS, setFilterSKS] = useState<number | null>(null);
   const [filterSemester, setFilterSemester] = useState<number | null>(null);
@@ -38,41 +41,49 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
   const semester = [1, 2, 3, 4, 5, 6, 7, 8];
   const jenis = ["Wajib", "Pilihan"];
 
-  const { data, setData, post, errors } = useForm<FormData>({
-    id_jadwal: session?.selected_ids || [],
-    total_sks: session?.total_sks || 0,
-  });
-
   useEffect(() => {
-    const filteredData = jadwal.filter((item) => {
-      const matchSemester = filterSemester === null || item.semester === filterSemester;
-      const matchSKS = filterSKS === null || item.sks === filterSKS;
-      const matchJenis = filterJenis === null || item.jenis === filterJenis;
-  
-      return matchSemester && matchSKS && matchJenis;
-    });
-  
+    let filteredData = jadwal;
+
+    if (filterSemester !== null) {
+      filteredData = filteredData.filter((item) => item.semester === filterSemester);
+    }
+
+    if (filterSKS !== null) {
+      filteredData = filteredData.filter((item) => item.sks === filterSKS);
+    }
+
+    if (filterJenis !== null) {
+      filteredData = filteredData.filter((item) => item.jenis === filterJenis);
+    }
+
     setFilteredJadwal(filteredData);
-  }, [filterSemester, filterSKS, filterJenis, jadwal]);
-  
+  }, [filterSemester, filterSKS, filterJenis]);
 
   const Paginateprops = ["5", "10", "25", "50"];
 
+  const { data, setData, post, errors } = useForm<FormData>({
+    id_jadwal: [],
+    total_sks: 0,
+  });
+
   const handleFilterChangeSemester = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterSemester(e.target.value ? parseInt(e.target.value) : null);
+    Inertia.get(route("mahasiswa.tambahirs"), { filterSemester: e.target.value, selected_ids: data.id_jadwal });
   };
 
   const handleFilterChangeSKS = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterSKS(e.target.value ? parseInt(e.target.value) : null);
+    Inertia.get(route("mahasiswa.tambahirs"), { filterSKS: e.target.value, selected_ids: data.id_jadwal });
   };
 
   const handleFilterChangeJenis = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilterJenis(e.target.value);
+    Inertia.get(route("mahasiswa.tambahirs"), { filterJenis: e.target.value, selected_ids: data.id_jadwal });
   };
 
   const handlePageChange = (url: string | null) => {
     if (url) {
-      Inertia.get(url);
+      Inertia.get(url, { selected_ids: data.id_jadwal });
     }
   };
 
@@ -118,41 +129,29 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
   const handleSelectKelas = (kodeMk: string, kelas: string) => {
     setSelectedKelas((prev) => ({
       ...prev,
-      [kodeMk]: prev[kodeMk] === kelas ? null : kelas, // Deselect if the same class is selected again
+      [kodeMk]: kelas,
     }));
 
     const selectedJadwal = jadwal.find((j) => j.kode_mk === kodeMk && j.kelas === kelas);
     if (selectedJadwal) {
-      setData((prevData) => ({
-        ...prevData,
-        id_jadwal: prevData.id_jadwal.filter((id) => jadwal.find((j) => j.id === id)?.kode_mk !== kodeMk),
-      }));
-
-      if (selectedKelas[kodeMk] !== kelas) {
-        setData((prevData) => ({
-          ...prevData,
-          id_jadwal: [...prevData.id_jadwal, selectedJadwal.id],
-        }));
-      }
+      setData({
+        ...data,
+        id_jadwal: [...data.id_jadwal.filter((id) => jadwal.find((j) => j.id === id)?.kode_mk !== kodeMk), selectedJadwal.id],
+      });
     }
   };
-  console.log("Data dikirim:", data); // Debug sebelum pengiriman
-  console.log("Cek Validitas ROute:", mahasiswa.hasMadeIRS);
-  console.log(mahasiswa.nim);
- 
 
   const handleSubmit = () => {
     console.log("Data dikirim:", data); // Debug sebelum pengiriman
-    const currentSemesterIRS = irs.find((item) => item.semester === mahasiswa.semester);
-    const routeName = currentSemesterIRS ? "mahasiswa.updateIRS" : "mahasiswa.storeirs";
-    post(route(routeName, { id: currentSemesterIRS?.id }), {
+    const routeName = mahasiswa.hasMadeIRS ? "mahasiswa.updateIRS" : "mahasiswa.storeirs";
+    post(route(routeName), {
       id_jadwal: data.id_jadwal,
       total_sks: data.total_sks,
       totalSKS: 0,
     } as Record<string, any>);
   };
 
-  const maxSKS = mahasiswa.ips > 3.0 ? 24 : 20;
+  const maxSKS = mahasiswa.ips > 3.0 ? 24 : 21;
 
   useEffect(() => {
     // Memuat data dari session jika tersedia
@@ -160,10 +159,8 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
     const savedTotalSKS = session?.total_sks || 0;
 
     // Set nilai default jika data tidak ada
-    setData({
-      id_jadwal: savedIds,
-      total_sks: savedTotalSKS,
-    });
+    setSelectedIds(savedIds);
+    setTotalSKS(savedTotalSKS);
 
     // Tandai kelas yang telah dipilih berdasarkan data sesi
     const savedKelas: Record<string, string> = {};
@@ -176,10 +173,14 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
     setSelectedKelas(savedKelas);
   }, [jadwal, session]);
 
- 
+  console.log(irs);
+  console.log(matakuliah);
+  console.log(jadwal);
+  console.log(kelas);
 
   //Console log data.id_jadwal tetapi di mapping
-  
+  console.log(data.id_jadwal);
+  console.log(data.total_sks);
 
   return (
     <PageLayout user={auth.user} back={
@@ -187,7 +188,7 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
         <Breadcrumb className="ml-10 mt-8 text-black">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/mahasiswa/dashboard">Dashboard</BreadcrumbLink>
+              <BreadcrumbLink href="/admin/dashboard">Dashboard</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -217,7 +218,7 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
       </>
     }>
       <div className="flex flex-col w-full items-start justify-start space-y-2 overflow-y-auto ">
-        <div className="flex w-full flex-row items-center justify-start ml-10 mt-2 text-primary-bg">
+        <div className="flex w-full flex-row items-center justify-start ml-10 text-primary-bg">
           <h1 className="text-2xl font-semibold">{mahasiswa.nama} |</h1>
           <h1 className="text-2xl font-semibold">| {mahasiswa.nim}</h1>
         </div>
@@ -238,18 +239,17 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
         <div className="flex w-full flex-row items-center justify-between pl-10 space-x-4">
           <div className="flex items-center space-x-4">
             Semester
-            <select id="filterSemester" className="w-36 h-10 border-2 border-primary-dark rounded-md" value={filterSemester || ''} onChange={handleFilterChangeSemester}>
-              <option value="" disabled>Semester</option>
+            <select id="filterSemester" className="w-32 h-10 border-2 border-primary-dark rounded-md ml-4" value={filterSemester || ''} onChange={handleFilterChangeSemester}>
+              <option value="">Semua</option>
               {semester.map((sem) => (
                 <option key={sem} value={sem}>
-                  {sem}
+                  Semester {sem}
                 </option>
               ))}
             </select>
-            
             SKS
             <select id="filterSKS" className="w-32 h-10 border-2 border-primary-dark rounded-md ml-4" value={filterSKS || ''} onChange={handleFilterChangeSKS}>
-              <option value="" disabled>SKS</option>
+              <option value="">Semua</option>
               {[1, 2, 3, 4].map((sks) => (
                 <option key={sks} value={sks}>
                   {sks} SKS
@@ -258,7 +258,7 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
             </select>
             Jenis
             <select id="filterJenis" className="w-32 h-10 border-2 border-primary-dark rounded-md" value={filterJenis || ''} onChange={handleFilterChangeJenis}>
-              <option value="" disabled>Semua</option>
+              <option value="">Semua</option>
               {jenis.map((jen) => (
                 <option key={jen} value={jen}>
                   {jen}
@@ -270,7 +270,6 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
             <div className="">
               Total SKS: {data.total_sks} / {maxSKS}
             </div>
-            
             <button type="submit" className="rounded-md bg-primary-bg w-42 h-12 mr-10 flex text-center items-center justify-center text-white gap-2" onClick={handleSubmit}>
               <FaPlus className="w-6 h-6 self-center" />
               <h1 className="self-center">Tambah MataKuliah</h1>
@@ -294,29 +293,33 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
               </tr>
             </thead>
             <tbody className='text-center scrollbar-hidden overflow-y-auto min-h-[4000px] '>
-              {filteredJadwal.map((jadwalItem, index) => {
-                const isFirstOccurrence = index === 0 || jadwalItem.kode_mk !== filteredJadwal[index - 1].kode_mk;
+              {jadwal.map((jadwalItem, index) => {
+                const isFirstOccurrence = index === 0 || jadwalItem.kode_mk !== jadwal[index - 1].kode_mk;
 
                 return (
                   <tr key={jadwalItem.id} className="border">
                     {isFirstOccurrence && (
                       <>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
-                          <input type="checkbox" checked={data.id_jadwal.includes(jadwalItem.id)} onChange={() => handleInputChange(jadwalItem.id, jadwalItem.sks)} />
-                        </td>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <td rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <input
+                          type="checkbox"
+                          checked={data.id_jadwal.includes(jadwalItem.id)}
+                          onChange={() => handleInputChange(jadwalItem.id, jadwalItem.sks)}
+                        />
+                      </td>
+                        <td className="py-3 border" rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
                           {jadwalItem.kode_mk}
                         </td>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <td className="py-3 border" rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
                           {jadwalItem.nama}
                         </td>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <td className="py-3 border" rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
                           {jadwalItem.semester}
                         </td>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <td className="py-3 border" rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
                           {jadwalItem.sks}
                         </td>
-                        <td className="py-3 border" rowSpan={filteredJadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
+                        <td className="py-3 border" rowSpan={jadwal.filter(j => j.kode_mk === jadwalItem.kode_mk).length}>
                           <span>
                             {jadwalItem.dosen_1}<br />
                             {jadwalItem.dosen_2}<br />

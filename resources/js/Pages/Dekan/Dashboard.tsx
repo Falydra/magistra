@@ -85,7 +85,7 @@ export default function DekanDashboard({auth, dekan }: DekanProps) {
                             <HiBuildingLibrary className='w-16 h-16 ml-8'/>
                             <div className=' flex flex-col w-full items-center justify-center'>
 
-                                <div className=" text-gray-900">Persetujuan Jadawl</div>
+                                <div className=" text-gray-900">Persetujuan Jadwal</div>
                                 <h1> Manajemen Jadawl</h1>
                             </div>
                         </div>

@@ -154,10 +154,10 @@ export default function AlokasiRuang({auth} : {auth: any} ) {
 
     
 
-    const gedungOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const gedungOptions = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'K'];
     const paginateOptions = [5, 10, 25, 50, 100];
     const prodiOptions = Object.keys(prodiMapping);
-    console.log(ruang)
+    // console.log(ruang)
 
     const handleDeleteAll = () => {
         Inertia.delete(route('admin.deleteAllruang'), {
@@ -203,8 +203,13 @@ export default function AlokasiRuang({auth} : {auth: any} ) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (data.selectedIds.length === 0) {
-            alert("Pilih ruang terlebih dahulu.");
-            return;
+            toast({
+                variant: "destructive",
+                className: "bg-red-500",
+                title: "Gagal memperbarui status ruang",
+                description: "Pilih ruang terlebih dahulu.",
+                duration: 2500
+            })
         }
     
         patch(route("admin.updatestatus"), {
@@ -245,7 +250,8 @@ export default function AlokasiRuang({auth} : {auth: any} ) {
 
 
 
-    console.log(data.selectedIds);
+    // console.log(data.selectedIds);
+    console.log(ruang.data);
 
 
     

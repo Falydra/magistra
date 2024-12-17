@@ -38,16 +38,16 @@ export default function AuthenticatedLayout({
     return (
         <>
             <Head title="Dashboard" />
-            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row">
+            <div className="flex-col hidden w-full min-h-screen bg-primary-bg md:flex sm:flex-row font-medium   ">
                 <div className="flex flex-col w-full sm:w-2/5 lg:w-3/12 bg-transparent mt-4 mb-10 ml-4 items-center">
 
                 {/* Sidebar Parent */}
-                    <div className="flex flex-col items-center w-full h-screen min-h-screen justify-between  overflow-y-auto lg:fixed lg:w-1/5 sm:w2/5 bg-dark-500 scrollbar-hidden z-5 mt-12">
+                    <div className="flex font-sans flex-col items-center w-full h-screen min-h-screen justify-between  overflow-y-auto lg:fixed lg:w-1/5 sm:w2/5 bg-dark-500 scrollbar-hidden z-5 mt-12">
                         
                         <div className='flex flex-col items-center justify-between'>
                             {/* Magistra Logo */}
-                            <div className='flex w-full items-center justify-center text-3xl text-white'>
-                                <h1 className=' font-thin'>
+                            <div className='flex w-full items-center justify-center text-3xl text-white font-sans'>
+                                <h1 className=' font-semibold'>
                                     MAGISTRA
                                 </h1>
                             </div>
@@ -65,7 +65,7 @@ export default function AuthenticatedLayout({
                                             <TbAppsFilled className='w-8 h-8'/>
                                             
                                             
-                                            <Link href={route(`${user.role}.dashboard`)}>Dashboard</Link>
+                                            <Link href={route(`${user.role}.dashboard`)} className='font-sans'>Dashboard</Link>
                                             
                                         </div>
                                         <div
@@ -107,7 +107,7 @@ export default function AuthenticatedLayout({
                     </div>
                 </div>
                 
-                <div className=' flex flex-row items-center justify-center w-full m-4 bg-white md:w-[2000px]  rounded-3xl'>
+                <div className=' flex flex-row items-center justify-center w-full m-4 bg-white md:w-[2000px]  rounded-3xl font-sans'>
 
                     <div className="flex flex-col items-center justify-start w-4/5 min-h-full bg-white z-10 rounded-3xl">
                         <div className="flex flex-row items-start justify-between w-full mt-12 bg-white h-full">
@@ -122,7 +122,7 @@ export default function AuthenticatedLayout({
                                 />
                             </div>
                         </div>
-                        <div className='flex flex-row w-11/12 items-center justify-start bg-secondary-bg h-[200px] rounded-xl space-x-4'>
+                        <div className='flex flex-row w-11/12 items-center font-sans justify-start bg-secondary-bg h-[200px] rounded-xl space-x-4'>
                             <div className="flex w-40 h-32 rounded-full bg-black mx-4"/>
                             <div className='flex w-full items-center justify-centerflex-col'>
                                 <div className='flex flex-col items-start justify-center'>
@@ -133,7 +133,7 @@ export default function AuthenticatedLayout({
                                         {auth.user.name}
                                     </h1>
                                     {attrChildren}
-                                    <h4 className=''>
+                                    <h4 className='font-sans'>
                                     
                                         Email: {auth.user.email}
                                         
@@ -143,7 +143,7 @@ export default function AuthenticatedLayout({
                             </div>
                             
                         </div>
-                        <div className='flex flex-col w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
+                        <div className='flex font-sans flex-col w-11/12 items-center justify-start bg-secondary-bg h-[330px] rounded-xl m-4 p-8'>
                         
                             {children}
                             

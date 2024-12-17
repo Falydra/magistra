@@ -12,6 +12,7 @@ import { LuFilePlus2 } from "react-icons/lu";
 import { Inertia } from "@inertiajs/inertia";
 import { useState } from "react";
 import { MahasiswaProps } from "@/types";
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/Components/ui/breadcrumb";
 
 
 export default function registrasi({auth, mahasiswa}: MahasiswaProps) {
@@ -33,12 +34,20 @@ export default function registrasi({auth, mahasiswa}: MahasiswaProps) {
         <PageLayout
         user={auth.user}
         back = {
-            <Link href={route("mahasiswa.dashboard")}>
-                    <h2 className="mb-4 ml-10 text-3xl font-bold leading-tight text-primary-dark">
-                        <FontAwesomeIcon icon={faChevronLeft} className="mr-3" />
-                        Registrasi
-                    </h2>
-                </Link>
+            <>
+                <Breadcrumb className="ml-10 mt-8 text-black">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/mahasiswa/dashboard">Dashboard</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    
+                                <BreadcrumbItem>
+                            <BreadcrumbPage>IRS</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </>
         }
 
         sidebarChildren = {
