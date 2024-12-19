@@ -333,14 +333,14 @@ export default function IRSMahasiswa({ auth, mahasiswa }: MahasiswaProps) {
                                             </Link>
                                         </td>
                                         <td className=" border space-x-2 items-center flex-col justify-center text-white">
-                                            {index + 1 < mahasiswa.semester ?
+                                            {item.status === "Disetujui" || item.status === "Dibatalkan" ?
                                               <Button variant="default" className="bg-yellow-400 cursor-not-allowed" disabled>Edit</Button>
                                                 :
                                                  <Button variant="default" className="bg-yellow-400" onClick={() => Inertia.visit('/mahasiswa/tambahirs')}>Edit</Button>
                                             }
                                          
 
-                                            {index + 1 < mahasiswa.semester ?
+                                            {item.status === "Disetujui" ?
                                                 <Button variant="default" className="bg-red-500 text-white cursor-not-allowed" disabled>
                                                     <FaTrashAlt />
                                                 </Button>

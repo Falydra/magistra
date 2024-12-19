@@ -99,6 +99,31 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
       return;
     }
 
+    if (newTotalSKS > maxSKS) {
+      toast({
+        variant: "destructive",
+        title: "SKS Mencapai Batas Maksimum",
+        className: "bg-primary-red",
+        description: `Total SKS: ${data.total_sks}`,
+        duration: 2500,
+      });
+      return;
+    }
+
+    // Jika total SKS kurang dari 0, beri peringatan dan batalkan perubahan
+    if (newTotalSKS < 0) {
+      toast({
+        variant: "destructive",
+        title: "SKS Tidak Boleh Negatif",
+        className: "bg-primary-red",
+        description: `Total SKS: ${data.total_sks}`,
+        duration: 2500,
+      });
+      return;
+    }
+
+    
+
     // Perbarui data
     setData({
       id_jadwal: newIdJadwal,
@@ -175,6 +200,8 @@ export default function IRSMahasiswa({ mahasiswa, irs, matakuliah, jadwal, kelas
     });
     setSelectedKelas(savedKelas);
   }, [jadwal, session]);
+
+  
 
  
 

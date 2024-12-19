@@ -163,7 +163,7 @@ export default function PersetujuanJadwal({ auth, jadwalProdi }: JadwalProdiProp
                                     <td className="py-3 border">{prodiMapping[item.kode_prodi]}</td>
                                     <td className="py-3 border">
                                         <span className={`px-2 py-1 text-white rounded ${item.status === 'Belum Disetujui' ? 'bg-red-500' : 'bg-green-500 bg-opacity-60 '}`}>
-                                            {statusMapping[item.status]}
+                                            {item.status}
                                         </span>
                                     </td>
                                     <td className="py-3 border">
@@ -171,7 +171,7 @@ export default function PersetujuanJadwal({ auth, jadwalProdi }: JadwalProdiProp
                                             <>
                                             
                                             <button
-                                                className="px-4 py-2 bg-green-500 text-white rounded"
+                                                className="px-4 py-2 bg-green-500 text-white rounded mr-4"
                                                 onClick={handleApprove}
                                             >
                                                 Setujui
@@ -185,13 +185,7 @@ export default function PersetujuanJadwal({ auth, jadwalProdi }: JadwalProdiProp
                                             </>
                                             
                                         )}
-                                            <button
-                                                className="px-4 py-2 bg-red-500 text-white rounded cursor-not-allowed"
-                                                onClick={handleApprove}
-                                                disabled={item.status === 'Disetujui'}
-                                            >
-                                                <FaTrashAlt className="w-6 h-6" />
-                                            </button>
+                                    
                                         
                                     </td>
                                 </tr>

@@ -78,6 +78,7 @@ public function updateMataKuliah(Request $request)
             'dosen_nip_2' => 'nullable|string|exists:dosen,nip',
             'dosen_nip_3' => 'nullable|string|exists:dosen,nip',
         ]);
+        \Log::info('Update Mata Kuliah', $validated);
 
 
         // Validasi kode_mk agar tidak digunakan oleh mata kuliah lain
@@ -100,6 +101,7 @@ public function updateMataKuliah(Request $request)
 
         $mataKuliah->update([
             'semester' => $validated['semester'],
+            'kode_mk' => $validated['kode_mk'],
             'sks' => $validated['sks'],
             'jumlah_kelas' => $validated['jumlah_kelas'],
             'kuota' => $validated['kuota'],

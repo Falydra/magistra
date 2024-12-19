@@ -142,7 +142,7 @@ const handleDropdownSelection = (index: number, value: string) => {
 
     const handleUpdateMataKuliah = () => {
         const updateData = {
-          kode_mk: selectedMataKuliah,
+          kode_mk: kodeMatkul,
           semester: semester,
           sks: sks,
           jumlah_kelas: jumlahKelas,
@@ -151,7 +151,8 @@ const handleDropdownSelection = (index: number, value: string) => {
           dosen_nip_2: dropdowns[1] || null, // Dosen kedua (opsional)
           dosen_nip_3: dropdowns[2] || null, // Dosen ketiga (opsional)
         };
-        
+        console.log("Data yang akan diupdate:", updateData);
+
         if (!dropdowns[0]) {
             setError("Dosen wajib diisi!");
             return;
