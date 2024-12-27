@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { usePage } from '@inertiajs/react';
 import PageLayout from "@/Layouts/PageLayout";
 import { PageProps, MahasiswaProps, IRSProps, JadwalProps, IRSJadwalProps } from '@/types';
@@ -56,6 +56,24 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs, mahasiswaDetail }:
             irs_id: irs[0].id,
             jadwal_ids: selectedJadwalIds,
         });
+    };
+
+    const printRef = useRef<HTMLDivElement>(null);
+
+    const handlePrint = () => {
+        const printableContent = printRef.current;
+        if (!printableContent) {
+            alert("Bagian yang akan dicetak tidak ditemukan!");
+            return;
+        }
+
+        const originalContent = document.body.innerHTML;
+        const printContent = printableContent.innerHTML;
+
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+        window.location.reload(); 
     };
 
     console.log(selectedJadwalIds);
@@ -118,7 +136,7 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs, mahasiswaDetail }:
             }
         >
             <div className="flex flex-col w-11/12 items-center justify-center mx-12 my-8 overflow-y-auto">
-                <div className="w-full overflow-y-auto overflow-x-auto">
+                <div className="w-full overflow-y-auto overflow-x-auto" ref={printRef} id='printable-section'>
                     <table className="w-full mb-6 border border-gray-300">
                         <tbody>
                             <tr>
@@ -202,7 +220,13 @@ export default function CheckIRS({ mahasiswa, irsJadwal, irs, mahasiswaDetail }:
                             ))}
                         </tbody>
                     </table>
-                    <div className='w-full flex flex-row items-center justify-end'>
+                    <div className='w-full flex flex-row items-center justify-between'>
+                    <button 
+                            onClick={handlePrint}
+                            className='w-60 h-12 mt-4 text-white bg-primary-bg flex-row flex justify-center items-center rounded-lg self-end'>
+                            <LuFilePlus2 className='w-6 h-6 text-white '/>   
+                            Cetak IRS
+                        </button>
                         <button 
                             onClick={handleSubmit}
                             className='w-60 h-12 mt-4 text-white bg-primary-green flex-row flex justify-center items-center rounded-lg self-end'>

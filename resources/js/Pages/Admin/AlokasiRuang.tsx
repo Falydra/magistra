@@ -399,6 +399,7 @@ export default function AlokasiRuang({auth} : {auth: any} ) {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
                     <div className="bg-white p-8 rounded-md shadow-md">
                         <h2 className="text-xl font-semibold mb-4">Apakah anda yakin?</h2>
+                        <h2 className="text-md font-semibold mb-4">Anda akan menghapus ruang ini</h2>
                         <div className="flex justify-end space-x-4">
                             <button
                                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -500,7 +501,7 @@ export default function AlokasiRuang({auth} : {auth: any} ) {
                                             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
                                                 <div className="bg-white p-8 rounded-md shadow-md">
                                                     <h2 className="text-xl font-semibold">Apakah anda yakin?</h2>
-                                                    <h2 className="text-md font-semibold mb-4">Anda akan membatalkan mata kuliah ini</h2>
+                                                    <h2 className="text-md font-semibold mb-4">Anda akan menghapus ruang ini</h2>
                                                     <div className="flex justify-between space-x-4">
                                                         <button
                                                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
